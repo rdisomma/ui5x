@@ -5,7 +5,16 @@
   "types": "dist/index.d.ts",
   "main": "index.js",
   "license": "Apache-2.0",
+  "author": "Raffaele Di Somma",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rdisomma/ui5x.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rdisomma/ui5x/issues"
+  },
+  "homepage": "https://github.com/rdisomma/ui5x#readme",
   "scripts": {
     "start": "run-p \"interfaces:watch\" \"start:server\"",
     "start:server": "ui5 serve --open test-resources/ui5x/Skeleton.html",
@@ -20,8 +29,16 @@
     "test:unit:browser": "ui5 serve --open test-resources/ui5x/qunit/unitTests.qunit.html",
     "clean": "rm -rf dist"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "ui5",
+    "openui5",
+    "sapui5",
+    "skeleton",
+    "loading",
+    "ux",
+    "controls",
+    "typescript"
+  ],
   "type": "commonjs",
   "devDependencies": {
     "@openui5/types": "^1.151.0",
