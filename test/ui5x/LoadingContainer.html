@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X Skeleton Demo</title>
+
+    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
+        </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/library",
+            "ui5x/loading/Skeleton",
+            "ui5x/loading/LoadingContainer",
+            "sap/m/VBox",
+            "sap/m/HBox",
+            "sap/m/Text",
+            "sap/m/Button",
+            "sap/m/FlexItemData",
+        ], function (
+            library,
+            Skeleton,
+            LoadingContainer,
+            VBox,
+            HBox,
+            Text,
+            Button,
+            FlexItemData
+        ) {
+            const skeletonStructure = new VBox({
+                width: "20%",
+                gap: "1rem",
+                items: [
+                    new HBox({
+                        gap: "1rem",
+                        items: [
+                            new Skeleton({
+                                type: "Circle",
+                                width: "3rem"
+                            }),
+                            new Skeleton({
+                                type: "Rectangle",
+                                lines: 3,
+                                layoutData: new FlexItemData({
+                                    growFactor: 1,
+                                    baseSize: "0"
+                                })
+                            })
+                        ]
+                    }),
+                    new Skeleton({
+                        type: "Line",
+                        lines: 3
+                    })
+                ]
+            });
+
+            const container = new LoadingContainer({
+                loading: true,
+
+                placeholder: skeletonStructure,
+
+                content: new Text({
+                    text: "Contenuto caricato!"
+                })
+            });
+
+            const simpleContainer = new LoadingContainer({
+                loading: true,
+                skeletonType: "Line",
+                width: "5rem",
+                skeletonLines: 3,
+                content: new Text({
+                    text: "Contenuto caricato!"
+                })
+            });
+
+            new VBox({
+                gap: "10rem",
+                items: [
+                    container,
+                    simpleContainer,
+                    new Button({
+                        text: "Toggle loading",
+                        press: function () {
+                            container.setLoading(
+                                !container.getLoading()
+                            );
+                        }
+                    })
+                ]
+            }).placeAt("content");
+        });
+    </script>
+</head>
+
+<body class="sapUiBody">
+    <div id="content"></div>
+</body>
+
+</html>

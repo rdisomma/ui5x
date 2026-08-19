@@ -1,0 +1,26 @@
+specVersion: "4.0"
+type: library
+framework:
+  name: OpenUI5
+  version: "1.151.0"
+  libraries:
+    - name: sap.ui.core
+    - name: sap.m
+      development: true
+    - name: themelib_sap_horizon
+      development: true
+builder:
+  resources:
+    excludes:
+      - "/test-resources/**"
+  customTasks:
+    - name: ui5-tooling-transpile-task
+      afterTask: replaceVersion
+server:
+  customMiddleware:
+    - name: ui5-tooling-transpile-middleware
+      afterMiddleware: compression
+metadata:
+  name: ui5x
+  copyright: |-
+    Copyright (c) ${currentYear} Raffaele Di Somma.

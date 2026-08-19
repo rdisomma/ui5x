@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<library xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>ui5x</name>
+    <vendor>Raffaele Di Somma</vendor>
+    <version>0.1.0</version>
+    <copyright>Copyright (c) 2026 Raffaele Di Somma</copyright>
+    <title>UI5X</title>
+    <documentation>Modern UX extensions for OpenUI5 and SAPUI5.</documentation>
+
+    <dependencies>
+        <dependency>
+            <libraryName>sap.ui.core</libraryName>
+        </dependency>
+    </dependencies>
+</library>

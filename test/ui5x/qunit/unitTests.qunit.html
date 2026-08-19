@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X Unit Tests</title>
+
+    <link
+        rel="stylesheet"
+        href="/resources/sap/ui/thirdparty/qunit-2.css"
+    >
+
+    <script src="/resources/sap/ui/thirdparty/qunit-2.js"></script>
+
+    <script>
+        QUnit.config.autostart = false;
+    </script>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
+
+    <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
+        sap.ui.require([
+            "ui5x/test/qunit/unitTests.qunit"
+        ]);
+    </script>
+</head>
+
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>

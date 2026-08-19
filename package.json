@@ -1,0 +1,35 @@
+{
+  "name": "@raffaeledisomma/ui5x",
+  "version": "0.1.0",
+  "description": "Modern UX extensions for OpenUI5 and SAPUI5",
+  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "start": "run-p \"interfaces:watch\" \"start:server\"",
+    "start:server": "ui5 serve --open test-resources/ui5x/Skeleton.html",
+    "interfaces": "npx @ui5/ts-interface-generator",
+    "interfaces:watch": "npx @ui5/ts-interface-generator --watch",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run interfaces && npm run typecheck && ui5 build --clean-dest",
+    "package:prepare": "node scripts/prepare-package.mjs",
+    "package:pack": "npm run build && npm run package:prepare && npm pack ./dist",
+    "package:dry-run": "npm run build && npm run package:prepare && npm pack ./dist --dry-run",
+    "start:dist": "ui5 serve --config ui5-dist.yaml --open test-resources/ui5x/Skeleton.html",
+    "test:unit:browser": "ui5 serve --open test-resources/ui5x/qunit/unitTests.qunit.html",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "commonjs",
+  "devDependencies": {
+    "@openui5/types": "^1.151.0",
+    "@types/qunit": "^2.19.14",
+    "@ui5/cli": "^4.0.62",
+    "@ui5/ts-interface-generator": "^0.11.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "6.0.3",
+    "ui5-tooling-transpile": "^3.13.0"
+  }
+}

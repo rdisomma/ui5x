@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X Skeleton Demo</title>
+
+    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
+        </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/library",
+            "ui5x/loading/Skeleton",
+            "sap/m/VBox"
+        ], function (library, Skeleton, VBox) {
+
+            new VBox({
+                gap: "1rem",
+                items: [
+                    new Skeleton({
+                        type: "Rectangle",
+                        width: "20rem",
+                        animated: true
+                    }),
+
+                    new Skeleton({
+                        type: "Line",
+                        width: "20rem",
+                        lines: 50
+                    }),
+
+                    new Skeleton({
+                        type: "Circle",
+                    })
+                ]
+            }).placeAt("content");;
+
+        });
+    </script>
+</head>
+
+<body class="sapUiBody">
+    <div id="content"></div>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+.ui5xSkeleton {
+    display: inline-flex;
+    box-sizing: border-box;
+}
+
+.ui5xSkeletonItem {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+
+    background-color: fade(@sapUiContentForegroundBorderColor, 50%);
+
+    overflow: hidden;
+}
+
+.ui5xSkeletonItem::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    transform: translateX(-100%);
+
+    background: linear-gradient(90deg,
+            transparent 0%,
+            fade(@sapUiContentForegroundBorderColor, 35%) 50%,
+            transparent 100%);
+
+    animation: ui5xSkeletonShimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes ui5xSkeletonShimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui5xSkeletonItem::after {
+        animation: none;
+        display: none;
+    }
+}
+
+.ui5xSkeletonNoAnimation .ui5xSkeletonItem::after {
+    display: none;
+}
+
+/* Line */
+
+.ui5xSkeletonLine {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ui5xSkeletonLineItem {
+    width: 100%;
+    height: 1rem;
+
+    border-radius: 0.25rem;
+}
+
+.ui5xSkeletonLineItem:last-child:not(:first-child) {
+    width: 70%;
+}
+
+/* Rectangle */
+
+.ui5xSkeletonRectangle {
+    width: 100%;
+}
+
+.ui5xSkeletonRectangle .ui5xSkeletonShape {
+    width: 100%;
+    height: 3rem;
+
+    border-radius: 0.5rem;
+}
+
+/* Circle */
+
+.ui5xSkeletonCircle {
+    width: 3rem;
+}
+
+.ui5xSkeletonCircle .ui5xSkeletonShape {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    border-radius: 50%;
+}
