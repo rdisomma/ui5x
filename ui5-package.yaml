@@ -8,10 +8,4 @@ type: library
 resources:
   configuration:
     paths:
-      src: resources/ui5x/
-
-framework:
-  name: OpenUI5
-  version: "1.151.0"
-  libraries:
-    - name: sap.ui.core
+      src: resources

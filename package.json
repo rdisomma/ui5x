@@ -22,9 +22,10 @@
     "interfaces:watch": "npx @ui5/ts-interface-generator --watch",
     "typecheck": "tsc --noEmit",
     "build": "npm run interfaces && npm run typecheck && ui5 build --clean-dest",
+    "build:package": "npm run interfaces && npm run typecheck && ui5 build --clean-dest --create-build-manifest",
     "package:prepare": "node scripts/prepare-package.mjs",
-    "package:pack": "npm run build && npm run package:prepare && npm pack ./dist",
-    "package:dry-run": "npm run build && npm run package:prepare && npm pack ./dist --dry-run",
+    "package:pack": "npm run build:package && npm run package:prepare && npm pack ./dist",
+    "package:dry-run": "npm run build:package && npm run package:prepare && npm pack ./dist --dry-run",
     "start:dist": "ui5 serve --config ui5-dist.yaml --open test-resources/ui5x/Skeleton.html",
     "test:unit:browser": "ui5 serve --open test-resources/ui5x/qunit/unitTests.qunit.html",
     "clean": "rm -rf dist"
