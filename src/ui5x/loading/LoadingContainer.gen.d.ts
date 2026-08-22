@@ -55,64 +55,36 @@ declare module "./LoadingContainer" {
         // property: loading
 
         /**
-         * Gets current value of property "loading".
-         *
          * Defines whether the container displays its loading placeholder
         instead of the content.
-         *
-         * Default value is: false
-         * @returns Value of property "loading"
          */
         getLoading(): boolean;
 
         /**
-         * Sets a new value for property "loading".
-         *
          * Defines whether the container displays its loading placeholder
         instead of the content.
-         *
-         * When called with a value of "null" or "undefined", the default value of the property will be restored.
-         *
-         * Default value is: false
-         * @param [loading=false] New value for property "loading"
-         * @returns Reference to "this" in order to allow method chaining
          */
         setLoading(loading: boolean): this;
 
         // property: skeletonType
 
         /**
-         * Gets current value of property "skeletonType".
-         *
          * Defines the type of the default skeleton placeholder.
         
         This property has no effect when a custom placeholder is provided.
-         *
-         * Default value is: "SkeletonType.Line"
-         * @returns Value of property "skeletonType"
          */
         getSkeletonType(): SkeletonType;
 
         /**
-         * Sets a new value for property "skeletonType".
-         *
          * Defines the type of the default skeleton placeholder.
         
         This property has no effect when a custom placeholder is provided.
-         *
-         * When called with a value of "null" or "undefined", the default value of the property will be restored.
-         *
-         * Default value is: "SkeletonType.Line"
-         * @param [skeletonType="SkeletonType.Line"] New value for property "skeletonType"
-         * @returns Reference to "this" in order to allow method chaining
          */
         setSkeletonType(skeletonType: SkeletonType): this;
 
         // property: skeletonLines
 
         /**
-         * Gets current value of property "skeletonLines".
-         *
          * /**
                      * Defines the number of lines displayed by the default skeleton placeholder.
                      *
@@ -123,15 +95,10 @@ declare module "./LoadingContainer" {
                      * placeholder is provided.
                      *
                      * Valid values are between 1 and 3.
-         *
-         * Default value is: 1
-         * @returns Value of property "skeletonLines"
          */
         getSkeletonLines(): number;
 
         /**
-         * Sets a new value for property "skeletonLines".
-         *
          * /**
                      * Defines the number of lines displayed by the default skeleton placeholder.
                      *
@@ -142,48 +109,29 @@ declare module "./LoadingContainer" {
                      * placeholder is provided.
                      *
                      * Valid values are between 1 and 3.
-         *
-         * When called with a value of "null" or "undefined", the default value of the property will be restored.
-         *
-         * Default value is: 1
-         * @param [skeletonLines=1] New value for property "skeletonLines"
-         * @returns Reference to "this" in order to allow method chaining
          */
         setSkeletonLines(skeletonLines: number): this;
 
         // aggregation: content
 
         /**
-         * Gets content of aggregation "content".
-         *
          * The actual content displayed when loading is false.
          */
         getContent(): Control;
 
         /**
-         * Sets the aggregated content.
-         *
          * The actual content displayed when loading is false.
-         *
-         * @param content The content to set
-         * @returns Reference to "this" in order to allow method chaining
          */
         setContent(content: Control): this;
 
         /**
-         * Destroys the content in the aggregation "content".
-         *
          * The actual content displayed when loading is false.
-         *
-         * @returns Reference to "this" in order to allow method chaining
          */
         destroyContent(): this;
 
         // aggregation: placeholder
 
         /**
-         * Gets content of aggregation "placeholder".
-         *
          * Optional custom placeholder displayed while loading.
         
         When omitted, LoadingContainer uses its default Skeleton.
@@ -191,25 +139,16 @@ declare module "./LoadingContainer" {
         getPlaceholder(): Control;
 
         /**
-         * Sets the aggregated placeholder.
-         *
          * Optional custom placeholder displayed while loading.
         
         When omitted, LoadingContainer uses its default Skeleton.
-         *
-         * @param placeholder The placeholder to set
-         * @returns Reference to "this" in order to allow method chaining
          */
         setPlaceholder(placeholder: Control): this;
 
         /**
-         * Destroys the placeholder in the aggregation "placeholder".
-         *
          * Optional custom placeholder displayed while loading.
         
         When omitted, LoadingContainer uses its default Skeleton.
-         *
-         * @returns Reference to "this" in order to allow method chaining
          */
         destroyPlaceholder(): this;
     }
