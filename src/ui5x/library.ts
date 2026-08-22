@@ -4,21 +4,25 @@
  */
 
 import "./loading/SkeletonType";
+import "./loading/SkeletonRowMode";
 import Lib from "sap/ui/core/Lib";
 
 const UI5X = Lib.init({
     name: "ui5x",
     version: "${version}",
     dependencies: [
-        "sap.ui.core"
+        "sap.ui.core",
+        "sap.m"
     ],
     types: [
         "ui5x.loading.SkeletonType",
+        "ui5x.loading.SkeletonRowMode",
     ],
     interfaces: [],
     controls: [
         "ui5x.loading.Skeleton",
-        "ui5x.loading.LoadingContainer"
+        "ui5x.loading.LoadingContainer",
+        "ui5x.loading.LoadingResponsiveTable"
     ],
     elements: [],
     noLibraryCSS: false

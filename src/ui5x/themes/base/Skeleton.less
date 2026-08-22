@@ -1,3 +1,6 @@
+@ui5xSkeletonBaseColor: fade(@sapUiContentForegroundBorderColor, 15%);
+@ui5xSkeletonHighlightColor: fade(@sapUiContentForegroundBorderColor, 24%);
+
 .ui5xSkeleton {
     display: inline-flex;
     box-sizing: border-box;
@@ -8,7 +11,7 @@
     display: block;
     box-sizing: border-box;
 
-    background-color: fade(@sapUiContentForegroundBorderColor, 50%);
+    background-color: @ui5xSkeletonBaseColor;
 
     overflow: hidden;
 }
@@ -21,10 +24,12 @@
 
     transform: translateX(-100%);
 
-    background: linear-gradient(90deg,
-            transparent 0%,
-            fade(@sapUiContentForegroundBorderColor, 35%) 50%,
-            transparent 100%);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        @ui5xSkeletonHighlightColor 50%,
+        transparent 100%
+    );
 
     animation: ui5xSkeletonShimmer 1.3s ease-in-out infinite;
 }
@@ -56,9 +61,9 @@
 
 .ui5xSkeletonLineItem {
     width: 100%;
-    height: 1rem;
+    height: 0.7rem;
 
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
 }
 
 .ui5xSkeletonLineItem:last-child:not(:first-child) {

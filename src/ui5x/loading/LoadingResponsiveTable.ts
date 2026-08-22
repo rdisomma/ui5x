@@ -1,0 +1,342 @@
+/*!
+ * Copyright (c) 2026 Raffaele Di Somma.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+import "../library";
+
+import Control from "sap/ui/core/Control";
+import type { MetadataOptions } from "sap/ui/core/Element";
+
+import Table from "sap/m/Table";
+import Column from "sap/m/Column";
+import ColumnListItem from "sap/m/ColumnListItem";
+
+import Skeleton from "../loading/Skeleton";
+import SkeletonType from "../loading/SkeletonType";
+import SkeletonRowMode from "./SkeletonRowMode";
+
+import LoadingResponsiveTableRenderer from "./renderer/LoadingResponsiveTableRenderer";
+
+/**
+ * Displays a responsive table with skeleton rows while data is loading.
+ *
+ * @extends sap.ui.core.Control
+ * @public
+ * @name ui5x.loading.LoadingResponsiveTable
+ */
+export default class LoadingResponsiveTable extends Control {
+
+    constructor(idOrSettings?: string | $LoadingResponsiveTableSettings);
+    constructor(id?: string, settings?: $LoadingResponsiveTableSettings);
+    constructor(id?: string, settings?: $LoadingResponsiveTableSettings) {
+        super(id, settings);
+    }
+
+    static readonly metadata: MetadataOptions = {
+        library: "ui5x",
+
+        defaultAggregation: "table",
+
+        properties: {
+            /**
+             * Defines whether skeleton rows are displayed instead of
+             * the actual table.
+             */
+            loading: {
+                type: "boolean",
+                defaultValue: false
+            },
+
+            /**
+             * Defines the number of skeleton rows displayed while loading.
+             */
+            skeletonRows: {
+                type: "int",
+                defaultValue: 5
+            },
+
+            /**
+             * Defines the maximum number of skeleton rows rendered when
+             * skeletonRowsMode is Fill.
+             */
+            maxSkeletonRows: {
+                type: "int",
+                defaultValue: 10
+            },
+
+            /**
+             * Defines how the number of skeleton rows is determined.
+             */
+            skeletonRowsMode: {
+                type: "ui5x.loading.SkeletonRowMode",
+                defaultValue: SkeletonRowMode.Fixed
+            },
+
+            /**
+             * Defines whether skeleton cells use varying widths
+             * to produce a more natural loading appearance.
+             */
+            dynamicSkeletonWidths: {
+                type: "boolean",
+                defaultValue: false
+            },
+
+            /**
+             * Defines whether skeleton animations are enabled.
+             */
+            animated: {
+                type: "boolean",
+                defaultValue: true
+            }
+        },
+
+        aggregations: {
+            /**
+             * The responsive table containing the actual application data.
+             */
+            table: {
+                type: "sap.m.Table",
+                multiple: false
+            },
+
+            /**
+             * Internal table used to render skeleton rows.
+             */
+            _skeletonTable: {
+                type: "sap.m.Table",
+                multiple: false,
+                visibility: "hidden"
+            }
+        }
+    };
+
+    static renderer: typeof LoadingResponsiveTableRenderer =
+        LoadingResponsiveTableRenderer;
+
+    private _calculatedSkeletonRows = 0;
+
+    private _onWindowResize = (): void => {
+        if (
+            this.getLoading() &&
+            this.getSkeletonRowsMode() === SkeletonRowMode.Fill
+        ) {
+            this._updateCalculatedSkeletonRows();
+        }
+    };
+
+    init(): void {
+        this.setAggregation(
+            "_skeletonTable",
+            new Table({
+                showNoData: false
+            }),
+            true
+        );
+
+        window.addEventListener(
+            "resize",
+            this._onWindowResize
+        );
+    }
+
+    exit(): void {
+        window.removeEventListener(
+            "resize",
+            this._onWindowResize
+        );
+    }
+
+    onBeforeRendering(): void {
+        if (this.getLoading()) {
+            this._syncSkeletonTable();
+        }
+    }
+
+    onAfterRendering(): void {
+        if (
+            this.getLoading() &&
+            this.getSkeletonRowsMode() === SkeletonRowMode.Fill
+        ) {
+            this._updateCalculatedSkeletonRows();
+        }
+    }
+
+    setSkeletonRows(rows: number): this {
+        return this.setProperty(
+            "skeletonRows",
+            Math.max(1, rows)
+        );
+    }
+
+    _getSkeletonTable(): Table | null {
+        return this.getAggregation("_skeletonTable") as Table | null;
+    }
+
+    private _getEffectiveSkeletonRows(): number {
+        if (
+            this.getSkeletonRowsMode() ===
+            SkeletonRowMode.Fill
+        ) {
+            /*
+             * Before the first DOM measurement, use skeletonRows
+             * as a sensible fallback.
+             */
+            return this._calculatedSkeletonRows ||
+                this.getSkeletonRows();
+        }
+
+        return this.getSkeletonRows();
+    }
+
+    private _syncSkeletonTable(): void {
+        const sourceTable = this.getTable();
+        const skeletonTable = this._getSkeletonTable();
+
+        if (!sourceTable || !skeletonTable) {
+            return;
+        }
+
+        skeletonTable.destroyColumns();
+        skeletonTable.destroyItems();
+
+        skeletonTable.setWidth(
+            sourceTable.getWidth()
+        );
+
+        skeletonTable.setFixedLayout(
+            sourceTable.getFixedLayout()
+        );
+
+        skeletonTable.setBackgroundDesign(
+            sourceTable.getBackgroundDesign()
+        );
+
+        skeletonTable.setInset(
+            sourceTable.getInset()
+        );
+
+        skeletonTable.setShowSeparators(
+            sourceTable.getShowSeparators()
+        );
+
+        const columns = sourceTable.getColumns();
+
+        columns.forEach(
+            (column: Column, index: number) => {
+                skeletonTable.addColumn(
+                    column.clone(
+                        `-ui5xSkeleton-${index}`
+                    )
+                );
+            }
+        );
+
+        const rows = this._getEffectiveSkeletonRows();
+
+        for (let row = 0; row < rows; row++) {
+            skeletonTable.addItem(
+                new ColumnListItem({
+                    cells: columns.map(
+                        (_column, columnIndex) =>
+                            new Skeleton({
+                                type: SkeletonType.Line,
+                                width: this.getDynamicSkeletonWidths()
+                                    ? this._getSkeletonWidth(row, columnIndex)
+                                    : "100%",
+                                animated: this.getAnimated()
+                            })
+                    )
+                })
+            );
+        }
+    }
+
+    private _updateCalculatedSkeletonRows(): void {
+        const root = this.getDomRef();
+        const skeletonTable = this._getSkeletonTable();
+
+        if (!root || !skeletonTable) {
+            return;
+        }
+
+        const tableDomRef = skeletonTable.getDomRef();
+
+        const items = skeletonTable.getItems();
+
+        if (!tableDomRef || items.length === 0) {
+            return;
+        }
+
+        const firstRowDomRef = items[0].getDomRef();
+
+        if (!firstRowDomRef) {
+            return;
+        }
+
+        const rootRect = root.getBoundingClientRect();
+
+        const tableRect = tableDomRef.getBoundingClientRect();
+
+        const rowHeight = firstRowDomRef.getBoundingClientRect().height;
+
+        if (rowHeight <= 0) {
+            return;
+        }
+
+        /*
+         * Everything belonging to the table except its rows:
+         * header, borders and other structural elements.
+         */
+        const chromeHeight = Math.max(
+            0,
+            tableRect.height -
+            rowHeight * items.length
+        );
+
+        /*
+         * Space between the top of this control and the bottom
+         * of the viewport.
+         */
+        const availableHeight = window.innerHeight - rootRect.top;
+
+        const availableRowsHeight = Math.max(
+            0,
+            availableHeight - chromeHeight
+        );
+
+        /*
+         * floor() avoids producing an additional row that would
+         * overflow the viewport and create a scrollbar.
+         */
+        const calculatedRows = Math.max(
+            1,
+            Math.min(
+                this.getMaxSkeletonRows(),
+                Math.floor(
+                    availableRowsHeight / rowHeight
+                )
+            )
+        );
+
+        if (calculatedRows === this._calculatedSkeletonRows) {
+            return;
+        }
+
+        this._calculatedSkeletonRows = calculatedRows;
+
+        /*
+         * Re-render once with the newly calculated number
+         * of rows.
+         */
+        this.invalidate();
+    }
+
+    private _getSkeletonWidth(rowIndex: number, columnIndex: number): string {
+        const widths = ["72%", "88%", "64%", "80%", "55%"];
+
+        return widths[
+            (rowIndex + columnIndex) % widths.length
+        ];
+    }
+}

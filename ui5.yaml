@@ -6,7 +6,6 @@ framework:
   libraries:
     - name: sap.ui.core
     - name: sap.m
-      development: true
     - name: themelib_sap_horizon
       development: true
 builder:
