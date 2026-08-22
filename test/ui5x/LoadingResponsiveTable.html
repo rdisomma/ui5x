@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X LoadingResponsiveTable Demo</title>
+
+    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
+        </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/library",
+            "ui5x/loading/LoadingResponsiveTable",
+            "sap/ui/model/json/JSONModel",
+            "sap/m/Table",
+            "sap/m/Column",
+            "sap/m/ColumnListItem",
+            "sap/m/Text",
+            "sap/m/ObjectStatus",
+            "sap/m/Button",
+            "sap/m/HBox",
+            "sap/m/VBox"
+        ], function (
+            library,
+            LoadingResponsiveTable,
+            JSONModel,
+            Table,
+            Column,
+            ColumnListItem,
+            Text,
+            ObjectStatus,
+            Button,
+            HBox,
+            VBox
+        ) {
+            "use strict";
+
+            const model = new JSONModel({
+                rows: []
+            });
+
+            const sourceTable = new Table({
+                columns: [
+                    new Column({
+                        width: "15%",
+                        header: new Text({
+                            text: "Name"
+                        })
+                    }),
+
+                    new Column({
+                        width: "15%",
+                        header: new Text({
+                            text: "Company"
+                        })
+                    }),
+
+                    new Column({
+                        width: "10%",
+                        minScreenWidth: "Tablet",
+                        demandPopin: true,
+                        header: new Text({
+                            text: "Status"
+                        })
+                    }),
+
+                    new Column({
+                        width: "10%",
+                        hAlign: "End",
+                        minScreenWidth: "Tablet",
+                        demandPopin: true,
+                        header: new Text({
+                            text: "Amount"
+                        })
+                    }),
+
+                    new Column({
+                        width: "50%",
+                        minScreenWidth: "Desktop",
+                        demandPopin: true,
+                        header: new Text({
+                            text: "City"
+                        })
+                    })
+                ]
+            });
+
+            sourceTable.bindItems({
+                path: "/rows",
+                templateShareable: false,
+
+                template: new ColumnListItem({
+                    cells: [
+                        new Text({
+                            text: "{name}"
+                        }),
+
+                        new Text({
+                            text: "{company}"
+                        }),
+
+                        new ObjectStatus({
+                            text: "{status}",
+                            state: "{statusState}"
+                        }),
+
+                        new Text({
+                            text: "{amount}"
+                        }),
+
+                        new Text({
+                            text: "{city}"
+                        })
+                    ]
+                })
+            });
+
+            const loadingTable = new LoadingResponsiveTable({
+                loading: true,
+                skeletonRowsMode: "Fill",
+                skeletonRows: 5,
+                maxSkeletonRows: 50,
+                animated: true,
+                table: sourceTable
+            });
+
+            loadingTable.setModel(model);
+
+            const loadedRows = [
+                {
+                    name: "Mario Rossi",
+                    company: "Acme S.p.A.",
+                    status: "Active",
+                    statusState: "Success",
+                    amount: "€ 125,000",
+                    city: "Milan"
+                },
+                {
+                    name: "Laura Bianchi",
+                    company: "Example S.r.l.",
+                    status: "Pending",
+                    statusState: "Warning",
+                    amount: "€ 87,500",
+                    city: "Rome"
+                },
+                {
+                    name: "Giuseppe Verdi",
+                    company: "Northwind",
+                    status: "Active",
+                    statusState: "Success",
+                    amount: "€ 310,000",
+                    city: "Turin"
+                },
+                {
+                    name: "Anna Neri",
+                    company: "Contoso",
+                    status: "Inactive",
+                    statusState: "Error",
+                    amount: "€ 42,000",
+                    city: "Naples"
+                },
+                {
+                    name: "Luca Gialli",
+                    company: "Fabrikam",
+                    status: "Active",
+                    statusState: "Success",
+                    amount: "€ 198,000",
+                    city: "Bologna"
+                },
+                {
+                    name: "Sara Romano",
+                    company: "Adventure Works",
+                    status: "Pending",
+                    statusState: "Warning",
+                    amount: "€ 76,200",
+                    city: "Florence"
+                },
+                {
+                    name: "Marco Costa",
+                    company: "Tailspin Toys",
+                    status: "Active",
+                    statusState: "Success",
+                    amount: "€ 221,400",
+                    city: "Genoa"
+                }
+            ];
+
+            const loadingButton = new Button({
+                text: "Load data",
+
+                press: function () {
+                    if (loadingTable.getLoading()) {
+                        model.setProperty("/rows", loadedRows);
+                        loadingTable.setLoading(false);
+
+                        loadingButton.setText("Show skeleton");
+                    } else {
+                        model.setProperty("/rows", []);
+                        loadingTable.setLoading(true);
+
+                        loadingButton.setText("Load data");
+                    }
+                }
+            });
+
+            const modeButton = new Button({
+                text: "Mode: Fill",
+
+                press: function () {
+                    const currentMode =
+                        loadingTable.getSkeletonRowsMode();
+
+                    if (currentMode === "Fill") {
+                        loadingTable.setSkeletonRowsMode("Fixed");
+                        loadingTable.setSkeletonRows(5);
+
+                        modeButton.setText("Mode: Fixed");
+                    } else {
+                        loadingTable.setSkeletonRowsMode("Fill");
+
+                        modeButton.setText("Mode: Fill");
+                    }
+                }
+            });
+
+            const animationButton = new Button({
+                text: "Animation: On",
+
+                press: function () {
+                    const animated =
+                        loadingTable.getAnimated();
+
+                    loadingTable.setAnimated(!animated);
+
+                    animationButton.setText(
+                        animated
+                            ? "Animation: Off"
+                            : "Animation: On"
+                    );
+                }
+            });
+
+            const toolbar = new HBox({
+                items: [
+                    loadingButton,
+                    modeButton,
+                    animationButton
+                ]
+            });
+
+            loadingButton.addStyleClass("sapUiTinyMarginEnd");
+            modeButton.addStyleClass("sapUiTinyMarginEnd");
+
+            const page = new VBox({
+                width: "100%",
+                items: [
+                    toolbar,
+                    loadingTable
+                ]
+            });
+
+            toolbar.addStyleClass("sapUiSmallMarginBottom");
+
+            page.addStyleClass("sapUiMediumMargin");
+
+            page.placeAt("content");
+        });
+    </script>
+</head>
+
+<body class="sapUiBody sapUiSizeCompact">
+    <div id="content"></div>
+</body>
+
+</html>
