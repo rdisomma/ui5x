@@ -22,7 +22,9 @@ const UI5X = Lib.init({
     controls: [
         "ui5x.loading.Skeleton",
         "ui5x.loading.LoadingContainer",
-        "ui5x.loading.LoadingResponsiveTable"
+        "ui5x.loading.LoadingResponsiveTable",
+        "ui5x.layout.Accordion",
+        "ui5x.layout.AccordionItem"
     ],
     elements: [],
     noLibraryCSS: false

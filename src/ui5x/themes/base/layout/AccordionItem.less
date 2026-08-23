@@ -1,0 +1,130 @@
+/* AccordionItem.less */
+
+.ui5xAccordionItem {
+    width: 100%;
+    box-sizing: border-box;
+
+    border-bottom: 1px solid @sapUiGroupContentBorderColor;
+}
+
+.ui5xAccordionItemHeader {
+    width: 100%;
+    min-height: 2.75rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+
+    padding: 0.625rem 1rem;
+
+    border: 0;
+    background: transparent;
+
+    color: @sapUiGroupTitleTextColor;
+
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.ui5xAccordionItemHeader:hover {
+    background-color: @sapUiListHoverBackground;
+}
+
+.ui5xAccordionItemHeader:focus-visible {
+    outline: 0.125rem solid @sapUiContentFocusColor;
+    outline-offset: -0.1875rem;
+}
+
+.ui5xAccordionItemTitle {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ui5xAccordionItemIndicator {
+    width: 0.4rem;
+    height: 0.4rem;
+
+    flex: 0 0 auto;
+
+    margin-left: 1rem;
+    margin-right: 0.25rem;
+
+    border-right: 0.1rem solid currentColor;
+    border-bottom: 0.1rem solid currentColor;
+
+    transform: rotate(45deg);
+
+    transition: transform 0.2s ease;
+}
+
+.ui5xAccordionItemExpanded .ui5xAccordionItemIndicator {
+    transform: rotate(225deg);
+}
+
+
+.ui5xAccordionItemContent {
+    display: grid;
+    grid-template-rows: 0fr;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        grid-template-rows 0.22s ease,
+        opacity 0.16s ease,
+        visibility 0s linear 0.22s;
+}
+
+.ui5xAccordionItemContentInner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ui5xAccordionItemContentBody {
+    padding: 0.75rem 1rem;
+}
+
+.ui5xAccordionItemExpanded .ui5xAccordionItemContent {
+    grid-template-rows: 1fr;
+
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transition:
+        grid-template-rows 0.22s ease,
+        opacity 0.18s ease,
+        visibility 0s;
+}
+
+.ui5xAccordionItemDisabled .ui5xAccordionItemHeader {
+    cursor: default;
+    opacity: @sapUiContentDisabledOpacity;
+}
+
+.ui5xAccordionItemDisabled .ui5xAccordionItemHeader:hover {
+    background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ui5xAccordionItemHeader,
+    .ui5xAccordionItemIndicator,
+    .ui5xAccordionItemContent {
+        transition: none;
+    }
+}
