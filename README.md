@@ -18,6 +18,8 @@ views, from JavaScript or from TypeScript.
   layout.
 - **`LoadingResponsiveTable`** — wraps a responsive `sap.m.Table` and replaces its rows with
   matching skeleton cells while data is loading. It supports fixed and viewport-filling row counts.
+- **`LoadingTable`** — wraps a grid `sap.ui.table.Table` and renders a matching, presentation-only
+  table with skeleton cells while data is loading.
 - **`Accordion`** — groups `AccordionItem` sections with single or multiple expansion. Items can
   contain any UI5 control and support disabled or non-toggleable states.
 - **Accessibility-aware** — the container exposes `aria-busy` while loading, skeletons are
@@ -288,6 +290,73 @@ table and the bottom of the viewport, using `skeletonRows` as the initial fallba
 | ----------- | ------------- | ----------- | ------------------------------------------------ |
 | `table`     | `sap.m.Table` | 0..1        | Default aggregation containing the actual data. |
 
+### LoadingTable
+
+`LoadingTable` provides the same loading experience for a grid `sap.ui.table.Table`. While
+`loading` is `true`, it renders an internal table with matching columns and skeleton rows. The
+original table, its row binding and its application data remain untouched.
+
+![Animated preview of the UI5X LoadingTable control](docs/assets/loading-table-preview.gif)
+
+```xml
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:loading="ui5x.loading"
+  xmlns:m="sap.m"
+  xmlns:t="sap.ui.table">
+
+  <loading:LoadingTable
+    loading="{ui>/busy}"
+    skeletonRowsMode="Fixed"
+    skeletonRows="5"
+    maxSkeletonRows="10"
+    dynamicSkeletonWidths="true">
+
+    <t:Table
+      rows="{/rows}"
+      visibleRowCount="5"
+      visibleRowCountMode="Fixed">
+
+      <t:columns>
+        <t:Column width="15rem">
+          <m:Label text="Customer" />
+          <t:template>
+            <m:Text text="{name}" />
+          </t:template>
+        </t:Column>
+
+        <t:Column width="13rem">
+          <m:Label text="Company" />
+          <t:template>
+            <m:Text text="{company}" />
+          </t:template>
+        </t:Column>
+      </t:columns>
+
+    </t:Table>
+
+  </loading:LoadingTable>
+
+</mvc:View>
+```
+
+`Fixed` mode always renders `skeletonRows`. `Fill` mode calculates how many rows fit between the
+table and the bottom of the viewport, using `skeletonRows` as the initial fallback and
+`maxSkeletonRows` as the upper limit.
+
+| Property                | Type                           | Default | Description                                            |
+| ----------------------- | ------------------------------ | ------- | ------------------------------------------------------ |
+| `loading`               | `boolean`                      | `false` | Show skeleton rows instead of the original table.      |
+| `skeletonRows`          | `int`                          | `5`     | Rows rendered in `Fixed` mode and fallback for `Fill`. |
+| `maxSkeletonRows`       | `int`                          | `10`    | Maximum rows calculated in `Fill` mode.                |
+| `skeletonRowsMode`      | `ui5x.loading.SkeletonRowMode` | `Fixed` | Row-count strategy: `Fixed` or `Fill`.                 |
+| `dynamicSkeletonWidths` | `boolean`                      | `false` | Vary skeleton widths across cells.                     |
+| `animated`              | `boolean`                      | `true`  | Enable the skeleton shimmer animation.                 |
+
+| Aggregation | Type                 | Cardinality | Description                                      |
+| ----------- | -------------------- | ----------- | ------------------------------------------------ |
+| `table`     | `sap.ui.table.Table` | 0..1        | Default aggregation containing the actual data. |
+
 ### Accordion
 
 `Accordion` displays a collection of expandable `AccordionItem` sections. By default, expanding
@@ -376,7 +445,8 @@ npm start
 
 `npm start` regenerates the control interfaces in watch mode and serves the test pages at
 `http://localhost:8080/test-resources/ui5x/Skeleton.html`. Additional manual demos include
-`LoadingContainer.html`, `LoadingResponsiveTable.html` and `Accordion.html` in the same directory.
+`LoadingContainer.html`, `LoadingResponsiveTable.html`, `LoadingTable.html` and `Accordion.html`
+in the same directory.
 
 | Script                      | What it does |
 | --------------------------- | ------------ |
@@ -400,6 +470,7 @@ src/ui5x/
     Skeleton.ts                  placeholder control
     LoadingContainer.ts          loading-state container
     LoadingResponsiveTable.ts    responsive table skeleton wrapper
+    LoadingTable.ts              grid table skeleton wrapper
     SkeletonType.ts              Line | Rectangle | Circle enum
     renderer/                    control renderers
   layout/
