@@ -29,7 +29,7 @@ const SkeletonRenderer = {
             rm.class("ui5xSkeletonNoAnimation");
 
         if (width)
-            rm.style("width", control.getWidth());
+            rm.style("width", width);
 
         rm.attr("aria-hidden", "true");
         rm.openEnd();
