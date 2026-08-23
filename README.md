@@ -2,9 +2,9 @@
 
 Modern UX extensions for OpenUI5 and SAPUI5.
 
-UI5X is an open-source UI5 control library. Its controls extend `sap.ui.core.Control` and the
-library depends only on `sap.ui.core`, so they are declared, bound and rendered like any standard
-UI5 control: from XML views, from JavaScript or from TypeScript.
+UI5X is an open-source UI5 control library. Its controls extend `sap.ui.core.Control` and use
+public UI5 APIs, so they are declared, bound and rendered like any standard UI5 control: from XML
+views, from JavaScript or from TypeScript.
 
 > UI5X is in early development. APIs may change before version 1.0.
 
@@ -16,6 +16,10 @@ UI5 control: from XML views, from JavaScript or from TypeScript.
   model flag and the container does the switch for you, with no manual visibility juggling. It
   ships with a built-in skeleton and accepts any UI5 control as a custom placeholder when the default does not match your
   layout.
+- **`LoadingResponsiveTable`** — wraps a responsive `sap.m.Table` and replaces its rows with
+  matching skeleton cells while data is loading. It supports fixed and viewport-filling row counts.
+- **`Accordion`** — groups `AccordionItem` sections with single or multiple expansion. Items can
+  contain any UI5 control and support disabled or non-toggleable states.
 - **Accessibility-aware** — the container exposes `aria-busy` while loading, skeletons are
   hidden from assistive technologies, and animations respect `prefers-reduced-motion`.
 - **TypeScript first** — written in TypeScript and shipped with type definitions, while remaining
@@ -132,6 +136,8 @@ instead of rebuilding its themes, preload and other build artifacts in every con
 A `Line` skeleton stacks `lines` bars and shortens the last one to look like a paragraph;
 `Rectangle` fills the available width; `Circle` uses `width` as its diameter.
 
+![Animated preview of the UI5X Skeleton control](docs/assets/skeleton-preview.gif)
+
 ```js
 sap.ui.require(["ui5x/loading/Skeleton"], function (Skeleton) {
   new Skeleton({
@@ -167,6 +173,8 @@ In XML views:
 A container that swaps between a placeholder and its real content: it renders the placeholder
 while `loading` is `true`, and its `content` otherwise. Only one of the two is in the DOM at a
 time, so `loading` can be bound directly to a model flag.
+
+![Animated preview of the UI5X LoadingContainer control](docs/assets/loading-container-preview.gif)
 
 ```js
 sap.ui.require([
@@ -217,6 +225,145 @@ With a custom placeholder:
 | `content`     | `sap.ui.core.Control`  | 0..1        | Default aggregation. Displayed when `loading` is `false`.       |
 | `placeholder` | `sap.ui.core.Control`  | 0..1        | Custom placeholder — any control, e.g. skeletons composed in a `VBox`. Falls back to the built-in `Skeleton`. |
 
+### LoadingResponsiveTable
+
+`LoadingResponsiveTable` wraps a `sap.m.Table`. While `loading` is `true`, it renders a matching
+table with cloned columns and skeleton cells; when loading finishes, it renders the original table
+and its bound items.
+
+![Animated preview of the UI5X LoadingResponsiveTable control](docs/assets/loading-responsive-table-preview.gif)
+
+```xml
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:loading="ui5x.loading"
+  xmlns:m="sap.m">
+
+  <loading:LoadingResponsiveTable
+    loading="{ui>/busy}"
+    skeletonRowsMode="Fill"
+    skeletonRows="5"
+    maxSkeletonRows="10"
+    dynamicSkeletonWidths="true">
+
+    <m:Table items="{/rows}">
+      <m:columns>
+        <m:Column>
+          <m:Text text="Name" />
+        </m:Column>
+        <m:Column>
+          <m:Text text="Company" />
+        </m:Column>
+      </m:columns>
+
+      <m:items>
+        <m:ColumnListItem>
+          <m:cells>
+            <m:Text text="{name}" />
+            <m:Text text="{company}" />
+          </m:cells>
+        </m:ColumnListItem>
+      </m:items>
+    </m:Table>
+
+  </loading:LoadingResponsiveTable>
+
+</mvc:View>
+```
+
+`Fixed` mode always renders `skeletonRows`. `Fill` mode calculates how many rows fit between the
+table and the bottom of the viewport, using `skeletonRows` as the initial fallback and
+`maxSkeletonRows` as the upper limit.
+
+| Property                | Type                           | Default | Description                                           |
+| ----------------------- | ------------------------------ | ------- | ----------------------------------------------------- |
+| `loading`               | `boolean`                      | `false` | Show skeleton rows instead of the original table.     |
+| `skeletonRows`          | `int`                          | `5`     | Rows rendered in `Fixed` mode and fallback for `Fill`. |
+| `maxSkeletonRows`       | `int`                          | `10`    | Maximum rows calculated in `Fill` mode.               |
+| `skeletonRowsMode`      | `ui5x.loading.SkeletonRowMode` | `Fixed` | Row-count strategy: `Fixed` or `Fill`.                |
+| `dynamicSkeletonWidths` | `boolean`                      | `false` | Vary skeleton widths across cells.                    |
+| `animated`              | `boolean`                      | `true`  | Enable the skeleton shimmer animation.                |
+
+| Aggregation | Type          | Cardinality | Description                                      |
+| ----------- | ------------- | ----------- | ------------------------------------------------ |
+| `table`     | `sap.m.Table` | 0..1        | Default aggregation containing the actual data. |
+
+### Accordion
+
+`Accordion` displays a collection of expandable `AccordionItem` sections. By default, expanding
+one item collapses the other toggleable items. Set `multipleExpansion` to `true` to allow several
+sections to remain open at the same time.
+
+![Animated preview of the UI5X Accordion control](docs/assets/accordion-preview.gif)
+
+```xml
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:layout="ui5x.layout"
+  xmlns:m="sap.m">
+
+  <layout:Accordion
+    width="30rem"
+    multipleExpansion="false"
+    itemToggle=".onItemToggle">
+
+    <layout:AccordionItem
+      title="General information"
+      expanded="true">
+      <m:Text text="Content of the first section" />
+    </layout:AccordionItem>
+
+    <layout:AccordionItem title="Details">
+      <m:VBox>
+        <m:Label
+          text="Company name"
+          labelFor="companyName" />
+        <m:Input
+          id="companyName"
+          value="{/company/name}"
+          width="100%" />
+        <m:HBox class="sapUiSmallMarginTop">
+          <m:Button
+            text="Save"
+            type="Emphasized"
+            press=".onSave" />
+          <m:Button
+            text="Cancel"
+            press=".onCancel"
+            class="sapUiTinyMarginBegin" />
+        </m:HBox>
+      </m:VBox>
+    </layout:AccordionItem>
+
+    <layout:AccordionItem
+      title="Always expanded"
+      expanded="true"
+      toggleable="false">
+      <m:Text text="This section cannot be collapsed" />
+    </layout:AccordionItem>
+
+  </layout:Accordion>
+
+</mvc:View>
+```
+
+| `Accordion` property | Type                  | Default | Description                                      |
+| -------------------- | --------------------- | ------- | ------------------------------------------------ |
+| `multipleExpansion`  | `boolean`             | `false` | Allow more than one item to be expanded.         |
+| `width`              | `sap.ui.core.CSSSize` | `null`  | Width of the accordion, such as `"100%"`.        |
+
+| `AccordionItem` property | Type      | Default | Description                                             |
+| ------------------------ | --------- | ------- | ------------------------------------------------------- |
+| `title`                  | `string`  | `""`    | Text displayed in the item header.                      |
+| `expanded`               | `boolean` | `false` | Whether the content is expanded.                        |
+| `toggleable`             | `boolean` | `true`  | Whether user and accordion logic may change the state.  |
+| `enabled`                | `boolean` | `true`  | Whether the item can be toggled through user input.     |
+
+| API          | Type                   | Description                                             |
+| ------------ | ---------------------- | ------------------------------------------------------- |
+| `items`      | `AccordionItem[]`      | Default aggregation containing the accordion sections. |
+| `itemToggle` | Event                  | Fired after an item is toggled through user input.      |
+
 ## Development
 
 ```bash
@@ -228,7 +375,8 @@ npm start
 ```
 
 `npm start` regenerates the control interfaces in watch mode and serves the test pages at
-`http://localhost:8080/test-resources/ui5x/Skeleton.html` and `.../LoadingContainer.html`.
+`http://localhost:8080/test-resources/ui5x/Skeleton.html`. Additional manual demos include
+`LoadingContainer.html`, `LoadingResponsiveTable.html` and `Accordion.html` in the same directory.
 
 | Script                      | What it does |
 | --------------------------- | ------------ |
@@ -251,9 +399,14 @@ src/ui5x/
   loading/
     Skeleton.ts                  placeholder control
     LoadingContainer.ts          loading-state container
+    LoadingResponsiveTable.ts    responsive table skeleton wrapper
     SkeletonType.ts              Line | Rectangle | Circle enum
     renderer/                    control renderers
-  themes/                        LESS sources (base + sap_horizon)
+  layout/
+    Accordion.ts                 accordion container
+    AccordionItem.ts             expandable section
+    renderer/                    control renderers
+  themes/                        LESS sources grouped by control namespace
 test/ui5x/
   *.html                         manual demo pages
   qunit/                         unit tests
