@@ -6,9 +6,116 @@
 
     <title>UI5X LoadingResponsiveTable Demo</title>
 
-    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
-        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
-        </script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 1280px;
+            height: 720px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+        }
+
+        .showcaseTable {
+            width: 64rem;
+
+            box-sizing: border-box;
+
+            background: var(--sapGroup_ContentBackground);
+
+            border: 1px solid var(--sapGroup_ContentBorderColor);
+            border-radius: 0.75rem;
+
+            box-shadow: var(--sapContent_Shadow0);
+
+            overflow: hidden;
+        }
+
+        /*
+         * Keep both the source table and the internally generated
+         * skeleton table geometrically identical.
+         */
+
+        .showcaseTable .sapMListTblHeader {
+            height: 2.75rem;
+        }
+
+        .showcaseTable .sapMListTblHeaderCell {
+            height: 2.75rem;
+
+            box-sizing: border-box;
+
+            vertical-align: middle;
+        }
+
+        .showcaseTable .sapMListTblRow {
+            height: 3.5rem;
+        }
+
+        .showcaseTable .sapMListTblCell {
+            height: 3.5rem;
+
+            box-sizing: border-box;
+
+            vertical-align: middle;
+        }
+
+        /*
+         * Softer separators make the table feel less spreadsheet-like.
+         */
+
+        .showcaseTable .sapMListTblCell {
+            border-bottom-color:
+                color-mix(
+                    in srgb,
+                    var(--sapList_BorderColor) 55%,
+                    transparent
+                );
+        }
+
+        /*
+         * Customer / company hierarchy.
+         */
+
+        .rowPrimary {
+            font-weight: 600;
+            color: var(--sapTextColor);
+        }
+
+        .rowSecondary {
+            margin-top: 0.125rem;
+
+            font-size: 0.75rem;
+            color: var(--sapContent_LabelColor);
+        }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
 
     <script>
         sap.ui.require([
@@ -20,7 +127,8 @@
             "sap/m/ColumnListItem",
             "sap/m/Text",
             "sap/m/ObjectStatus",
-            "sap/m/Button",
+            "sap/m/ObjectNumber",
+            "sap/m/Avatar",
             "sap/m/HBox",
             "sap/m/VBox"
         ], function (
@@ -32,7 +140,8 @@
             ColumnListItem,
             Text,
             ObjectStatus,
-            Button,
+            ObjectNumber,
+            Avatar,
             HBox,
             VBox
         ) {
@@ -43,23 +152,27 @@
             });
 
             const sourceTable = new Table({
+                width: "100%",
+                fixedLayout: true,
+                showSeparators: "Inner",
+
                 columns: [
                     new Column({
-                        width: "15%",
+                        width: "18rem",
                         header: new Text({
-                            text: "Name"
+                            text: "Customer"
                         })
                     }),
 
                     new Column({
-                        width: "15%",
+                        width: "14rem",
                         header: new Text({
                             text: "Company"
                         })
                     }),
 
                     new Column({
-                        width: "10%",
+                        width: "9rem",
                         minScreenWidth: "Tablet",
                         demandPopin: true,
                         header: new Text({
@@ -68,21 +181,20 @@
                     }),
 
                     new Column({
-                        width: "10%",
+                        width: "10rem",
                         hAlign: "End",
                         minScreenWidth: "Tablet",
                         demandPopin: true,
                         header: new Text({
-                            text: "Amount"
+                            text: "Revenue"
                         })
                     }),
 
                     new Column({
-                        width: "50%",
                         minScreenWidth: "Desktop",
                         demandPopin: true,
                         header: new Text({
-                            text: "City"
+                            text: "Location"
                         })
                     })
                 ]
@@ -93,13 +205,48 @@
                 templateShareable: false,
 
                 template: new ColumnListItem({
+                    vAlign: "Middle",
+
                     cells: [
-                        new Text({
-                            text: "{name}"
+                        new HBox({
+                            alignItems: "Center",
+                            gap: "0.75rem",
+
+                            items: [
+                                new Avatar({
+                                    initials: "{initials}",
+                                    displaySize: "XS",
+                                    backgroundColor: "{avatarColor}"
+                                }),
+
+                                new VBox({
+                                    items: [
+                                        new Text({
+                                            text: "{name}",
+                                            wrapping: false
+                                        }).addStyleClass("rowPrimary"),
+
+                                        new Text({
+                                            text: "{email}",
+                                            wrapping: false
+                                        }).addStyleClass("rowSecondary")
+                                    ]
+                                })
+                            ]
                         }),
 
-                        new Text({
-                            text: "{company}"
+                        new VBox({
+                            items: [
+                                new Text({
+                                    text: "{company}",
+                                    wrapping: false
+                                }).addStyleClass("rowPrimary"),
+
+                                new Text({
+                                    text: "{industry}",
+                                    wrapping: false
+                                }).addStyleClass("rowSecondary")
+                            ]
                         }),
 
                         new ObjectStatus({
@@ -107,12 +254,24 @@
                             state: "{statusState}"
                         }),
 
-                        new Text({
-                            text: "{amount}"
+                        new ObjectNumber({
+                            number: "{amount}",
+                            unit: "EUR",
+                            emphasized: false
                         }),
 
-                        new Text({
-                            text: "{city}"
+                        new VBox({
+                            items: [
+                                new Text({
+                                    text: "{city}",
+                                    wrapping: false
+                                }).addStyleClass("rowPrimary"),
+
+                                new Text({
+                                    text: "{country}",
+                                    wrapping: false
+                                }).addStyleClass("rowSecondary")
+                            ]
                         })
                     ]
                 })
@@ -120,10 +279,14 @@
 
             const loadingTable = new LoadingResponsiveTable({
                 loading: true,
-                skeletonRowsMode: "Fill",
+
+                skeletonRowsMode: "Fixed",
                 skeletonRows: 5,
-                maxSkeletonRows: 50,
+                maxSkeletonRows: 5,
+
                 animated: true,
+                dynamicSkeletonWidths: true,
+
                 table: sourceTable
             });
 
@@ -131,142 +294,123 @@
 
             const loadedRows = [
                 {
+                    initials: "MR",
+                    avatarColor: "Accent1",
+
                     name: "Mario Rossi",
+                    email: "mario.rossi@example.com",
+
                     company: "Acme S.p.A.",
+                    industry: "Manufacturing",
+
                     status: "Active",
                     statusState: "Success",
-                    amount: "€ 125,000",
-                    city: "Milan"
+
+                    amount: "125,000",
+
+                    city: "Milan",
+                    country: "Italy"
                 },
+
                 {
+                    initials: "LB",
+                    avatarColor: "Accent2",
+
                     name: "Laura Bianchi",
+                    email: "laura.bianchi@example.com",
+
                     company: "Example S.r.l.",
+                    industry: "Consulting",
+
                     status: "Pending",
                     statusState: "Warning",
-                    amount: "€ 87,500",
-                    city: "Rome"
+
+                    amount: "87,500",
+
+                    city: "Rome",
+                    country: "Italy"
                 },
+
                 {
+                    initials: "GV",
+                    avatarColor: "Accent3",
+
                     name: "Giuseppe Verdi",
+                    email: "giuseppe.verdi@example.com",
+
                     company: "Northwind",
+                    industry: "Retail",
+
                     status: "Active",
                     statusState: "Success",
-                    amount: "€ 310,000",
-                    city: "Turin"
+
+                    amount: "310,000",
+
+                    city: "Turin",
+                    country: "Italy"
                 },
+
                 {
+                    initials: "AN",
+                    avatarColor: "Accent4",
+
                     name: "Anna Neri",
+                    email: "anna.neri@example.com",
+
                     company: "Contoso",
+                    industry: "Technology",
+
                     status: "Inactive",
                     statusState: "Error",
-                    amount: "€ 42,000",
-                    city: "Naples"
+
+                    amount: "42,000",
+
+                    city: "Naples",
+                    country: "Italy"
                 },
+
                 {
+                    initials: "LG",
+                    avatarColor: "Accent5",
+
                     name: "Luca Gialli",
+                    email: "luca.gialli@example.com",
+
                     company: "Fabrikam",
+                    industry: "Logistics",
+
                     status: "Active",
                     statusState: "Success",
-                    amount: "€ 198,000",
-                    city: "Bologna"
-                },
-                {
-                    name: "Sara Romano",
-                    company: "Adventure Works",
-                    status: "Pending",
-                    statusState: "Warning",
-                    amount: "€ 76,200",
-                    city: "Florence"
-                },
-                {
-                    name: "Marco Costa",
-                    company: "Tailspin Toys",
-                    status: "Active",
-                    statusState: "Success",
-                    amount: "€ 221,400",
-                    city: "Genoa"
+
+                    amount: "198,000",
+
+                    city: "Bologna",
+                    country: "Italy"
                 }
             ];
 
-            const loadingButton = new Button({
-                text: "Load data",
-
-                press: function () {
-                    if (loadingTable.getLoading()) {
-                        model.setProperty("/rows", loadedRows);
-                        loadingTable.setLoading(false);
-
-                        loadingButton.setText("Show skeleton");
-                    } else {
-                        model.setProperty("/rows", []);
-                        loadingTable.setLoading(true);
-
-                        loadingButton.setText("Load data");
-                    }
-                }
-            });
-
-            const modeButton = new Button({
-                text: "Mode: Fill",
-
-                press: function () {
-                    const currentMode =
-                        loadingTable.getSkeletonRowsMode();
-
-                    if (currentMode === "Fill") {
-                        loadingTable.setSkeletonRowsMode("Fixed");
-                        loadingTable.setSkeletonRows(5);
-
-                        modeButton.setText("Mode: Fixed");
-                    } else {
-                        loadingTable.setSkeletonRowsMode("Fill");
-
-                        modeButton.setText("Mode: Fill");
-                    }
-                }
-            });
-
-            const animationButton = new Button({
-                text: "Animation: On",
-
-                press: function () {
-                    const animated =
-                        loadingTable.getAnimated();
-
-                    loadingTable.setAnimated(!animated);
-
-                    animationButton.setText(
-                        animated
-                            ? "Animation: Off"
-                            : "Animation: On"
-                    );
-                }
-            });
-
-            const toolbar = new HBox({
+            new VBox({
+                width: "64rem",
                 items: [
-                    loadingButton,
-                    modeButton,
-                    animationButton
-                ]
-            });
-
-            loadingButton.addStyleClass("sapUiTinyMarginEnd");
-            modeButton.addStyleClass("sapUiTinyMarginEnd");
-
-            const page = new VBox({
-                width: "100%",
-                items: [
-                    toolbar,
                     loadingTable
                 ]
-            });
+            })
+                .addStyleClass("showcaseTable")
+                .placeAt("content");
 
-            toolbar.addStyleClass("sapUiSmallMarginBottom");
+            function play() {
+                model.setProperty("/rows", []);
+                loadingTable.setLoading(true);
 
-            page.addStyleClass("sapUiMediumMargin");
+                setTimeout(function () {
+                    model.setProperty("/rows", loadedRows);
+                    loadingTable.setLoading(false);
+                }, 1800);
 
-            page.placeAt("content");
+                setTimeout(play, 4400);
+            }
+
+            play();
         });
     </script>
 </head>

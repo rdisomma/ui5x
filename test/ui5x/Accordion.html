@@ -6,9 +6,84 @@
 
     <title>UI5X Accordion Demo</title>
 
-    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
-        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
-        </script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 720px;
+            height: 405px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+        }
+
+        .showcaseSurface {
+            width: 35rem;
+            min-height: 18rem;
+
+            box-sizing: border-box;
+        }
+
+        .showcaseAccordion {
+            width: 100%;
+        }
+
+        .showcaseSectionContent {
+            min-height: 4.5rem;
+            box-sizing: border-box;
+        }
+
+        .showcaseRow {
+            width: 100%;
+        }
+
+        .showcaseLabel {
+            font-size: 0.75rem;
+            color: var(--sapContent_LabelColor);
+        }
+
+        .showcaseValue {
+            margin-top: 0.125rem;
+
+            color: var(--sapTextColor);
+            font-weight: 500;
+        }
+
+        .showcaseDescription {
+            margin-top: 0.5rem;
+
+            font-size: 0.8125rem;
+            line-height: 1.4;
+
+            color: var(--sapContent_LabelColor);
+        }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
 
     <script>
         sap.ui.require([
@@ -17,32 +92,18 @@
             "ui5x/layout/AccordionItem",
             "sap/m/VBox",
             "sap/m/HBox",
-            "sap/m/Title",
             "sap/m/Text",
-            "sap/m/Input",
-            "sap/m/Button",
-            "sap/m/Label"
+            "sap/m/ObjectStatus"
         ], function (
             library,
             Accordion,
             AccordionItem,
             VBox,
             HBox,
-            Title,
             Text,
-            Input,
-            Button,
-            Label
+            ObjectStatus
         ) {
             "use strict";
-
-            const statusText = new Text({
-                text: "No interaction yet."
-            });
-
-            /*
-             * Accordion items
-             */
 
             const generalItem = new AccordionItem({
                 title: "General information",
@@ -50,247 +111,177 @@
 
                 content: [
                     new VBox({
-                        items: [
-                            new Label({
-                                text: "Company name",
-                                labelFor: "companyName"
-                            }),
+                        width: "100%",
 
-                            new Input("companyName", {
-                                value: "Acme S.p.A.",
-                                width: "20rem"
-                            }),
+                        items: [
+                            new HBox({
+                                width: "100%",
+                                justifyContent: "SpaceBetween",
+                                alignItems: "Center",
+
+                                items: [
+                                    new VBox({
+                                        items: [
+                                            new Text({
+                                                text: "Organization"
+                                            }).addStyleClass("showcaseLabel"),
+
+                                            new Text({
+                                                text: "Acme S.p.A."
+                                            }).addStyleClass("showcaseValue")
+                                        ]
+                                    }),
+
+                                    new ObjectStatus({
+                                        text: "Active",
+                                        state: "Success"
+                                    })
+                                ]
+                            }).addStyleClass("showcaseRow"),
 
                             new Text({
-                                text: "This section is initially expanded."
-                            }).addStyleClass("sapUiSmallMarginTop")
+                                text: "Primary workspace used for customer and account management."
+                            }).addStyleClass("showcaseDescription")
                         ]
-                    })
+                    }).addStyleClass("showcaseSectionContent")
                 ]
             });
 
-            const detailsItem = new AccordionItem({
-                title: "Details",
+            const appearanceItem = new AccordionItem({
+                title: "Appearance",
 
                 content: [
-                    new Text({
-                        text: "AccordionItem can contain any sap.ui.core.Control."
-                    }),
+                    new VBox({
+                        width: "100%",
 
-                    new HBox({
                         items: [
-                            new Button({
-                                text: "Primary action",
-                                type: "Emphasized"
-                            }),
+                            new HBox({
+                                width: "100%",
+                                justifyContent: "SpaceBetween",
+                                alignItems: "Center",
 
-                            new Button({
-                                text: "Secondary action"
-                            }).addStyleClass("sapUiTinyMarginBegin")
+                                items: [
+                                    new VBox({
+                                        items: [
+                                            new Text({
+                                                text: "Theme"
+                                            }).addStyleClass("showcaseLabel"),
+
+                                            new Text({
+                                                text: "SAP Horizon"
+                                            }).addStyleClass("showcaseValue")
+                                        ]
+                                    }),
+
+                                    new ObjectStatus({
+                                        text: "Default",
+                                        state: "Information"
+                                    })
+                                ]
+                            }).addStyleClass("showcaseRow"),
+
+                            new Text({
+                                text: "Uses the active UI5 theme and adapts automatically to supported variants."
+                            }).addStyleClass("showcaseDescription")
                         ]
-                    }).addStyleClass("sapUiSmallMarginTop")
+                    }).addStyleClass("showcaseSectionContent")
                 ]
             });
 
-            const notesItem = new AccordionItem({
-                title: "Notes",
+            const notificationsItem = new AccordionItem({
+                title: "Notifications",
 
                 content: [
-                    new Text({
-                        text: "This is another expandable section."
-                    })
+                    new VBox({
+                        width: "100%",
+
+                        items: [
+                            new HBox({
+                                width: "100%",
+                                justifyContent: "SpaceBetween",
+                                alignItems: "Center",
+
+                                items: [
+                                    new VBox({
+                                        items: [
+                                            new Text({
+                                                text: "Activity updates"
+                                            }).addStyleClass("showcaseLabel"),
+
+                                            new Text({
+                                                text: "Important changes only"
+                                            }).addStyleClass("showcaseValue")
+                                        ]
+                                    }),
+
+                                    new ObjectStatus({
+                                        text: "Enabled",
+                                        state: "Success"
+                                    })
+                                ]
+                            }).addStyleClass("showcaseRow"),
+
+                            new Text({
+                                text: "Receive notifications when relevant workspace activity requires attention."
+                            }).addStyleClass("showcaseDescription")
+                        ]
+                    }).addStyleClass("showcaseSectionContent")
                 ]
             });
-
-            const disabledItem = new AccordionItem({
-                title: "Disabled section",
-                enabled: false,
-
-                content: [
-                    new Text({
-                        text: "This content should not be reachable through user interaction."
-                    })
-                ]
-            });
-
-            const collapsedItem = new AccordionItem({
-                title: "Collapsed section",
-                expanded: false,
-                toggleable: false,
-
-                content: [
-                    new Text({
-                        text: "This content should not be reachable through user interaction."
-                    })
-                ]
-            });
-
-            const expandedItem = new AccordionItem({
-                title: "Expanded section",
-                expanded: true,
-                toggleable: false,
-
-                content: [
-                    new Text({
-                        text: "This content can not be collapsed"
-                    })
-                ]
-            });
-
-            /*
-             * Accordion
-             */
 
             const accordion = new Accordion({
-                width: "50%",
                 multipleExpansion: false,
 
                 items: [
                     generalItem,
-                    detailsItem,
-                    notesItem,
-                    expandedItem,
-                    collapsedItem,
-                    disabledItem
-                ],
-
-                itemToggle: function (event) {
-                    const item = event.getParameter("item");
-                    const expanded = event.getParameter("expanded");
-
-                    statusText.setText(
-                        `"${item.getTitle()}" is now ${expanded ? "expanded" : "collapsed"
-                        }.`
-                    );
-                }
-            });
-
-            /*
-             * Test controls
-             */
-
-            const modeButton = new Button({
-                text: "Mode: Single expansion",
-
-                press: function () {
-                    const multiple =
-                        accordion.getMultipleExpansion();
-
-                    accordion.setMultipleExpansion(!multiple);
-
-                    modeButton.setText(
-                        multiple
-                            ? "Mode: Single expansion"
-                            : "Mode: Multiple expansion"
-                    );
-
-                    statusText.setText(
-                        multiple
-                            ? "Single expansion enabled."
-                            : "Multiple expansion enabled."
-                    );
-                }
-            });
-
-            const expandAllButton = new Button({
-                text: "Expand all",
-
-                press: function () {
-                    accordion.setMultipleExpansion(true);
-
-                    modeButton.setText(
-                        "Mode: Multiple expansion"
-                    );
-
-                    generalItem.setExpanded(true);
-                    detailsItem.setExpanded(true);
-                    notesItem.setExpanded(true);
-
-                    statusText.setText(
-                        "All enabled items expanded programmatically."
-                    );
-                }
-            });
-
-            const collapseAllButton = new Button({
-                text: "Collapse all",
-
-                press: function () {
-                    generalItem.setExpanded(false);
-                    detailsItem.setExpanded(false);
-                    notesItem.setExpanded(false);
-
-                    statusText.setText(
-                        "All items collapsed programmatically."
-                    );
-                }
-            });
-
-            const resetButton = new Button({
-                text: "Reset",
-
-                press: function () {
-                    accordion.setMultipleExpansion(false);
-
-                    generalItem.setExpanded(true);
-                    detailsItem.setExpanded(false);
-                    notesItem.setExpanded(false);
-
-                    modeButton.setText(
-                        "Mode: Single expansion"
-                    );
-
-                    statusText.setText(
-                        "Accordion reset."
-                    );
-                }
-            });
-
-            const toolbar = new HBox({
-                wrap: "Wrap",
-
-                items: [
-                    modeButton,
-                    expandAllButton,
-                    collapseAllButton,
-                    resetButton
+                    appearanceItem,
+                    notificationsItem
                 ]
-            });
+            }).addStyleClass("showcaseAccordion");
 
-            modeButton.addStyleClass("sapUiTinyMarginEnd");
-            expandAllButton.addStyleClass("sapUiTinyMarginEnd");
-            collapseAllButton.addStyleClass("sapUiTinyMarginEnd");
-
-            /*
-             * Test page
-             */
-
-            const page = new VBox({
-                width: "100%",
+            new VBox({
+                width: "35rem",
 
                 items: [
-                    new Title({
-                        text: "UI5X Accordion",
-                        level: "H1"
-                    }),
-
-                    new Text({
-                        text: "Test single and multiple expansion, keyboard interaction, disabled items and complex content."
-                    }).addStyleClass("sapUiSmallMarginBottom"),
-
-                    toolbar,
-
-                    statusText
-                        .addStyleClass("sapUiSmallMarginTop")
-                        .addStyleClass("sapUiSmallMarginBottom"),
-
                     accordion
                 ]
-            });
+            })
+                .addStyleClass("showcaseSurface")
+                .placeAt("content");
 
-            page.addStyleClass("sapUiMediumMargin");
+            function showItem(item) {
+                generalItem.setExpanded(
+                    item === generalItem
+                );
 
-            page.placeAt("content");
+                appearanceItem.setExpanded(
+                    item === appearanceItem
+                );
+
+                notificationsItem.setExpanded(
+                    item === notificationsItem
+                );
+            }
+
+            function play() {
+                showItem(generalItem);
+
+                setTimeout(function () {
+                    showItem(appearanceItem);
+                }, 1800);
+
+                setTimeout(function () {
+                    showItem(notificationsItem);
+                }, 3600);
+
+                setTimeout(function () {
+                    showItem(generalItem);
+                }, 5400);
+
+                setTimeout(play, 7200);
+            }
+
+            play();
         });
     </script>
 </head>

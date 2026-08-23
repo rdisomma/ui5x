@@ -6,38 +6,89 @@
 
     <title>UI5X Skeleton Demo</title>
 
-    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
-        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
-        </script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 640px;
+            height: 360px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+        }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
 
     <script>
         sap.ui.require([
             "ui5x/library",
             "ui5x/loading/Skeleton",
-            "sap/m/VBox"
-        ], function (library, Skeleton, VBox) {
+            "sap/m/VBox",
+            "sap/m/HBox",
+            "sap/m/FlexItemData"
+        ], function (
+            library,
+            Skeleton,
+            VBox,
+            HBox,
+            FlexItemData
+        ) {
 
             new VBox({
+                width: "24rem",
                 gap: "1rem",
                 items: [
+                    new HBox({
+                        width: "100%",
+                        alignItems: "Center",
+                        gap: "1rem",
+                        items: [
+                            new Skeleton({
+                                type: "Circle"
+                            }),
+
+                            new Skeleton({
+                                type: "Line",
+                                lines: 3,
+                                layoutData: new FlexItemData({
+                                    growFactor: 1,
+                                    baseSize: "0"
+                                })
+                            })
+                        ]
+                    }),
+
                     new Skeleton({
                         type: "Rectangle",
-                        width: "20rem",
-                        animated: true
-                    }),
-
-                    new Skeleton({
-                        type: "Line",
-                        width: "20rem",
-                        lines: 50
-                    }),
-
-                    new Skeleton({
-                        type: "Circle",
+                        width: "100%"
                     })
                 ]
-            }).placeAt("content");;
-
+            }).placeAt("content");
         });
     </script>
 </head>

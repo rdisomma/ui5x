@@ -4,11 +4,89 @@
 <head>
     <meta charset="utf-8">
 
-    <title>UI5X Skeleton Demo</title>
+    <title>UI5X LoadingContainer Demo</title>
 
-    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
-        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
-        </script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 640px;
+            height: 360px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+        }
+
+        .showcasePanel {
+            width: 26rem;
+            box-sizing: border-box;
+
+            padding: 1.25rem;
+
+            background: var(--sapGroup_ContentBackground);
+            border: 1px solid var(--sapGroup_ContentBorderColor);
+            border-radius: 0.5rem;
+        }
+
+        .showcaseState {
+            width: 100%;
+            height: 11.25rem;
+            box-sizing: border-box;
+        }
+
+        .showcaseHeaderContent {
+            min-width: 0;
+        }
+
+        .showcaseLabel {
+            margin-bottom: 0.125rem;
+
+            font-size: 0.75rem;
+            color: var(--sapContent_LabelColor);
+        }
+
+        .showcaseTitle {
+            color: var(--sapGroup_TitleTextColor);
+        }
+
+        .showcaseSubtitle {
+            margin-top: 0.125rem;
+
+            font-size: 0.875rem;
+            color: var(--sapContent_LabelColor);
+        }
+
+        .showcaseDescription {
+            line-height: 1.45;
+            color: var(--sapTextColor);
+        }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
 
     <script>
         sap.ui.require([
@@ -18,8 +96,11 @@
             "sap/m/VBox",
             "sap/m/HBox",
             "sap/m/Text",
-            "sap/m/Button",
-            "sap/m/FlexItemData",
+            "sap/m/Title",
+            "sap/m/Avatar",
+            "sap/m/ObjectStatus",
+            "sap/m/MessageStrip",
+            "sap/m/FlexItemData"
         ], function (
             library,
             Skeleton,
@@ -27,72 +108,183 @@
             VBox,
             HBox,
             Text,
-            Button,
+            Title,
+            Avatar,
+            ObjectStatus,
+            MessageStrip,
             FlexItemData
         ) {
-            const skeletonStructure = new VBox({
-                width: "20%",
-                gap: "1rem",
+
+            /*
+             * Loading state
+             *
+             * Circle    -> Avatar
+             * Line      -> Text content / status
+             * Rectangle -> MessageStrip
+             */
+
+            const placeholder = new VBox({
+                width: "100%",
+                height: "11.25rem",
+                justifyContent: "SpaceBetween",
                 items: [
                     new HBox({
+                        width: "100%",
+                        alignItems: "Center",
                         gap: "1rem",
                         items: [
                             new Skeleton({
                                 type: "Circle",
                                 width: "3rem"
                             }),
-                            new Skeleton({
-                                type: "Rectangle",
-                                lines: 3,
+
+                            new VBox({
+                                gap: "0.5rem",
+                                items: [
+                                    new Skeleton({
+                                        type: "Line",
+                                        width: "10rem"
+                                    }),
+
+                                    new Skeleton({
+                                        type: "Line",
+                                        width: "14rem"
+                                    })
+                                ],
                                 layoutData: new FlexItemData({
                                     growFactor: 1,
                                     baseSize: "0"
                                 })
+                            }),
+
+                            new Skeleton({
+                                type: "Line",
+                                width: "3.5rem"
                             })
                         ]
                     }),
+
                     new Skeleton({
                         type: "Line",
-                        lines: 3
+                        lines: 3,
+                        width: "100%"
+                    }),
+
+                    new Skeleton({
+                        type: "Rectangle",
+                        width: "100%"
                     })
                 ]
-            });
+            }).addStyleClass("showcaseState");
 
-            const container = new LoadingContainer({
+
+            /*
+             * Loaded state
+             */
+
+            const content = new VBox({
+                width: "100%",
+                height: "11.25rem",
+                justifyContent: "SpaceBetween",
+                items: [
+                    new HBox({
+                        width: "100%",
+                        alignItems: "Center",
+                        gap: "1rem",
+                        items: [
+                            new Avatar({
+                                initials: "UX",
+                                displaySize: "S",
+                                backgroundColor: "Accent6"
+                            }),
+
+                            new VBox({
+                                items: [
+                                    new Text({
+                                        text: "Project overview"
+                                    }).addStyleClass("showcaseLabel"),
+
+                                    new Title({
+                                        text: "UI5X Component Library",
+                                        level: "H4"
+                                    }).addStyleClass("showcaseTitle"),
+
+                                    new Text({
+                                        text: "Modern UX extensions for UI5",
+                                        wrapping: false
+                                    }).addStyleClass("showcaseSubtitle")
+                                ],
+                                layoutData: new FlexItemData({
+                                    growFactor: 1,
+                                    baseSize: "0"
+                                })
+                            }).addStyleClass("showcaseHeaderContent"),
+
+                            new ObjectStatus({
+                                text: "Ready",
+                                state: "Success",
+                                inverted: true
+                            })
+                        ]
+                    }),
+
+                    new Text({
+                        text:
+                            "Build expressive loading experiences while keeping " +
+                            "application content clean and declarative.",
+                        wrapping: true
+                    }).addStyleClass("showcaseDescription"),
+
+                    new MessageStrip({
+                        text: "Content loaded successfully.",
+                        type: "Information",
+                        showIcon: true,
+                        showCloseButton: false
+                    })
+                ]
+            }).addStyleClass("showcaseState");
+
+
+            /*
+             * LoadingContainer
+             */
+
+            const loadingContainer = new LoadingContainer({
                 loading: true,
-
-                placeholder: skeletonStructure,
-
-                content: new Text({
-                    text: "Contenuto caricato!"
-                })
+                placeholder: placeholder,
+                content: content
             });
 
-            const simpleContainer = new LoadingContainer({
-                loading: true,
-                skeletonType: "Line",
-                width: "5rem",
-                skeletonLines: 3,
-                content: new Text({
-                    text: "Contenuto caricato!"
-                })
-            });
+
+            /*
+             * Stable showcase surface
+             */
 
             new VBox({
-                gap: "10rem",
+                width: "26rem",
                 items: [
-                    container,
-                    simpleContainer,
-                    new Button({
-                        text: "Toggle loading",
-                        press: function () {
-                            container.setLoading(
-                                !container.getLoading()
-                            );
-                        }
-                    })
+                    loadingContainer
                 ]
-            }).placeAt("content");
+            })
+                .addStyleClass("showcasePanel")
+                .placeAt("content");
+
+
+            /*
+             * Automatic loop for recording
+             */
+
+            function play() {
+                loadingContainer.setLoading(true);
+
+                setTimeout(function () {
+                    loadingContainer.setLoading(false);
+                }, 1800);
+
+                setTimeout(play, 4200);
+            }
+
+            play();
         });
     </script>
 </head>
