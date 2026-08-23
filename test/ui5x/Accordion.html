@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X Accordion Demo</title>
+
+    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
+        </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/library",
+            "ui5x/layout/Accordion",
+            "ui5x/layout/AccordionItem",
+            "sap/m/VBox",
+            "sap/m/HBox",
+            "sap/m/Title",
+            "sap/m/Text",
+            "sap/m/Input",
+            "sap/m/Button",
+            "sap/m/Label"
+        ], function (
+            library,
+            Accordion,
+            AccordionItem,
+            VBox,
+            HBox,
+            Title,
+            Text,
+            Input,
+            Button,
+            Label
+        ) {
+            "use strict";
+
+            const statusText = new Text({
+                text: "No interaction yet."
+            });
+
+            /*
+             * Accordion items
+             */
+
+            const generalItem = new AccordionItem({
+                title: "General information",
+                expanded: true,
+
+                content: [
+                    new VBox({
+                        items: [
+                            new Label({
+                                text: "Company name",
+                                labelFor: "companyName"
+                            }),
+
+                            new Input("companyName", {
+                                value: "Acme S.p.A.",
+                                width: "20rem"
+                            }),
+
+                            new Text({
+                                text: "This section is initially expanded."
+                            }).addStyleClass("sapUiSmallMarginTop")
+                        ]
+                    })
+                ]
+            });
+
+            const detailsItem = new AccordionItem({
+                title: "Details",
+
+                content: [
+                    new Text({
+                        text: "AccordionItem can contain any sap.ui.core.Control."
+                    }),
+
+                    new HBox({
+                        items: [
+                            new Button({
+                                text: "Primary action",
+                                type: "Emphasized"
+                            }),
+
+                            new Button({
+                                text: "Secondary action"
+                            }).addStyleClass("sapUiTinyMarginBegin")
+                        ]
+                    }).addStyleClass("sapUiSmallMarginTop")
+                ]
+            });
+
+            const notesItem = new AccordionItem({
+                title: "Notes",
+
+                content: [
+                    new Text({
+                        text: "This is another expandable section."
+                    })
+                ]
+            });
+
+            const disabledItem = new AccordionItem({
+                title: "Disabled section",
+                enabled: false,
+
+                content: [
+                    new Text({
+                        text: "This content should not be reachable through user interaction."
+                    })
+                ]
+            });
+
+            const collapsedItem = new AccordionItem({
+                title: "Collapsed section",
+                expanded: false,
+                toggleable: false,
+
+                content: [
+                    new Text({
+                        text: "This content should not be reachable through user interaction."
+                    })
+                ]
+            });
+
+            const expandedItem = new AccordionItem({
+                title: "Expanded section",
+                expanded: true,
+                toggleable: false,
+
+                content: [
+                    new Text({
+                        text: "This content can not be collapsed"
+                    })
+                ]
+            });
+
+            /*
+             * Accordion
+             */
+
+            const accordion = new Accordion({
+                width: "50%",
+                multipleExpansion: false,
+
+                items: [
+                    generalItem,
+                    detailsItem,
+                    notesItem,
+                    expandedItem,
+                    collapsedItem,
+                    disabledItem
+                ],
+
+                itemToggle: function (event) {
+                    const item = event.getParameter("item");
+                    const expanded = event.getParameter("expanded");
+
+                    statusText.setText(
+                        `"${item.getTitle()}" is now ${expanded ? "expanded" : "collapsed"
+                        }.`
+                    );
+                }
+            });
+
+            /*
+             * Test controls
+             */
+
+            const modeButton = new Button({
+                text: "Mode: Single expansion",
+
+                press: function () {
+                    const multiple =
+                        accordion.getMultipleExpansion();
+
+                    accordion.setMultipleExpansion(!multiple);
+
+                    modeButton.setText(
+                        multiple
+                            ? "Mode: Single expansion"
+                            : "Mode: Multiple expansion"
+                    );
+
+                    statusText.setText(
+                        multiple
+                            ? "Single expansion enabled."
+                            : "Multiple expansion enabled."
+                    );
+                }
+            });
+
+            const expandAllButton = new Button({
+                text: "Expand all",
+
+                press: function () {
+                    accordion.setMultipleExpansion(true);
+
+                    modeButton.setText(
+                        "Mode: Multiple expansion"
+                    );
+
+                    generalItem.setExpanded(true);
+                    detailsItem.setExpanded(true);
+                    notesItem.setExpanded(true);
+
+                    statusText.setText(
+                        "All enabled items expanded programmatically."
+                    );
+                }
+            });
+
+            const collapseAllButton = new Button({
+                text: "Collapse all",
+
+                press: function () {
+                    generalItem.setExpanded(false);
+                    detailsItem.setExpanded(false);
+                    notesItem.setExpanded(false);
+
+                    statusText.setText(
+                        "All items collapsed programmatically."
+                    );
+                }
+            });
+
+            const resetButton = new Button({
+                text: "Reset",
+
+                press: function () {
+                    accordion.setMultipleExpansion(false);
+
+                    generalItem.setExpanded(true);
+                    detailsItem.setExpanded(false);
+                    notesItem.setExpanded(false);
+
+                    modeButton.setText(
+                        "Mode: Single expansion"
+                    );
+
+                    statusText.setText(
+                        "Accordion reset."
+                    );
+                }
+            });
+
+            const toolbar = new HBox({
+                wrap: "Wrap",
+
+                items: [
+                    modeButton,
+                    expandAllButton,
+                    collapseAllButton,
+                    resetButton
+                ]
+            });
+
+            modeButton.addStyleClass("sapUiTinyMarginEnd");
+            expandAllButton.addStyleClass("sapUiTinyMarginEnd");
+            collapseAllButton.addStyleClass("sapUiTinyMarginEnd");
+
+            /*
+             * Test page
+             */
+
+            const page = new VBox({
+                width: "100%",
+
+                items: [
+                    new Title({
+                        text: "UI5X Accordion",
+                        level: "H1"
+                    }),
+
+                    new Text({
+                        text: "Test single and multiple expansion, keyboard interaction, disabled items and complex content."
+                    }).addStyleClass("sapUiSmallMarginBottom"),
+
+                    toolbar,
+
+                    statusText
+                        .addStyleClass("sapUiSmallMarginTop")
+                        .addStyleClass("sapUiSmallMarginBottom"),
+
+                    accordion
+                ]
+            });
+
+            page.addStyleClass("sapUiMediumMargin");
+
+            page.placeAt("content");
+        });
+    </script>
+</head>
+
+<body class="sapUiBody sapUiSizeCompact">
+    <div id="content"></div>
+</body>
+
+</html>
