@@ -15,5 +15,8 @@
         <dependency>
             <libraryName>sap.m</libraryName>
         </dependency>
+        <dependency>
+            <libraryName>sap.ui.table</libraryName>
+        </dependency>
     </dependencies>
 </library>

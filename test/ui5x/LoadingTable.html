@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X LoadingTable Demo</title>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 960px;
+            height: 540px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+        }
+
+        .showcaseTable {
+            width: 54rem;
+
+            box-sizing: border-box;
+            overflow: hidden;
+
+            background: var(--sapGroup_ContentBackground);
+
+            border: 1px solid var(--sapGroup_ContentBorderColor);
+            border-radius: 0.75rem;
+        }
+
+        /*
+         * Keep sap.ui.table's native Horizon cell separators.
+         */
+
+        .columnLabel {
+            width: 100%;
+
+            text-align: left;
+        }
+
+        .primaryText {
+            font-weight: 600;
+            color: var(--sapTextColor);
+        }
+
+        .secondaryText {
+            margin-top: 0.125rem;
+
+            font-size: 0.75rem;
+            color: var(--sapContent_LabelColor);
+        }
+
+        .revenueNumber {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+
+    <script id="sap-ui-bootstrap" src="/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true" data-sap-ui-compat-version="edge">
+        </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/library",
+            "ui5x/loading/LoadingTable",
+            "sap/ui/model/json/JSONModel",
+            "sap/ui/table/Table",
+            "sap/ui/table/Column",
+            "sap/ui/table/RowAction",
+            "sap/ui/table/RowActionItem",
+            "sap/m/Text",
+            "sap/m/ObjectStatus",
+            "sap/m/ObjectNumber",
+            "sap/m/MessageToast",
+            "sap/m/VBox"
+        ], function (
+            library,
+            LoadingTable,
+            JSONModel,
+            Table,
+            Column,
+            RowAction,
+            RowActionItem,
+            Text,
+            ObjectStatus,
+            ObjectNumber,
+            MessageToast,
+            VBox
+        ) {
+            "use strict";
+
+            const model = new JSONModel({
+                rows: []
+            });
+
+            /*
+             * Row action
+             */
+
+            const rowActionTemplate = new RowAction({
+                items: [
+                    new RowActionItem({
+                        icon: "sap-icon://navigation-right-arrow",
+                        text: "Open customer",
+
+                        press: function (event) {
+                            const item = event.getSource();
+                            const context =
+                                item.getBindingContext();
+
+                            if (!context) {
+                                return;
+                            }
+
+                            const customer =
+                                context.getProperty("name");
+
+                            MessageToast.show(
+                                `Open ${customer}`
+                            );
+                        }
+                    })
+                ]
+            });
+
+            /*
+             * Source application table
+             */
+
+            const sourceTable = new Table({
+                width: "100%",
+
+                visibleRowCount: 5,
+                visibleRowCountMode: "Fixed",
+
+                rowHeight: 56,
+                columnHeaderHeight: 48,
+
+                selectionMode: "None",
+                rowHeaderVisible: false,
+
+                enableColumnReordering: false,
+
+                /*
+                 * Reserve one native row-action slot.
+                 *
+                 * LoadingTable mirrors rowActionCount on its internal
+                 * skeleton table, preserving the table geometry while
+                 * the real row actions are temporarily unavailable.
+                 */
+                rowActionCount: 1,
+                rowActionTemplate: rowActionTemplate,
+
+                columns: [
+                    new Column({
+                        width: "17rem",
+                        flexible: true,
+
+                        label: new Text({
+                            text: "Customer",
+                            width: "100%",
+                            textAlign: "Begin"
+                        }).addStyleClass(
+                            "columnLabel"
+                        ),
+
+                        template: new VBox({
+                            justifyContent: "Center",
+
+                            items: [
+                                new Text({
+                                    text: "{name}",
+                                    wrapping: false
+                                }).addStyleClass(
+                                    "primaryText"
+                                ),
+
+                                new Text({
+                                    text: "{email}",
+                                    wrapping: false
+                                }).addStyleClass(
+                                    "secondaryText"
+                                )
+                            ]
+                        })
+                    }),
+
+                    new Column({
+                        width: "15rem",
+                        flexible: true,
+
+                        label: new Text({
+                            text: "Company",
+                            width: "100%",
+                            textAlign: "Begin"
+                        }).addStyleClass(
+                            "columnLabel"
+                        ),
+
+                        template: new VBox({
+                            justifyContent: "Center",
+
+                            items: [
+                                new Text({
+                                    text: "{company}",
+                                    wrapping: false
+                                }).addStyleClass(
+                                    "primaryText"
+                                ),
+
+                                new Text({
+                                    text: "{segment}",
+                                    wrapping: false
+                                }).addStyleClass(
+                                    "secondaryText"
+                                )
+                            ]
+                        })
+                    }),
+
+                    new Column({
+                        width: "10rem",
+                        flexible: true,
+
+                        label: new Text({
+                            text: "Status",
+                            width: "100%",
+                            textAlign: "Begin"
+                        }).addStyleClass(
+                            "columnLabel"
+                        ),
+
+                        template: new ObjectStatus({
+                            text: "{status}",
+                            state: "{statusState}"
+                        })
+                    }),
+
+                    new Column({
+                        width: "12rem",
+                        flexible: true,
+
+                        label: new Text({
+                            text: "Revenue",
+                            width: "100%",
+                            textAlign: "Begin"
+                        }).addStyleClass(
+                            "columnLabel"
+                        ),
+
+                        template: new ObjectNumber({
+                            number: "{amount}",
+                            unit: "EUR",
+                            emphasized: false
+                        }).addStyleClass(
+                            "revenueNumber"
+                        )
+                    })
+                ]
+            });
+
+            sourceTable.bindRows({
+                path: "/rows"
+            });
+
+            /*
+             * UI5X LoadingTable
+             */
+
+            const loadingTable = new LoadingTable({
+                loading: true,
+
+                skeletonRowsMode: "Fixed",
+                skeletonRows: 5,
+                maxSkeletonRows: 5,
+
+                animated: true,
+                dynamicSkeletonWidths: true,
+
+                table: sourceTable
+            });
+
+            loadingTable.setModel(model);
+
+            /*
+             * Loaded data
+             */
+
+            const loadedRows = [
+                {
+                    name: "Mario Rossi",
+                    email: "mario.rossi@example.com",
+
+                    company: "Acme S.p.A.",
+                    segment: "Enterprise",
+
+                    status: "Active",
+                    statusState: "Success",
+
+                    amount: "125,000"
+                },
+
+                {
+                    name: "Laura Bianchi",
+                    email: "laura.bianchi@example.com",
+
+                    company: "Example S.r.l.",
+                    segment: "Mid-market",
+
+                    status: "Pending",
+                    statusState: "Warning",
+
+                    amount: "87,500"
+                },
+
+                {
+                    name: "Giuseppe Verdi",
+                    email: "giuseppe.verdi@example.com",
+
+                    company: "Northwind",
+                    segment: "Enterprise",
+
+                    status: "Active",
+                    statusState: "Success",
+
+                    amount: "310,000"
+                },
+
+                {
+                    name: "Anna Neri",
+                    email: "anna.neri@example.com",
+
+                    company: "Contoso",
+                    segment: "SMB",
+
+                    status: "Inactive",
+                    statusState: "Error",
+
+                    amount: "42,000"
+                },
+
+                {
+                    name: "Luca Gialli",
+                    email: "luca.gialli@example.com",
+
+                    company: "Fabrikam",
+                    segment: "Enterprise",
+
+                    status: "Active",
+                    statusState: "Success",
+
+                    amount: "198,000"
+                }
+            ];
+
+            /*
+             * Stable showcase container
+             */
+
+            new VBox({
+                width: "54rem",
+
+                items: [
+                    loadingTable
+                ]
+            })
+                .addStyleClass("showcaseTable")
+                .placeAt("content");
+
+            /*
+             * Automatic recording loop
+             */
+
+            function play() {
+                model.setProperty(
+                    "/rows",
+                    []
+                );
+
+                loadingTable.setLoading(
+                    true
+                );
+
+                setTimeout(function () {
+                    model.setProperty(
+                        "/rows",
+                        loadedRows
+                    );
+
+                    loadingTable.setLoading(
+                        false
+                    );
+                }, 1800);
+
+                setTimeout(
+                    play,
+                    4400
+                );
+            }
+
+            play();
+        });
+    </script>
+</head>
+
+<body class="sapUiBody sapUiSizeCompact">
+    <div id="content"></div>
+</body>
+
+</html>

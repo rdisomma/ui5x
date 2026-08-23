@@ -12,7 +12,8 @@ const UI5X = Lib.init({
     version: "${version}",
     dependencies: [
         "sap.ui.core",
-        "sap.m"
+        "sap.m",
+        "sap.ui.table"
     ],
     types: [
         "ui5x.loading.SkeletonType",
@@ -23,6 +24,7 @@ const UI5X = Lib.init({
         "ui5x.loading.Skeleton",
         "ui5x.loading.LoadingContainer",
         "ui5x.loading.LoadingResponsiveTable",
+        "ui5x.loading.LoadingTable",
         "ui5x.layout.Accordion",
         "ui5x.layout.AccordionItem"
     ],
