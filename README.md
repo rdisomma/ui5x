@@ -22,6 +22,8 @@ views, from JavaScript or from TypeScript.
   table with skeleton cells while data is loading.
 - **`Accordion`** — groups `AccordionItem` sections with single or multiple expansion. Items can
   contain any UI5 control and support disabled or non-toggleable states.
+- **`CopyButton`** — copies a value to the system clipboard and confirms success with a temporary
+  icon, text and button type while preserving the original state.
 - **Accessibility-aware** — the container exposes `aria-busy` while loading, skeletons are
   hidden from assistive technologies, and animations respect `prefers-reduced-motion`.
 - **TypeScript first** — written in TypeScript and shipped with type definitions, while remaining
@@ -433,6 +435,52 @@ sections to remain open at the same time.
 | `items`      | `AccordionItem[]`      | Default aggregation containing the accordion sections. |
 | `itemToggle` | Event                  | Fired after an item is toggled through user input.      |
 
+### CopyButton
+
+`CopyButton` extends `sap.m.Button` with clipboard support and visual success feedback. The
+feedback is shown only after the value has been copied successfully, then the original icon, text
+and button type are restored automatically.
+
+![Animated preview of the UI5X CopyButton control](docs/assets/copy-button-preview.gif)
+
+```js
+sap.ui.require(["ui5x/button/CopyButton"], function (CopyButton) {
+  new CopyButton({
+    value: "npm i @raffaeledisomma/ui5x",
+    text: "Copy",
+    successText: "Copied",
+    successType: "Accept"
+  }).placeAt("content");
+});
+```
+
+In XML views:
+
+```xml
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:button="ui5x.button">
+
+  <button:CopyButton
+    value="{invoice>/id}"
+    text="Copy ID"
+    successText="Copied"
+    successType="Accept" />
+
+</mvc:View>
+```
+
+When `successType` is omitted, the button keeps its current `type`. Set `successIcon` to an empty
+string to keep the original icon during feedback. Clipboard access requires a secure context and
+a press initiated by the user.
+
+| Property      | Type                  | Default                | Description                                                    |
+| ------------- | --------------------- | ---------------------- | -------------------------------------------------------------- |
+| `value`       | `string`              | `""`                   | Value written to the system clipboard.                         |
+| `successIcon` | `sap.ui.core.URI`     | `sap-icon://accept`    | Temporary success icon. An empty value preserves the icon.     |
+| `successText` | `string`              | `""`                   | Temporary text, applied only when the button already has text. |
+| `successType` | `sap.m.ButtonType`    | Current button `type`  | Temporary type. An explicitly configured value takes priority. |
+
 ## Development
 
 ```bash
@@ -445,8 +493,8 @@ npm start
 
 `npm start` regenerates the control interfaces in watch mode and serves the test pages at
 `http://localhost:8080/test-resources/ui5x/Skeleton.html`. Additional manual demos include
-`LoadingContainer.html`, `LoadingResponsiveTable.html`, `LoadingTable.html` and `Accordion.html`
-in the same directory.
+`LoadingContainer.html`, `LoadingResponsiveTable.html`, `LoadingTable.html`, `Accordion.html` and
+`CopyButton.html` in the same directory.
 
 | Script                      | What it does |
 | --------------------------- | ------------ |
@@ -477,6 +525,8 @@ src/ui5x/
     Accordion.ts                 accordion container
     AccordionItem.ts             expandable section
     renderer/                    control renderers
+  button/
+    CopyButton.ts                clipboard button with success feedback
   themes/                        LESS sources grouped by control namespace
 test/ui5x/
   *.html                         manual demo pages
