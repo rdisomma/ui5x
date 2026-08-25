@@ -26,7 +26,8 @@ const UI5X = Lib.init({
         "ui5x.loading.LoadingResponsiveTable",
         "ui5x.loading.LoadingTable",
         "ui5x.layout.Accordion",
-        "ui5x.layout.AccordionItem"
+        "ui5x.layout.AccordionItem",
+        "ui5x.button.CopyButton"
     ],
     elements: [],
     noLibraryCSS: false
