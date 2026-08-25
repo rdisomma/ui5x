@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X CopyButton Demo</title>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 720px;
+            height: 405px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+        }
+
+        .showcaseGrid {
+            width: 24rem;
+        }
+
+        .showcaseGridRow {
+            width: 100%;
+        }
+
+        .showcaseGridRow + .showcaseGridRow {
+            margin-top: 1.5rem;
+        }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/library",
+            "ui5x/button/CopyButton",
+            "sap/m/VBox",
+            "sap/m/HBox"
+        ], function (
+            library,
+            CopyButton,
+            VBox,
+            HBox
+        ) {
+            "use strict";
+
+            /*
+             * A timer-generated press has no browser user activation, so the
+             * real Clipboard API rejects it. Stub only the write operation in
+             * this visual demo: firePress() still exercises the component's
+             * complete press and success-feedback flow.
+             */
+            Object.defineProperty(navigator.clipboard, "writeText", {
+                configurable: true,
+                value: function () {
+                    return Promise.resolve();
+                }
+            });
+
+            const sharedSettings = {
+                value: "UI5X",
+                width: "7rem"
+            };
+
+            const defaultButton = new CopyButton({
+                ...sharedSettings,
+                text: "Copy"
+            });
+
+            const textButton = new CopyButton({
+                ...sharedSettings,
+                text: "Copy",
+                successText: "Copied"
+            });
+
+            const acceptButton = new CopyButton({
+                value: "npm i @raffaeledisomma/ui5x",
+                width: "7rem",
+                text: "Copy",
+                successText: "Done",
+                successType: "Accept"
+            });
+
+            const iconOnlyButton = new CopyButton({
+                value: "UI5X",
+                width: "7rem",
+                type: "Transparent",
+                tooltip: "Copy value"
+            });
+
+            const trailingIconButton = new CopyButton({
+                ...sharedSettings,
+                text: "Copy",
+                iconFirst: false,
+                type: "Transparent",
+                successText: "Copied"
+            });
+
+            const preserveIconButton = new CopyButton({
+                ...sharedSettings,
+                text: "Copy",
+                type: "Emphasized",
+                successIcon: "",
+                successText: "Copied"
+            });
+
+            function createRow(items) {
+                return new HBox({
+                    width: "100%",
+                    justifyContent: "SpaceBetween",
+                    alignItems: "Center",
+                    items
+                }).addStyleClass("showcaseGridRow");
+            }
+
+            const buttons = [
+                defaultButton,
+                textButton,
+                acceptButton,
+                iconOnlyButton,
+                trailingIconButton,
+                preserveIconButton
+            ];
+
+            new VBox({
+                items: [
+                    createRow([
+                        defaultButton,
+                        textButton,
+                        acceptButton
+                    ]),
+
+                    createRow([
+                        iconOnlyButton,
+                        trailingIconButton,
+                        preserveIconButton
+                    ])
+                ]
+            })
+                .addStyleClass("showcaseGrid")
+                .placeAt("content");
+
+            /*
+             * Trigger the real press event on every variant at the same time.
+             * The interval leaves the restored state visible before the next
+             * cycle, producing a clean loop without a mouse cursor.
+             */
+            function pressAll() {
+                buttons.forEach(function (button) {
+                    button.firePress();
+                });
+            }
+
+            setTimeout(function () {
+                pressAll();
+                window.setInterval(pressAll, 3200);
+            }, 800);
+        });
+    </script>
+</head>
+
+<body class="sapUiBody sapUiSizeCompact">
+    <div id="content"></div>
+</body>
+
+</html>
