@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X SegmentedInput Demo</title>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 720px;
+            height: 405px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+        }
+
+        .showcaseGrid {
+            width: 45rem;
+        }
+
+        .showcaseRow {
+            width: 100%;
+        }
+
+        .showcaseRow + .showcaseRow {
+            margin-top: 3rem;
+        }
+
+        .showcaseLabel {
+            width: 5.5rem;
+            margin-right: 0.5rem;
+
+            flex: 0 0 auto;
+        }
+
+        .showcaseComplete .ui5xSegmentedInputValueStateText {
+            visibility: visible;
+        }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/input/SegmentedInput",
+            "sap/base/Log",
+            "sap/m/HBox",
+            "sap/m/Label",
+            "sap/m/VBox"
+        ], function (
+            SegmentedInput,
+            Log,
+            HBox,
+            Label,
+            VBox
+        ) {
+            "use strict";
+
+            function createEntry(configuration) {
+                const control = new SegmentedInput({
+                    ...configuration.settings,
+                    valueStateText: configuration.initialText,
+
+                    liveChange: function (event) {
+                        Log.info(
+                            `${configuration.label}: ${event.getParameter("value")}`
+                        );
+                    },
+
+                    complete: function () {
+                        this.setValueState(configuration.completeState);
+                        this.setValueStateText(configuration.completeText);
+                        this.addStyleClass("showcaseComplete");
+                    }
+                });
+
+                return {
+                    ...configuration,
+                    control
+                };
+            }
+
+            const entries = [
+                createEntry({
+                    label: "One-time code",
+                    value: "482931",
+                    initialText: "Enter the six-digit code",
+                    completeState: "None",
+                    completeText: "Code verified",
+                    settings: {
+                        digits: 6,
+                        inputType: "Numeric",
+                        size: "Large",
+                        showSeparators: true,
+                        separatorInterval: 2
+                    }
+                }),
+                createEntry({
+                    label: "License key",
+                    value: "UI5X2026",
+                    initialText: "Enter the product key",
+                    completeState: "Success",
+                    completeText: "License key accepted",
+                    settings: {
+                        digits: 8,
+                        inputType: "Alphanumeric",
+                        size: "Small",
+                        showSeparators: true,
+                        separatorInterval: 4,
+                        showClearIcon: true
+                    }
+                }),
+                createEntry({
+                    label: "Fiscal code",
+                    value: "RSSMRA85T10A562S",
+                    initialText: "Enter a valid fiscal code",
+                    completeState: "Error",
+                    completeText: "Invalid fiscal code",
+                    settings: {
+                        digits: 16,
+                        inputType: "Alphanumeric",
+                        size: "Medium",
+                        showSeparators: false,
+                        showClearIcon: true
+                    }
+                })
+            ];
+
+            function createRow(entry) {
+                return new HBox({
+                    width: "100%",
+                    alignItems: "Center",
+                    items: [
+                        entry.control
+                    ]
+                }).addStyleClass("showcaseRow");
+            }
+
+            new VBox({
+                width: "100%",
+                items: entries.map(createRow)
+            })
+                .addStyleClass("showcaseGrid")
+                .placeAt("content");
+
+            function wait(milliseconds) {
+                return new Promise(function (resolve) {
+                    window.setTimeout(resolve, milliseconds);
+                });
+            }
+
+            async function enterCharacter(entry, index) {
+                let field;
+
+                while (!field) {
+                    field = document.getElementById(
+                        `${entry.control.getId()}-digit-${index}`
+                    );
+
+                    if (!field) {
+                        await wait(50);
+                    }
+                }
+
+                field.focus();
+                field.value = entry.value[index];
+                field.dispatchEvent(new InputEvent("input", {
+                    bubbles: true,
+                    data: entry.value[index],
+                    inputType: "insertText"
+                }));
+            }
+
+            async function typeEntry(entry) {
+                for (let index = 0; index < entry.value.length; index += 1) {
+                    await enterCharacter(entry, index);
+                    await wait(90);
+                }
+
+                await wait(350);
+            }
+
+            function resetEntry(entry) {
+                entry.control.clear();
+                entry.control.setValueState("None");
+                entry.control.setValueStateText(entry.initialText);
+                entry.control.removeStyleClass("showcaseComplete");
+            }
+
+            async function play() {
+                entries.forEach(resetEntry);
+
+                await wait(700);
+
+                for (const entry of entries) {
+                    await typeEntry(entry);
+                }
+
+                await wait(1600);
+
+                entries.forEach(resetEntry);
+
+                await wait(900);
+
+               play();
+            }
+
+            play();
+        });
+    </script>
+</head>
+
+<body class="sapUiBody sapUiSizeCompact">
+    <div id="content"></div>
+</body>
+
+</html>

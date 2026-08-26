@@ -5,6 +5,8 @@
 
 import "./loading/SkeletonType";
 import "./loading/SkeletonRowMode";
+import "./input/SegmentedInputSize";
+import "./input/SegmentedInputType";
 import Lib from "sap/ui/core/Lib";
 
 const UI5X = Lib.init({
@@ -18,6 +20,8 @@ const UI5X = Lib.init({
     types: [
         "ui5x.loading.SkeletonType",
         "ui5x.loading.SkeletonRowMode",
+        "ui5x.input.SegmentedInputSize",
+        "ui5x.input.SegmentedInputType",
     ],
     interfaces: [],
     controls: [
@@ -27,7 +31,8 @@ const UI5X = Lib.init({
         "ui5x.loading.LoadingTable",
         "ui5x.layout.Accordion",
         "ui5x.layout.AccordionItem",
-        "ui5x.button.CopyButton"
+        "ui5x.button.CopyButton",
+        "ui5x.input.SegmentedInput"
     ],
     elements: [],
     noLibraryCSS: false

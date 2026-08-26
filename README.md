@@ -24,6 +24,8 @@ views, from JavaScript or from TypeScript.
   contain any UI5 control and support disabled or non-toggleable states.
 - **`CopyButton`** — copies a value to the system clipboard and confirms success with a temporary
   icon, text and button type while preserving the original state.
+- **`SegmentedInput`** — collects numeric or alphanumeric identifiers in separate fields, with
+  optional grouping, three sizes, value-state feedback, paste support and a Fiori clear action.
 - **Accessibility-aware** — the container exposes `aria-busy` while loading, skeletons are
   hidden from assistive technologies, and animations respect `prefers-reduced-motion`.
 - **TypeScript first** — written in TypeScript and shipped with type definitions, while remaining
@@ -481,6 +483,73 @@ a press initiated by the user.
 | `successText` | `string`              | `""`                   | Temporary text, applied only when the button already has text. |
 | `successType` | `sap.m.ButtonType`    | Current button `type`  | Temporary type. An explicitly configured value takes priority. |
 
+### SegmentedInput
+
+`SegmentedInput` collects a fixed-length value in individual fields. It supports numeric codes
+such as PINs and one-time passwords, as well as alphanumeric identifiers such as fiscal codes,
+license keys, VINs and IBANs. Pasted content is distributed across the segments automatically.
+
+![Animated preview of the UI5X SegmentedInput control](docs/assets/segmented-input-preview.gif)
+
+```js
+sap.ui.require(["ui5x/input/SegmentedInput"], function (SegmentedInput) {
+  new SegmentedInput({
+    digits: 16,
+    inputType: "Alphanumeric",
+    size: "Small",
+    showClearIcon: true,
+    complete: function (event) {
+      this.setValueState("Success");
+      this.setValueStateText(`Completed: ${event.getParameter("value")}`);
+    }
+  }).placeAt("content");
+});
+```
+
+In XML views:
+
+```xml
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:input="ui5x.input">
+
+  <input:SegmentedInput
+    digits="6"
+    inputType="Numeric"
+    size="Large"
+    showSeparators="true"
+    separatorInterval="3"
+    value="{/verificationCode}"
+    valueState="{/codeState}"
+    valueStateText="{/codeStateText}"
+    liveChange=".onCodeChange"
+    complete=".onCodeComplete" />
+
+</mvc:View>
+```
+
+The exposed `value` is always a string, including in `Numeric` mode, so leading zeroes are
+preserved. `Medium` matches the standard `sap.m.Input` height; `Small` is suitable for compact
+forms and `Large` emphasizes short verification codes.
+
+| Property            | Type                               | Default   | Description                                                       |
+| ------------------- | ---------------------------------- | --------- | ----------------------------------------------------------------- |
+| `digits`            | `int`                              | `6`       | Number of segments, clamped between 1 and 34.                     |
+| `inputType`         | `ui5x.input.SegmentedInputType`    | `Numeric` | Accepted characters: `Numeric` or `Alphanumeric`.                 |
+| `size`              | `ui5x.input.SegmentedInputSize`    | `Medium`  | Segment size: `Small`, `Medium` or `Large`.                       |
+| `value`             | `string`                           | `""`      | Current normalized value, limited to the configured segment count. |
+| `showSeparators`    | `boolean`                          | `false`   | Display visual separators between groups.                        |
+| `separatorInterval` | `int`                              | `3`       | Number of segments in each group; values below 1 become 1.        |
+| `valueState`        | `sap.ui.core.ValueState`           | `None`    | Fiori value state applied to every segment.                       |
+| `valueStateText`    | `string`                           | `""`      | Message associated with the current value state.                  |
+| `showClearIcon`     | `boolean`                          | `false`   | Show a transparent Fiori clear button while a value is present.   |
+
+| API          | Type   | Description                                                       |
+| ------------ | ------ | ----------------------------------------------------------------- |
+| `liveChange` | Event  | Fired after every user change with the current `value`.           |
+| `complete`   | Event  | Fired when every segment contains a character.                    |
+| `clear()`    | Method | Clears all segments without firing user-interaction events.       |
+
 ## Development
 
 ```bash
@@ -493,8 +562,8 @@ npm start
 
 `npm start` regenerates the control interfaces in watch mode and serves the test pages at
 `http://localhost:8080/test-resources/ui5x/Skeleton.html`. Additional manual demos include
-`LoadingContainer.html`, `LoadingResponsiveTable.html`, `LoadingTable.html`, `Accordion.html` and
-`CopyButton.html` in the same directory.
+`LoadingContainer.html`, `LoadingResponsiveTable.html`, `LoadingTable.html`, `Accordion.html`,
+`CopyButton.html` and `SegmentedInput.html` in the same directory.
 
 | Script                      | What it does |
 | --------------------------- | ------------ |
@@ -527,6 +596,11 @@ src/ui5x/
     renderer/                    control renderers
   button/
     CopyButton.ts                clipboard button with success feedback
+  input/
+    SegmentedInput.ts            segmented numeric and alphanumeric input
+    SegmentedInputType.ts        Numeric | Alphanumeric enum
+    SegmentedInputSize.ts        Small | Medium | Large enum
+    renderer/                    segmented input renderer
   themes/                        LESS sources grouped by control namespace
 test/ui5x/
   *.html                         manual demo pages

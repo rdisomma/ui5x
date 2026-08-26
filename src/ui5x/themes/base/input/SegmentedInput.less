@@ -1,0 +1,185 @@
+.ui5xSegmentedInput {
+    max-width: 100%;
+
+    display: inline-flex;
+    flex-direction: column;
+
+    position: relative;
+
+    box-sizing: border-box;
+
+    color: @sapUiText;
+    font-family: @sapUiFontFamily;
+}
+
+.ui5xSegmentedInputDigits {
+    max-width: 100%;
+
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.ui5xSegmentedInputDigit {
+    width: @sapUiElementHeight;
+    height: @sapUiElementHeight;
+
+    flex: 0 0 auto;
+
+    box-sizing: border-box;
+
+    padding: 0;
+
+    appearance: none;
+
+    border: 1px solid @sapUiFieldBorderColor;
+    border-radius: 0.5rem;
+    background: @sapUiFieldBackground;
+
+    color: @sapUiFieldTextColor;
+
+    font: inherit;
+    font-size: @sapMFontMediumSize;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+
+    caret-color: @sapUiContentFocusColor;
+}
+
+.ui5xSegmentedInputDigit:hover {
+    border-color: @sapUiFieldHoverBorderColor;
+}
+
+.ui5xSegmentedInputDigit:focus {
+    outline: 0.125rem solid @sapUiContentFocusColor;
+    outline-offset: -0.25rem;
+}
+
+.ui5xSegmentedInputSeparator {
+    flex: 0 0 auto;
+
+    color: @sapUiFieldBorderColor;
+
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.ui5xSegmentedInputSizeSmall .ui5xSegmentedInputDigits {
+    gap: 0.25rem;
+}
+
+.ui5xSegmentedInputSizeSmall .ui5xSegmentedInputDigit {
+    width: @sapUiElementCompactHeight;
+    height: @sapUiElementCompactHeight;
+}
+
+.ui5xSegmentedInputSizeSmall .ui5xSegmentedInputDigit {
+    border-radius: 0.25rem;
+
+    font-size: @sapMFontSmallSize;
+}
+
+.ui5xSegmentedInputSizeSmall .ui5xSegmentedInputSeparator {
+    font-size: @sapMFontMediumSize;
+}
+
+.ui5xSegmentedInputSizeMedium .ui5xSegmentedInputDigit {
+    width: @sapUiElementHeight;
+    height: @sapUiElementHeight;
+}
+
+.ui5xSegmentedInputSizeLarge .ui5xSegmentedInputDigits {
+    gap: 0.5rem;
+}
+
+.ui5xSegmentedInputSizeLarge .ui5xSegmentedInputDigit {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+.ui5xSegmentedInputSizeLarge .ui5xSegmentedInputDigit {
+    font-size: 1.5rem;
+}
+
+.ui5xSegmentedInputSizeLarge .ui5xSegmentedInputSeparator {
+    font-size: 1.25rem;
+}
+
+.ui5xSegmentedInputClearButton {
+    flex: 0 0 auto;
+}
+
+.ui5xSegmentedInputClearButton[hidden] {
+    display: none;
+}
+
+.ui5xSegmentedInputError .ui5xSegmentedInputDigit {
+    border: @sapUiFieldInvalidBorderWidth @sapUiFieldInvalidBorderStyle @sapUiFieldInvalidColor;
+    background: @sapUiFieldInvalidBackgroundStyle;
+    background-color: @sapUiFieldInvalidBackground;
+}
+
+.ui5xSegmentedInputWarning .ui5xSegmentedInputDigit {
+    border: @sapUiFieldWarningBorderWidth @sapUiFieldWarningBorderStyle @sapUiFieldWarningColor;
+    background: @sapUiFieldWarningBackgroundStyle;
+    background-color: @sapUiFieldWarningBackground;
+}
+
+.ui5xSegmentedInputSuccess .ui5xSegmentedInputDigit {
+    border: @sapUiFieldSuccessBorderWidth @sapUiFieldSuccessBorderStyle @sapUiFieldSuccessColor;
+    background: @sapUiFieldSuccessBackgroundStyle;
+    background-color: @sapUiFieldSuccessBackground;
+}
+
+.ui5xSegmentedInputInformation .ui5xSegmentedInputDigit {
+    border: @sapUiFieldInformationBorderWidth @sapUiFieldInformationBorderStyle @sapUiFieldInformationColor;
+    background: @sapUiFieldInformationBackgroundStyle;
+    background-color: @sapUiFieldInformationBackground;
+}
+
+.ui5xSegmentedInputValueStateText {
+    width: 100%;
+    max-width: 22rem;
+
+    position: absolute;
+    z-index: 1;
+    inset-block-start: calc(100% + 0.25rem);
+    inset-inline-start: 0;
+
+    visibility: hidden;
+
+    box-sizing: border-box;
+    padding: 0.5rem 0.625rem;
+
+    border-radius: @sapUiElementBorderCornerRadius;
+
+    color: @sapUiText;
+
+    font-size: @sapMFontSmallSize;
+    line-height: 1rem;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+}
+
+.ui5xSegmentedInput:focus-within .ui5xSegmentedInputValueStateText {
+    visibility: visible;
+}
+
+.ui5xSegmentedInputValueStateTextError {
+    background: @sapUiErrorBG;
+}
+
+.ui5xSegmentedInputValueStateTextWarning {
+    background: @sapUiWarningBG;
+}
+
+.ui5xSegmentedInputValueStateTextInformation {
+    background: @sapUiInformationBG;
+}
+
+.ui5xSegmentedInputValueStateTextSuccess {
+    background: @sapUiSuccessBG;
+}

@@ -19,7 +19,7 @@ declare module "./CopyButton" {
         /**
          * Defines the icon temporarily displayed after the value has been
         successfully copied to the system clipboard.
-
+        
         When empty, the button icon is not changed.
          */
         successIcon?: URI | PropertyBindingInfo | `{${string}}`;
@@ -27,11 +27,11 @@ declare module "./CopyButton" {
         /**
          * Defines the temporary text displayed after the value has been
         successfully copied to the system clipboard.
-
+        
         The success text is shown only when the button already has a
         non-empty text value. For icon-only buttons, this property is
         ignored and only the success icon is displayed.
-
+        
         When empty, the button text is not changed.
          */
         successText?: string | PropertyBindingInfo;
@@ -39,7 +39,7 @@ declare module "./CopyButton" {
         /**
          * Defines the button type temporarily applied after the value has been
         successfully copied to the system clipboard.
-
+        
         When not explicitly set, the current button type is preserved.
          */
         successType?: ButtonType | PropertyBindingInfo | `{${string}}`;
@@ -66,7 +66,7 @@ declare module "./CopyButton" {
         /**
          * Defines the icon temporarily displayed after the value has been
         successfully copied to the system clipboard.
-
+        
         When empty, the button icon is not changed.
          */
         getSuccessIcon(): URI;
@@ -74,7 +74,7 @@ declare module "./CopyButton" {
         /**
          * Defines the icon temporarily displayed after the value has been
         successfully copied to the system clipboard.
-
+        
         When empty, the button icon is not changed.
          */
         setSuccessIcon(successIcon: URI): this;
@@ -84,11 +84,11 @@ declare module "./CopyButton" {
         /**
          * Defines the temporary text displayed after the value has been
         successfully copied to the system clipboard.
-
+        
         The success text is shown only when the button already has a
         non-empty text value. For icon-only buttons, this property is
         ignored and only the success icon is displayed.
-
+        
         When empty, the button text is not changed.
          */
         getSuccessText(): string;
@@ -96,11 +96,11 @@ declare module "./CopyButton" {
         /**
          * Defines the temporary text displayed after the value has been
         successfully copied to the system clipboard.
-
+        
         The success text is shown only when the button already has a
         non-empty text value. For icon-only buttons, this property is
         ignored and only the success icon is displayed.
-
+        
         When empty, the button text is not changed.
          */
         setSuccessText(successText: string): this;
@@ -110,7 +110,7 @@ declare module "./CopyButton" {
         /**
          * Defines the button type temporarily applied after the value has been
         successfully copied to the system clipboard.
-
+        
         When not explicitly set, the current button type is preserved.
          */
         getSuccessType(): ButtonType;
@@ -118,7 +118,7 @@ declare module "./CopyButton" {
         /**
          * Defines the button type temporarily applied after the value has been
         successfully copied to the system clipboard.
-
+        
         When not explicitly set, the current button type is preserved.
          */
         setSuccessType(successType: ButtonType): this;
