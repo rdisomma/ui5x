@@ -114,18 +114,26 @@ export default class LoadingResponsiveTable extends Control {
     static renderer: typeof LoadingResponsiveTableRenderer =
         LoadingResponsiveTableRenderer;
 
-    private _calculatedSkeletonRows = 0;
-
-    private _onWindowResize = (): void => {
-        if (
-            this.getLoading() &&
-            this.getSkeletonRowsMode() === SkeletonRowMode.Fill
-        ) {
-            this._updateCalculatedSkeletonRows();
-        }
-    };
+    /*
+     * UI5 invokes init() from the base Control constructor. These fields must
+     * therefore be type-only declarations: emitted class-field initializers
+     * would run after init() and overwrite the state created there.
+     */
+    private declare _calculatedSkeletonRows: number;
+    private declare _onWindowResize: () => void;
 
     init(): void {
+        this._calculatedSkeletonRows = 0;
+
+        this._onWindowResize = (): void => {
+            if (
+                this.getLoading() &&
+                this.getSkeletonRowsMode() === SkeletonRowMode.Fill
+            ) {
+                this._updateCalculatedSkeletonRows();
+            }
+        };
+
         this.setAggregation(
             "_skeletonTable",
             new Table({

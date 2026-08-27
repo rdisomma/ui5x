@@ -26,6 +26,21 @@ QUnit.test("Default properties and row constraints", function (assert) {
     loadingTable.destroy();
 });
 
+QUnit.test("The resize handler exists when init registers it", function (assert) {
+    const loadingTable = new LoadingResponsiveTable();
+    const handler = (
+        loadingTable as unknown as { _onWindowResize: unknown }
+    )._onWindowResize;
+
+    assert.strictEqual(
+        typeof handler,
+        "function",
+        "A class-field initializer would run after init() and leave the listener undefined"
+    );
+
+    loadingTable.destroy();
+});
+
 QUnit.test("Skeleton table mirrors columns, rows and visual settings", function (assert) {
     const done = assert.async();
     const sourceTable = new Table({
