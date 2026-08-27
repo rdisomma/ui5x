@@ -21,12 +21,30 @@ const LoadingResponsiveTableRenderer = {
         );
         rm.openEnd();
 
-        const table = control.getLoading()
-            ? control._getSkeletonTable()
-            : control.getTable();
+        if (control.getLoading()) {
+            const skeletonTable = control._getSkeletonTable();
 
-        if (table) {
-            rm.renderControl(table);
+            if (skeletonTable) {
+                /*
+                 * The internal table only reproduces the visual geometry of the
+                 * application table while data is loading. It must therefore remain
+                 * outside the accessibility tree and must not receive keyboard or
+                 * pointer interaction.
+                 */
+                rm.openStart("div");
+                rm.class("ui5xLoadingResponsiveTableSkeleton");
+                rm.attr("aria-hidden", "true");
+                rm.attr("inert", "");
+                rm.openEnd();
+                rm.renderControl(skeletonTable);
+                rm.close("div");
+            }
+        } else {
+            const table = control.getTable();
+
+            if (table) {
+                rm.renderControl(table);
+            }
         }
 
         rm.close("div");
