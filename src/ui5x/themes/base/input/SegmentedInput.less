@@ -183,3 +183,19 @@
 .ui5xSegmentedInputValueStateTextSuccess {
     background: @sapUiSuccessBG;
 }
+
+/* Disabled and read-only */
+
+.ui5xSegmentedInputDisabled {
+    opacity: @sapUiContentDisabledOpacity;
+}
+
+.ui5xSegmentedInputDisabled .ui5xSegmentedInputDigit,
+.ui5xSegmentedInputReadOnly .ui5xSegmentedInputDigit {
+    cursor: default;
+}
+
+.ui5xSegmentedInputReadOnly .ui5xSegmentedInputDigit {
+    background: @sapUiFieldReadOnlyBackground;
+    border-color: @sapUiFieldReadOnlyBorderColor;
+}
