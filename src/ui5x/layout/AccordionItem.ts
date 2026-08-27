@@ -7,6 +7,7 @@ import "../library";
 
 import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
+import type { AccessibilityInfo } from "sap/ui/core/library";
 
 import AccordionItemRenderer from "./renderer/AccordionItemRenderer";
 
@@ -119,6 +120,26 @@ export default class AccordionItem extends Control {
 
         this.setExpanded(expanded);
         this.fireEvent("toggle", { expanded });
+    }
+
+    getFocusDomRef(): Element | null {
+        /*
+         * The header button is the only focusable part of the item, and the
+         * section element around it is not.
+         */
+        return this.getDomRef(`header`) ?? null;
+    }
+
+    getAccessibilityInfo(): AccessibilityInfo {
+        return {
+            role: "button",
+            type: this.getTitle(),
+            focusable: this.getEnabled() && this.getToggleable(),
+            enabled: this.getEnabled(),
+            children: this.getExpanded()
+                ? this.getContent()
+                : []
+        };
     }
 
     onclick(event: MouseEvent): void {

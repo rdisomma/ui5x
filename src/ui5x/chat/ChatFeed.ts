@@ -12,6 +12,7 @@ import type { TextArea$LiveChangeEvent } from "sap/m/TextArea";
 import type UI5Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
+import type { AccessibilityInfo } from "sap/ui/core/library";
 import Lib from "sap/ui/core/Lib";
 import type ChangeReason from "sap/ui/model/ChangeReason";
 
@@ -421,6 +422,36 @@ export default class ChatFeed extends Control {
         }
 
         return this.getProperty("sendButtonTooltip") as string;
+    }
+
+    getFocusDomRef(): Element | null {
+        /*
+         * The root section is not focusable, so focus() would be swallowed.
+         * The composer is what a caller means by focusing the feed.
+         */
+        return this._getTextArea()?.getFocusDomRef() ?? null;
+    }
+
+    getIdForLabel(): string {
+        const textArea = this._getTextArea();
+
+        return textArea
+            ? textArea.getIdForLabel()
+            : this.getId();
+    }
+
+    getAccessibilityInfo(): AccessibilityInfo {
+        return {
+            role: "log",
+            type: Lib.getResourceBundleFor("sap.m")?.getText(
+                "ACC_CTR_TYPE_INPUT"
+            ) ?? "Chat",
+            description: this.getValue(),
+            focusable: this.getEnabled(),
+            enabled: this.getEnabled(),
+            editable: this.getEnabled() && this.getEditable(),
+            children: this.getMessages()
+        };
     }
 
     _getTextArea(): TextArea | null {
