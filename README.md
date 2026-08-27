@@ -26,6 +26,8 @@ views, from JavaScript or from TypeScript.
   icon, text and button type while preserving the original state.
 - **`SegmentedInput`** — collects numeric or alphanumeric identifiers in separate fields, with
   optional grouping, three sizes, value-state feedback, paste support and a Fiori clear action.
+- **`ChatFeed`** — combines a configurable message composer with a bindable conversation. Messages
+  can be aligned by current user, grouped by date and expose edit or delete actions.
 - **Accessibility-aware** — the container exposes `aria-busy` while loading, skeletons are
   hidden from assistive technologies, and animations respect `prefers-reduced-motion`.
 - **TypeScript first** — written in TypeScript and shipped with type definitions, while remaining
@@ -550,6 +552,105 @@ forms and `Large` emphasizes short verification codes.
 | `complete`   | Event  | Fired when every segment contains a character.                    |
 | `clear()`    | Method | Clears all segments without firing user-interaction events.       |
 
+### ChatFeed
+
+`ChatFeed` places a growing `sap.m.TextArea` composer above a chat-style message list. Its default `messages`
+aggregation accepts `ChatMessage` controls and can be bound directly to a model. Set
+`ownMessage` on each message to align messages from the current user to the end side.
+
+When `sendOnEnter` is enabled, Enter sends the message and Shift+Enter inserts a new line. When it
+is disabled, Enter keeps the standard multiline text-area behavior. A small Enter icon inside the
+composer indicates when keyboard submission is available.
+
+```js
+sap.ui.require([
+  "ui5x/chat/ChatFeed",
+  "ui5x/chat/ChatMessage"
+], function (ChatFeed, ChatMessage) {
+  const feed = new ChatFeed({
+    value: "{/draft}",
+    placeholder: "Write a message",
+    sendOnEnter: true,
+    sendButtonText: "Send",
+    groupByDate: true,
+    ownMessageAppearance: "Bubble",
+    incomingMessageAppearance: "Conversation",
+    composerPosition: "Bottom",
+    messageAlignment: "Bottom",
+    chatMaxHeight: "32rem",
+    send: function (event) {
+      // Add event.getParameter("value") to the application model.
+    },
+    messageEdit: function (event) {
+      // Update event.getParameter("message").getBindingContext().
+    },
+    messageDelete: function (event) {
+      // Remove the corresponding entry from the application model.
+    }
+  });
+
+  feed.bindAggregation("messages", {
+    path: "/messages",
+    template: new ChatMessage({
+      key: "{id}",
+      text: "{text}",
+      sender: "{sender}",
+      ownMessage: "{ownMessage}",
+      editable: "{editable}",
+      deletable: "{deletable}",
+      timestamp: "{timestamp}"
+    }),
+    templateShareable: false
+  });
+});
+```
+
+The control emits actions and leaves model mutations to the application, so the same API works
+with `JSONModel`, OData and other UI5 models. Sending clears the composer after the `send` event.
+Message appearance is configured independently for own and incoming messages. `Conversation`
+uses a transparent surface, while `Bubble` uses a neutral Fiori bubble. Bottom alignment preserves
+chronological order while initially showing the latest messages.
+
+| `ChatFeed` property      | Type                  | Default                    | Description                                      |
+| ------------------------ | --------------------- | -------------------------- | ------------------------------------------------ |
+| `value`                  | `string`              | `""`                       | Current composer value.                          |
+| `placeholder`            | `string`              | `""`                       | Composer placeholder.                            |
+| `enabled`                | `boolean`             | `true`                     | Enables the composer and send action.            |
+| `editable`               | `boolean`             | `true`                     | Allows the composer value to be changed.         |
+| `loading`                | `boolean`             | `false`                    | Replaces messages with chat skeleton placeholders. |
+| `sendOnEnter`            | `boolean`             | `true`                     | Sends when the user presses Enter.               |
+| `sendButtonText`         | `string`              | `""`                       | Optional send button text.                       |
+| `sendButtonIcon`         | `sap.ui.core.URI`     | `sap-icon://paper-plane`   | Send button icon.                                |
+| `sendButtonType`         | `sap.m.ButtonType`    | `Emphasized`               | Send button type.                                |
+| `sendButtonTooltip`      | `string`              | `sap.m localized text`      | Accessible send button tooltip.                  |
+| `showSendButton`         | `boolean`             | `true`                     | Displays the send button.                        |
+| `sendButtonEnabled`      | `boolean`             | `true`                     | Enables the button independently from Enter.    |
+| `groupByDate`            | `boolean`             | `false`                    | Inserts date separators between message groups. |
+| `highlightOwnMessage`    | `boolean`             | `false`                    | Highlights every message marked as `ownMessage`. |
+| `ownMessageAppearance`   | `ui5x.chat.ChatMessageAppearance` | `Bubble`          | Selects the appearance of messages from the current user. |
+| `incomingMessageAppearance` | `ui5x.chat.ChatMessageAppearance` | `Conversation` | Selects the appearance of incoming messages. |
+| `composerPosition`       | `ui5x.chat.ChatFeedComposerPosition` | `Top`       | Places the composer above or below the messages. |
+| `messageAlignment`       | `ui5x.chat.ChatFeedMessageAlignment` | `Top`       | Starts short conversations at the top or bottom and controls the initial scroll position. |
+| `chatMaxHeight`          | `sap.ui.core.CSSSize` | `32rem`                    | Reserves and limits the complete chat so the composer stays fixed; percentages require a parent with an explicit height, while an empty value restores a content-driven height. |
+| `width`                  | `sap.ui.core.CSSSize` | `100%`                     | Width of the control.                            |
+
+| `ChatMessage` property | Type      | Default | Description                                         |
+| ---------------------- | --------- | ------- | --------------------------------------------------- |
+| `key`                  | `string`  | `""`    | Stable application key for the message.             |
+| `text`                 | `string`  | `""`    | Message body.                                       |
+| `sender`               | `string`  | `""`    | Displayed sender name.                              |
+| `ownMessage`           | `boolean` | `false` | Aligns messages from the current user to the end.   |
+| `editable`             | `boolean` | `false` | Enables inline editing with save and cancel actions. |
+| `deletable`            | `boolean` | `false` | Displays a transparent Fiori delete action.         |
+| `timestamp`            | `any`     | `null`  | Date, ISO string or numeric message timestamp.      |
+
+| Event           | Parameter              | Description                                      |
+| --------------- | ---------------------- | ------------------------------------------------ |
+| `liveChange`    | `value: string`        | Fired whenever the composer value changes.      |
+| `send`          | `value: string`        | Fired after a non-empty value is submitted.      |
+| `messageEdit`   | `message: ChatMessage`, `value: string` | Fired when an inline edit is confirmed. |
+| `messageDelete` | `message: ChatMessage` | Fired when a message delete action is pressed.   |
+
 ## Development
 
 ```bash
@@ -563,7 +664,7 @@ npm start
 `npm start` regenerates the control interfaces in watch mode and serves the test pages at
 `http://localhost:8080/test-resources/ui5x/Skeleton.html`. Additional manual demos include
 `LoadingContainer.html`, `LoadingResponsiveTable.html`, `LoadingTable.html`, `Accordion.html`,
-`CopyButton.html` and `SegmentedInput.html` in the same directory.
+`CopyButton.html`, `SegmentedInput.html` and `ChatFeed.html` in the same directory.
 
 | Script                      | What it does |
 | --------------------------- | ------------ |
@@ -601,6 +702,10 @@ src/ui5x/
     SegmentedInputType.ts        Numeric | Alphanumeric enum
     SegmentedInputSize.ts        Small | Medium | Large enum
     renderer/                    segmented input renderer
+  chat/
+    ChatFeed.ts                  bindable chat and composer control
+    ChatMessage.ts               individual incoming or own message
+    renderer/                    chat renderers
   themes/                        LESS sources grouped by control namespace
 test/ui5x/
   *.html                         manual demo pages
