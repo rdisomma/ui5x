@@ -11,6 +11,7 @@ import Localization from "sap/base/i18n/Localization";
 import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
 import Lib from "sap/ui/core/Lib";
+import type { AccessibilityInfo } from "sap/ui/core/library";
 import { ValueState } from "sap/ui/core/library";
 
 import SegmentedInputRenderer from "./renderer/SegmentedInputRenderer";
@@ -112,6 +113,33 @@ export default class SegmentedInput extends Control {
             showClearIcon: {
                 type: "boolean",
                 defaultValue: false
+            },
+            /**
+             * Defines whether the control can be interacted with.
+             *
+             * A disabled control is dimmed and cannot receive focus.
+             */
+            enabled: {
+                type: "boolean",
+                defaultValue: true
+            },
+            /**
+             * Defines whether the value can be changed.
+             *
+             * A non-editable control keeps its normal appearance and can still
+             * be focused and read, but rejects every value change.
+             */
+            editable: {
+                type: "boolean",
+                defaultValue: true
+            },
+            /**
+             * Defines whether the control is marked as required for assistive
+             * technologies.
+             */
+            required: {
+                type: "boolean",
+                defaultValue: false
             }
         },
 
@@ -128,6 +156,20 @@ export default class SegmentedInput extends Control {
              * Fired whenever the value changes through user input.
              */
             liveChange: {
+                parameters: {
+                    /**
+                     * The current value.
+                     */
+                    value: {
+                        type: "string"
+                    }
+                }
+            },
+            /**
+             * Fired when the value has been changed by the user and the focus
+             * has left the control.
+             */
+            change: {
                 parameters: {
                     /**
                      * The current value.
@@ -162,10 +204,12 @@ export default class SegmentedInput extends Control {
      * created there.
      */
     private declare lastCompletedValue: string;
+    private declare lastChangeValue: string;
     private declare digitValues: string[];
 
     init(): void {
         this.lastCompletedValue = "";
+        this.lastChangeValue = "";
         this.digitValues = this.createDigitValues("");
 
         const clearText = Lib.getResourceBundleFor("sap.m")?.getText(
@@ -197,6 +241,8 @@ export default class SegmentedInput extends Control {
         ) {
             this.digitValues = this.createDigitValues(value);
         }
+
+        this.syncClearButton();
     }
 
     onAfterRendering(): void {
@@ -262,6 +308,12 @@ export default class SegmentedInput extends Control {
     }
 
     oninput(event: InputEvent): void {
+        if (!this.isChangeable()) {
+            this.syncDigitInputs();
+
+            return;
+        }
+
         const input = this.getDigitInput(event.target);
         const originalEvent = (
             event as InputEvent & { originalEvent?: InputEvent }
@@ -318,6 +370,10 @@ export default class SegmentedInput extends Control {
             case "Backspace": {
                 event.preventDefault();
 
+                if (!this.isChangeable()) {
+                    break;
+                }
+
                 const removeIndex = this.digitValues[index]
                     ? index
                     : index - 1;
@@ -332,7 +388,7 @@ export default class SegmentedInput extends Control {
             case "Delete":
                 event.preventDefault();
 
-                if (this.digitValues[index]) {
+                if (this.isChangeable() && this.digitValues[index]) {
                     this.removeDigit(index, index);
                 }
 
@@ -362,7 +418,7 @@ export default class SegmentedInput extends Control {
                 if (
                     !hasModifier
                     && key.length === 1
-                    && !this.isAllowedCharacter(key)
+                    && (!this.isChangeable() || !this.isAllowedCharacter(key))
                 ) {
                     event.preventDefault();
                 }
@@ -370,6 +426,12 @@ export default class SegmentedInput extends Control {
     }
 
     onpaste(event: ClipboardEvent): void {
+        if (!this.isChangeable()) {
+            event.preventDefault();
+
+            return;
+        }
+
         const input = this.getDigitInput(event.target);
         const originalEvent = (
             event as ClipboardEvent & { originalEvent?: ClipboardEvent }
@@ -396,7 +458,104 @@ export default class SegmentedInput extends Control {
     }
 
     onfocusin(event: FocusEvent): void {
-        this.getDigitInput(event.target)?.select();
+        const input = this.getDigitInput(event.target);
+
+        if (!input) {
+            return;
+        }
+
+        /*
+         * Remember the value the user starts from, but only when the focus
+         * enters the control: moving between the fields must not reset the
+         * reference the change event is compared against.
+         */
+        if (!this.containsFocusTarget(this.getRelatedTarget(event))) {
+            this.lastChangeValue = this.getValue();
+        }
+
+        input.select();
+    }
+
+    onfocusout(event: FocusEvent): void {
+        if (this.containsFocusTarget(this.getRelatedTarget(event))) {
+            return;
+        }
+
+        const value = this.getValue();
+
+        if (value === this.lastChangeValue) {
+            return;
+        }
+
+        this.lastChangeValue = value;
+
+        this.fireEvent("change", {
+            value
+        });
+    }
+
+    getFocusDomRef(): Element | null {
+        const root = this.getDomRef();
+
+        if (!root) {
+            return null;
+        }
+
+        const inputs = Array.from(
+            root.querySelectorAll<HTMLInputElement>(
+                ".ui5xSegmentedInputDigit"
+            )
+        );
+
+        /*
+         * Focusing the control means continuing where the value stops, so the
+         * first empty field wins. Without this the root div would be returned,
+         * which has no tabindex and silently swallows focus() calls.
+         */
+        return inputs.find((input) => !input.value)
+            ?? inputs[0]
+            ?? null;
+    }
+
+    getIdForLabel(): string {
+        return `${this.getId()}-digit-0`;
+    }
+
+    getAccessibilityInfo(): AccessibilityInfo {
+        return {
+            role: "group",
+            type: Lib.getResourceBundleFor("sap.m")?.getText(
+                "ACC_CTR_TYPE_INPUT"
+            ) ?? "Input",
+            description: this.getValue(),
+            focusable: this.getEnabled(),
+            enabled: this.getEnabled(),
+            editable: this.getEnabled() && this.getEditable(),
+            readonly: !this.getEditable()
+        };
+    }
+
+    /**
+     * Whether user interaction may change the value.
+     */
+    private isChangeable(): boolean {
+        return this.getEnabled() && this.getEditable();
+    }
+
+    private getRelatedTarget(event: FocusEvent): EventTarget | null {
+        const originalEvent = (
+            event as FocusEvent & { originalEvent?: FocusEvent }
+        ).originalEvent;
+
+        return event.relatedTarget ?? originalEvent?.relatedTarget ?? null;
+    }
+
+    private containsFocusTarget(target: EventTarget | null): boolean {
+        const root = this.getDomRef();
+
+        return Boolean(
+            root && target instanceof Node && root.contains(target)
+        );
     }
 
     _getDigitValue(index: number): string {
@@ -408,6 +567,10 @@ export default class SegmentedInput extends Control {
     }
 
     private handleClearPress(): void {
+        if (!this.isChangeable()) {
+            return;
+        }
+
         this.clear();
         this.fireEvent("liveChange", {
             value: ""
@@ -498,13 +661,22 @@ export default class SegmentedInput extends Control {
             input.value = this.digitValues[index] ?? "";
         });
 
-        const clearButton = this.getDomRef()?.querySelector<HTMLButtonElement>(
-            ".ui5xSegmentedInputClearButton"
-        );
+        this.syncClearButton();
+    }
 
-        if (clearButton) {
-            clearButton.hidden = !this.digitValues.some(Boolean);
-        }
+    /*
+     * The button is a real control, so its state goes through the UI5
+     * lifecycle. Writing hidden on its DOM node instead would be lost as soon
+     * as the button re-renders on its own.
+     */
+    private syncClearButton(): void {
+        const clearButton = this._getClearButton();
+
+        clearButton.setVisible(this.digitValues.some(Boolean));
+
+        clearButton.setEnabled(
+            this.getEnabled() && this.getEditable()
+        );
     }
 
     /*

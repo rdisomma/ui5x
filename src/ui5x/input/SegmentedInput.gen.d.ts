@@ -72,9 +72,36 @@ declare module "./SegmentedInput" {
         showClearIcon?: boolean | PropertyBindingInfo | `{${string}}`;
 
         /**
+         * Defines whether the control can be interacted with.
+        
+        A disabled control is dimmed and cannot receive focus.
+         */
+        enabled?: boolean | PropertyBindingInfo | `{${string}}`;
+
+        /**
+         * Defines whether the value can be changed.
+        
+        A non-editable control keeps its normal appearance and can still
+        be focused and read, but rejects every value change.
+         */
+        editable?: boolean | PropertyBindingInfo | `{${string}}`;
+
+        /**
+         * Defines whether the control is marked as required for assistive
+        technologies.
+         */
+        required?: boolean | PropertyBindingInfo | `{${string}}`;
+
+        /**
          * Fired whenever the value changes through user input.
          */
         liveChange?: (event: SegmentedInput$LiveChangeEvent) => void;
+
+        /**
+         * Fired when the value has been changed by the user and the focus
+        has left the control.
+         */
+        change?: (event: SegmentedInput$ChangeEvent) => void;
 
         /**
          * Fired when every digit field contains a value.
@@ -220,6 +247,54 @@ declare module "./SegmentedInput" {
          */
         setShowClearIcon(showClearIcon: boolean): this;
 
+        // property: enabled
+
+        /**
+         * Defines whether the control can be interacted with.
+        
+        A disabled control is dimmed and cannot receive focus.
+         */
+        getEnabled(): boolean;
+
+        /**
+         * Defines whether the control can be interacted with.
+        
+        A disabled control is dimmed and cannot receive focus.
+         */
+        setEnabled(enabled: boolean): this;
+
+        // property: editable
+
+        /**
+         * Defines whether the value can be changed.
+        
+        A non-editable control keeps its normal appearance and can still
+        be focused and read, but rejects every value change.
+         */
+        getEditable(): boolean;
+
+        /**
+         * Defines whether the value can be changed.
+        
+        A non-editable control keeps its normal appearance and can still
+        be focused and read, but rejects every value change.
+         */
+        setEditable(editable: boolean): this;
+
+        // property: required
+
+        /**
+         * Defines whether the control is marked as required for assistive
+        technologies.
+         */
+        getRequired(): boolean;
+
+        /**
+         * Defines whether the control is marked as required for assistive
+        technologies.
+         */
+        setRequired(required: boolean): this;
+
         // event: liveChange
 
         /**
@@ -241,6 +316,32 @@ declare module "./SegmentedInput" {
          * Fired whenever the value changes through user input.
          */
         fireLiveChange(parameters?: SegmentedInput$LiveChangeEventParameters): this;
+
+        // event: change
+
+        /**
+         * Fired when the value has been changed by the user and the focus
+        has left the control.
+         */
+        attachChange(fn: (event: SegmentedInput$ChangeEvent) => void, listener?: object): this;
+
+        /**
+         * Fired when the value has been changed by the user and the focus
+        has left the control.
+         */
+        attachChange<CustomDataType extends object>(data: CustomDataType, fn: (event: SegmentedInput$ChangeEvent, data: CustomDataType) => void, listener?: object): this;
+
+        /**
+         * Fired when the value has been changed by the user and the focus
+        has left the control.
+         */
+        detachChange(fn: (event: SegmentedInput$ChangeEvent) => void, listener?: object): this;
+
+        /**
+         * Fired when the value has been changed by the user and the focus
+        has left the control.
+         */
+        fireChange(parameters?: SegmentedInput$ChangeEventParameters): this;
 
         // event: complete
 
@@ -274,6 +375,15 @@ declare module "./SegmentedInput" {
     }
 
     /**
+     * Interface describing the parameters of SegmentedInput's 'change' event.
+     * Fired when the value has been changed by the user and the focus
+    has left the control.
+     */
+    export interface SegmentedInput$ChangeEventParameters {
+        value?: string;
+    }
+
+    /**
      * Interface describing the parameters of SegmentedInput's 'complete' event.
      * Fired when every digit field contains a value.
      */
@@ -286,6 +396,13 @@ declare module "./SegmentedInput" {
      * Fired whenever the value changes through user input.
      */
     export type SegmentedInput$LiveChangeEvent = Event<SegmentedInput$LiveChangeEventParameters>;
+
+    /**
+     * Type describing the SegmentedInput's 'change' event.
+     * Fired when the value has been changed by the user and the focus
+    has left the control.
+     */
+    export type SegmentedInput$ChangeEvent = Event<SegmentedInput$ChangeEventParameters>;
 
     /**
      * Type describing the SegmentedInput's 'complete' event.

@@ -21,6 +21,8 @@ const SegmentedInputRenderer = {
         const inputType = control.getInputType();
         const size = control.getSize();
         const isNumeric = inputType === SegmentedInputType.Numeric;
+        const enabled = control.getEnabled();
+        const editable = control.getEditable();
         const valueState = control.getValueState();
         const hasValueState = valueState !== ValueState.None;
         const valueStateText = hasValueState
@@ -34,6 +36,14 @@ const SegmentedInputRenderer = {
         rm.class("ui5xSegmentedInput");
         rm.class(`ui5xSegmentedInputSize${size}`);
         rm.attr("data-ui5x-digits", digits);
+
+        if (!enabled) {
+            rm.class("ui5xSegmentedInputDisabled");
+        }
+
+        if (!editable) {
+            rm.class("ui5xSegmentedInputReadOnly");
+        }
 
         if (hasValueState) {
             rm.class(`ui5xSegmentedInput${valueState}`);
@@ -57,6 +67,18 @@ const SegmentedInputRenderer = {
             rm.attr("data-ui5x-digit-index", index);
             rm.attr("autocapitalize", "off");
             rm.attr("spellcheck", "false");
+
+            if (!enabled) {
+                rm.attr("disabled", "disabled");
+            }
+
+            if (!editable) {
+                rm.attr("readonly", "readonly");
+            }
+
+            if (control.getRequired()) {
+                rm.attr("aria-required", "true");
+            }
             rm.attr(
                 "autocomplete",
                 isNumeric && index === 0 ? "one-time-code" : "off"

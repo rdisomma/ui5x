@@ -104,6 +104,12 @@
                         );
                     },
 
+                    change: function (event) {
+                        Log.info(
+                            `${configuration.label} change: ${event.getParameter("value")}`
+                        );
+                    },
+
                     complete: function () {
                         this.setValueState(configuration.completeState);
                         this.setValueStateText(configuration.completeText);
@@ -250,6 +256,38 @@
                     function (pressed) {
                         forEachControl(function (control) {
                             control.setShowClearIcon(pressed);
+                        });
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.toggle(
+                    "Enabled",
+                    reference.getEnabled(),
+                    function (pressed) {
+                        forEachControl(function (control) {
+                            control.setEnabled(pressed);
+                        });
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Editable",
+                    reference.getEditable(),
+                    function (pressed) {
+                        forEachControl(function (control) {
+                            control.setEditable(pressed);
+                        });
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Required",
+                    reference.getRequired(),
+                    function (pressed) {
+                        forEachControl(function (control) {
+                            control.setRequired(pressed);
                         });
                     }
                 ),
