@@ -139,10 +139,19 @@ export default class ChatMessage extends Control {
 
     static renderer: typeof ChatMessageRenderer = ChatMessageRenderer;
 
-    private editing = false;
-    private draftText = "";
+    /*
+     * UI5 invokes init() from the base Control constructor and applySettings()
+     * right after it. These fields must therefore be type-only declarations:
+     * emitted class-field initializers would run later and overwrite the state
+     * created by init() or by a setter called from settings.
+     */
+    private declare editing: boolean;
+    private declare draftText: string;
 
     init(): void {
+        this.editing = false;
+        this.draftText = "";
+
         const resourceBundle = Lib.getResourceBundleFor("sap.m");
         const editText = resourceBundle?.getText("LIST_ITEM_EDIT") ?? "";
         const deleteText = resourceBundle?.getText("LIST_ITEM_DELETE") ?? "";
@@ -244,16 +253,78 @@ export default class ChatMessage extends Control {
         return this.editing && this.getEditable();
     }
 
+    setEditable(editable: boolean): this {
+        /*
+         * Without this the editing state survives a disabled edit action and
+         * reopens the editor with a stale draft once it is enabled again.
+         */
+        if (!editable) {
+            this.editing = false;
+            this.draftText = "";
+        }
+
+        return this.setProperty("editable", editable);
+    }
+
+    _getDraft(): string {
+        return this._isEditing() ? this.draftText : "";
+    }
+
+    /**
+     * Reopens the editor with a draft captured before this control was
+     * recreated by an aggregation binding update.
+     */
+    _restoreDraft(draft: string): void {
+        if (!this.getEditable() || this.editing) {
+            return;
+        }
+
+        this.editing = true;
+        this.draftText = draft;
+        this._getEditor().setValue(draft);
+        this.updateSaveButtonEnabled();
+        this.invalidate();
+    }
+
+    _closeEdit(): void {
+        if (!this.editing) {
+            return;
+        }
+
+        this.editing = false;
+        this.draftText = "";
+        this._getEditor().setValue("");
+        this.invalidate();
+    }
+
     private beginEdit(): void {
         if (!this.getEditable()) {
             return;
         }
+
+        this.closeSiblingEdits();
 
         this.editing = true;
         this.draftText = this.getText();
         this._getEditor().setValue(this.draftText);
         this.updateSaveButtonEnabled();
         this.invalidate();
+    }
+
+    /*
+     * Only one message of a feed can be edited at a time. The parent is read
+     * structurally to keep ChatMessage independent from ChatFeed.
+     */
+    private closeSiblingEdits(): void {
+        const parent = this.getParent() as unknown as {
+            getMessages?: () => ChatMessage[];
+        } | null;
+
+        parent?.getMessages?.().forEach((message) => {
+            if (message !== this) {
+                message._closeEdit();
+            }
+        });
     }
 
     private handleEditorLiveChange(event: TextArea$LiveChangeEvent): void {

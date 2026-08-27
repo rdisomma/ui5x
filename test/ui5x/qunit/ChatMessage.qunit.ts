@@ -5,6 +5,23 @@ import ChatMessage from "ui5x/chat/ChatMessage";
 
 QUnit.module("ui5x.chat.ChatMessage");
 
+QUnit.test("Disabling editing discards the pending draft", function (assert) {
+    const message = new ChatMessage({ text: "Hello", editable: true });
+
+    message._getEditButton().firePress();
+    message._getEditor().fireLiveChange({ value: "Draft" });
+
+    assert.ok(message._isEditing(), "The editor is open");
+
+    message.setEditable(false);
+    message.setEditable(true);
+
+    assert.notOk(message._isEditing(), "The editor does not reopen with a stale draft");
+    assert.strictEqual(message._getDraft(), "", "The draft is discarded");
+
+    message.destroy();
+});
+
 QUnit.test("Defaults and action buttons", function (assert) {
     const message = new ChatMessage();
     const resourceBundle = Lib.getResourceBundleFor("sap.m");

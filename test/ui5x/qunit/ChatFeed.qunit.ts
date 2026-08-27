@@ -503,6 +503,79 @@ QUnit.test("Messages bind from a model, group by date and forward actions", func
     feed.placeAt("qunit-fixture");
 });
 
+QUnit.test("Only one message editor is open at a time", function (assert) {
+    const first = new ChatMessage({ text: "One", editable: true });
+    const second = new ChatMessage({ text: "Two", editable: true });
+    const feed = new ChatFeed({ messages: [first, second] });
+
+    first._getEditButton().firePress();
+    assert.ok(first._isEditing(), "The first editor opens");
+
+    second._getEditButton().firePress();
+
+    assert.ok(second._isEditing(), "The second editor opens");
+    assert.notOk(first._isEditing(), "The first editor is closed by the second one");
+
+    feed.destroy();
+});
+
+QUnit.test("An unconfirmed edit survives a model refresh", function (assert) {
+    const done = assert.async();
+    const model = new JSONModel({
+        messages: [
+            { id: "1", text: "Incoming", editable: false },
+            { id: "2", text: "Outgoing", editable: true }
+        ]
+    });
+    const feed = new ChatFeed();
+    let renderingCount = 0;
+
+    feed.setModel(model);
+    feed.bindAggregation("messages", {
+        path: "/messages",
+        template: new ChatMessage({
+            key: "{id}",
+            text: "{text}",
+            editable: "{editable}"
+        }),
+        templateShareable: false
+    });
+
+    feed.addEventDelegate({
+        onAfterRendering: () => {
+            renderingCount += 1;
+
+            const messages = feed.getMessages();
+
+            if (renderingCount === 1) {
+                messages[1]._getEditButton().firePress();
+                messages[1]._getEditor().fireLiveChange({ value: "Draft in progress" });
+
+                assert.ok(messages[1]._isEditing(), "The editor is open before the refresh");
+
+                model.setProperty("/messages", [
+                    ...(model.getProperty("/messages") as object[]),
+                    { id: "3", text: "New incoming", editable: false }
+                ]);
+
+                return;
+            }
+
+            const restored = messages.find((message) => message.getKey() === "2");
+
+            assert.strictEqual(messages.length, 3, "The refresh recreated the bound messages");
+            assert.ok(restored?._isEditing(), "The editor is still open after the refresh");
+            assert.strictEqual(restored?._getDraft(), "Draft in progress", "The draft is preserved");
+
+            feed.destroy();
+            model.destroy();
+            done();
+        }
+    });
+
+    feed.placeAt("qunit-fixture");
+});
+
 QUnit.test("Visibility and editability are reflected by the composer", function (assert) {
     const done = assert.async();
     const feed = new ChatFeed({

@@ -13,6 +13,7 @@ import type UI5Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
 import Lib from "sap/ui/core/Lib";
+import type ChangeReason from "sap/ui/model/ChangeReason";
 
 import Skeleton from "../loading/Skeleton";
 import ChatFeedComposerPosition from "./ChatFeedComposerPosition";
@@ -272,16 +273,35 @@ export default class ChatFeed extends Control {
 
     static renderer: typeof ChatFeedRenderer = ChatFeedRenderer;
 
-    private attachedMessages = new Set<ChatMessage>();
-    private wasBottomAligned = false;
-    private shouldScrollToBottom = false;
-    private forceScrollToBottom = false;
-    private hasRenderedMessages = false;
-    private renderedMessageCount = 0;
-    private renderedLastMessage: ChatMessage | null = null;
-    private renderedLastMessageKey = "";
+    /*
+     * UI5 invokes init() from the base Control constructor and applySettings()
+     * right after it. These fields must therefore be type-only declarations:
+     * emitted class-field initializers would run later and overwrite the state
+     * created by init() or by an aggregation binding applied from settings.
+     */
+    private declare attachedMessages: Set<ChatMessage>;
+    private declare wasBottomAligned: boolean;
+    private declare shouldScrollToBottom: boolean;
+    private declare forceScrollToBottom: boolean;
+    private declare hasRenderedMessages: boolean;
+    private declare renderedMessageCount: number;
+    private declare renderedLastMessage: ChatMessage | null;
+    private declare renderedLastMessageKey: string;
+    private declare pendingEditKey: string;
+    private declare pendingEditDraft: string;
 
     init(): void {
+        this.attachedMessages = new Set<ChatMessage>();
+        this.wasBottomAligned = false;
+        this.shouldScrollToBottom = false;
+        this.forceScrollToBottom = false;
+        this.hasRenderedMessages = false;
+        this.renderedMessageCount = 0;
+        this.renderedLastMessage = null;
+        this.renderedLastMessageKey = "";
+        this.pendingEditKey = "";
+        this.pendingEditDraft = "";
+
         const textArea = new TextArea(`${this.getId()}-text-area`, {
             width: "100%",
             rows: 1,
@@ -336,6 +356,29 @@ export default class ChatFeed extends Control {
 
         this.syncComposer();
         this.syncMessageHandlers();
+        this.restorePendingEdit();
+    }
+
+    /**
+     * Keeps an unconfirmed edit alive across an aggregation binding update.
+     *
+     * A model refresh destroys and recreates the bound ChatMessage controls, so
+     * the draft is captured here and handed back to the message carrying the
+     * same key.
+     */
+    updateMessages(changeReason: ChangeReason, eventInfo: {
+        detailedReason?: string;
+    }): void {
+        const editingMessage = this.getMessages().find(
+            (message) => message._isEditing() && message.getKey()
+        );
+
+        if (editingMessage) {
+            this.pendingEditKey = editingMessage.getKey();
+            this.pendingEditDraft = editingMessage._getDraft();
+        }
+
+        this.updateAggregation("messages", changeReason, eventInfo);
     }
 
     onAfterRendering(): void {
@@ -502,6 +545,22 @@ export default class ChatFeed extends Control {
         this.forceScrollToBottom = true;
         this.fireEvent("send", { value });
         this.setValue("");
+    }
+
+    private restorePendingEdit(): void {
+        if (!this.pendingEditKey) {
+            return;
+        }
+
+        const draft = this.pendingEditDraft;
+        const message = this.getMessages().find(
+            (candidate) => candidate.getKey() === this.pendingEditKey
+        );
+
+        this.pendingEditKey = "";
+        this.pendingEditDraft = "";
+
+        message?._restoreDraft(draft);
     }
 
     private syncMessageHandlers(): void {
