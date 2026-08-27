@@ -7,7 +7,6 @@ QUnit.test("Default properties", function (assert) {
     const accordion = new Accordion();
 
     assert.notOk(accordion.getMultipleExpansion(), "Single expansion is the default");
-    assert.deepEqual(accordion.getExpandedKeys(), [], "No expanded keys are configured");
     assert.strictEqual(accordion.getWidth(), "", "Width is unset by default");
     assert.deepEqual(accordion.getItems(), [], "The default aggregation starts empty");
 
@@ -82,6 +81,38 @@ QUnit.test("Multiple expansion keeps existing items open", function (assert) {
 
             assert.ok(firstItem.getExpanded(), "The first item remains expanded");
             assert.ok(secondItem.getExpanded(), "The second item is also expanded");
+
+            accordion.destroy();
+            done();
+        }
+    });
+
+    accordion.placeAt("qunit-fixture");
+});
+
+QUnit.test("Expanding an item never collapses a non-toggleable item", function (assert) {
+    const done = assert.async();
+    const fixedItem = new AccordionItem({
+        title: "Fixed",
+        expanded: true,
+        toggleable: false
+    });
+    const toggleableItem = new AccordionItem({ title: "Toggleable" });
+    const accordion = new Accordion({ items: [fixedItem, toggleableItem] });
+
+    accordion.addEventDelegate({
+        onAfterRendering: () => {
+            const header = document.getElementById(
+                `${toggleableItem.getId()}-header`
+            ) as HTMLButtonElement;
+
+            header.dispatchEvent(new MouseEvent("click", {
+                bubbles: true,
+                cancelable: true
+            }));
+
+            assert.ok(toggleableItem.getExpanded(), "The clicked item expands");
+            assert.ok(fixedItem.getExpanded(), "The non-toggleable item survives the coordination");
 
             accordion.destroy();
             done();

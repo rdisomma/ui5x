@@ -19,11 +19,6 @@ declare module "./Accordion" {
         multipleExpansion?: boolean | PropertyBindingInfo | `{${string}}`;
 
         /**
-         * Defines the keys of the currently expanded items.
-         */
-        expandedKeys?: string[] | PropertyBindingInfo | `{${string}}`;
-
-        /**
          * Defines the width of the accordion.
         
         Accepts any valid UI5 CSSSize value, such as
@@ -58,18 +53,6 @@ declare module "./Accordion" {
         at the same time.
          */
         setMultipleExpansion(multipleExpansion: boolean): this;
-
-        // property: expandedKeys
-
-        /**
-         * Defines the keys of the currently expanded items.
-         */
-        getExpandedKeys(): string[];
-
-        /**
-         * Defines the keys of the currently expanded items.
-         */
-        setExpandedKeys(expandedKeys: string[]): this;
 
         // property: width
 

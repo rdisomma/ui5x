@@ -43,13 +43,6 @@ export default class Accordion extends Control {
                 defaultValue: false
             },
             /**
-             * Defines the keys of the currently expanded items.
-             */
-            expandedKeys: {
-                type: "string[]",
-                defaultValue: []
-            },
-            /**
              * Defines the width of the accordion.
              *
              * Accepts any valid UI5 CSSSize value, such as
@@ -154,7 +147,15 @@ export default class Accordion extends Control {
 
         if (expanded && !this.getMultipleExpansion()) {
             for (const otherItem of this.getItems()) {
-                if (otherItem !== item && otherItem.getExpanded()) {
+                /*
+                 * A non-toggleable item keeps its state, so it is also exempt
+                 * from the single-expansion coordination.
+                 */
+                if (
+                    otherItem !== item
+                    && otherItem.getExpanded()
+                    && otherItem.getToggleable()
+                ) {
                     otherItem.setExpanded(false);
                 }
             }
