@@ -16,18 +16,28 @@
 
         body.sapUiBody {
             display: flex;
+            align-items: center;
             justify-content: center;
 
-            box-sizing: border-box;
-            padding: 2rem;
+            overflow: hidden;
 
             background: var(--sapBackgroundColor);
         }
 
         #content {
+            width: 720px;
+            height: 405px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-sizing: border-box;
+            padding: 1.5rem;
+        }
+
+        .showcaseChat {
             width: 100%;
-            height: 100%;
-            max-width: 100%;
         }
     </style>
 
@@ -57,37 +67,36 @@
         ) {
             "use strict";
 
+            const initialMessages = [
+                {
+                    id: "1",
+                    text: "Hi! Could you check the latest order status?",
+                    sender: "Anna",
+                    ownMessage: false,
+                    editable: false,
+                    deletable: false,
+                    timestamp: "2026-08-26T16:42:00"
+                },
+                {
+                    id: "2",
+                    text: "Of course. I'm checking it now.",
+                    sender: "You",
+                    ownMessage: true,
+                    editable: false,
+                    deletable: false,
+                    timestamp: "2026-08-26T16:45:00"
+                }
+            ];
+
+            function createInitialMessages() {
+                return initialMessages.map(function (message) {
+                    return { ...message };
+                });
+            }
+
             const model = new JSONModel({
                 draft: "",
-                messages: [
-                    {
-                        id: "1",
-                        text: "Hi! Can you check the latest order status?",
-                        sender: "Anna",
-                        ownMessage: false,
-                        editable: false,
-                        deletable: false,
-                        timestamp: "2026-08-25T16:42:00"
-                    },
-                    {
-                        id: "2",
-                        text: "Done.",
-                        sender: "You",
-                        ownMessage: true,
-                        editable: true,
-                        deletable: true,
-                        timestamp: "2026-08-25T16:45:00"
-                    },
-                    {
-                        id: "3",
-                        text: "Perfect, thank you!",
-                        sender: "Anna",
-                        ownMessage: false,
-                        editable: false,
-                        deletable: false,
-                        timestamp: "2026-08-26T09:10:00"
-                    }
-                ]
+                messages: createInitialMessages()
             });
 
             const messageTemplate = new ChatMessage({
@@ -116,20 +125,20 @@
                 incomingMessageAppearance: ChatMessageAppearance.Conversation,
                 composerPosition: ChatFeedComposerPosition.Bottom,
                 messageAlignment: ChatFeedMessageAlignment.Bottom,
-                chatMaxHeight: "100%",
+                chatMaxHeight: "22rem",
                 enabled: true,
 
                 send: function (event) {
                     const messages = model.getProperty("/messages");
 
                     messages.push({
-                        id: String(Date.now()),
+                        id: "4",
                         text: event.getParameter("value"),
                         sender: "You",
                         ownMessage: true,
                         editable: true,
                         deletable: true,
-                        timestamp: new Date()
+                        timestamp: "2026-08-27T10:18:00"
                     });
 
                     model.refresh(true);
@@ -166,16 +175,93 @@
                 template: messageTemplate,
                 templateShareable: false
             });
-            feed.placeAt("content");
+            feed
+                .addStyleClass("showcaseChat")
+                .placeAt("content");
 
-            setTimeout(function () {
+            function wait(milliseconds) {
+                return new Promise(function (resolve) {
+                    window.setTimeout(resolve, milliseconds);
+                });
+            }
+
+            async function typeMessage(text) {
+                feed._getTextArea().focus();
+
+                for (let index = 1; index <= text.length; index += 1) {
+                    feed.setValue(text.slice(0, index));
+                    await wait(35);
+                }
+            }
+
+            function resetConversation() {
+                feed.setLoading(true);
+                feed.setValue("");
+                model.setProperty("/messages", createInitialMessages());
+            }
+
+            function addStatusUpdate() {
+                const messages = model.getProperty("/messages");
+
+                messages.push({
+                    id: "3",
+                    text: "It was shipped this morning.",
+                    sender: "Anna",
+                    ownMessage: false,
+                    editable: false,
+                    deletable: false,
+                    timestamp: "2026-08-27T09:10:00"
+                });
+
+                model.refresh(true);
+            }
+
+            function addIncomingReply() {
+                const messages = model.getProperty("/messages");
+
+                messages.push({
+                    id: "5",
+                    text: "Sure! I've sent the tracking link and delivery details.",
+                    sender: "Anna",
+                    ownMessage: false,
+                    editable: false,
+                    deletable: false,
+                    timestamp: "2026-08-27T10:19:00"
+                });
+
+                model.refresh(true);
+            }
+
+            async function play() {
+                resetConversation();
+
+                await wait(1100);
                 feed.setLoading(false);
-            }, 1600);
+
+                await wait(600);
+                addStatusUpdate();
+
+                await wait(700);
+                await typeMessage(
+                    "Great! Could you send me the tracking link and confirm the delivery date?"
+                );
+
+                await wait(300);
+                feed._getSendButton().firePress();
+
+                await wait(900);
+                addIncomingReply();
+
+                await wait(2200);
+                play();
+            }
+
+            play();
         });
     </script>
 </head>
 
-<body class="sapUiBody">
+<body class="sapUiBody sapUiSizeCompact">
     <div id="content"></div>
 </body>
 
