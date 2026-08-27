@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>UI5X ChatFeed Demo</title>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body.sapUiBody {
+            display: flex;
+            justify-content: center;
+
+            box-sizing: border-box;
+            padding: 2rem;
+
+            background: var(--sapBackgroundColor);
+        }
+
+        #content {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+        }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge">
+    </script>
+
+    <script>
+        sap.ui.require([
+            "ui5x/chat/ChatFeed",
+            "ui5x/chat/ChatFeedComposerPosition",
+            "ui5x/chat/ChatFeedMessageAlignment",
+            "ui5x/chat/ChatMessage",
+            "ui5x/chat/ChatMessageAppearance",
+            "sap/ui/model/json/JSONModel"
+        ], function (
+            ChatFeed,
+            ChatFeedComposerPosition,
+            ChatFeedMessageAlignment,
+            ChatMessage,
+            ChatMessageAppearance,
+            JSONModel
+        ) {
+            "use strict";
+
+            const model = new JSONModel({
+                draft: "",
+                messages: [
+                    {
+                        id: "1",
+                        text: "Hi! Can you check the latest order status?",
+                        sender: "Anna",
+                        ownMessage: false,
+                        editable: false,
+                        deletable: false,
+                        timestamp: "2026-08-25T16:42:00"
+                    },
+                    {
+                        id: "2",
+                        text: "Done.",
+                        sender: "You",
+                        ownMessage: true,
+                        editable: true,
+                        deletable: true,
+                        timestamp: "2026-08-25T16:45:00"
+                    },
+                    {
+                        id: "3",
+                        text: "Perfect, thank you!",
+                        sender: "Anna",
+                        ownMessage: false,
+                        editable: false,
+                        deletable: false,
+                        timestamp: "2026-08-26T09:10:00"
+                    }
+                ]
+            });
+
+            const messageTemplate = new ChatMessage({
+                key: "{id}",
+                text: "{text}",
+                sender: "{sender}",
+                ownMessage: "{ownMessage}",
+                editable: "{editable}",
+                deletable: "{deletable}",
+                timestamp: "{timestamp}"
+            });
+
+            const feed = new ChatFeed({
+                value: "{/draft}",
+                placeholder: "Write a message",
+                loading: true,
+                sendOnEnter: true,
+                sendButtonText: "",
+                sendButtonIcon: "sap-icon://paper-plane",
+                sendButtonType: "Emphasized",
+                showSendButton: true,
+                sendButtonEnabled: true,
+                groupByDate: true,
+                highlightOwnMessage: false,
+                ownMessageAppearance: ChatMessageAppearance.Bubble,
+                incomingMessageAppearance: ChatMessageAppearance.Conversation,
+                composerPosition: ChatFeedComposerPosition.Bottom,
+                messageAlignment: ChatFeedMessageAlignment.Bottom,
+                chatMaxHeight: "100%",
+                enabled: true,
+
+                send: function (event) {
+                    const messages = model.getProperty("/messages");
+
+                    messages.push({
+                        id: String(Date.now()),
+                        text: event.getParameter("value"),
+                        sender: "You",
+                        ownMessage: true,
+                        editable: true,
+                        deletable: true,
+                        timestamp: new Date()
+                    });
+
+                    model.refresh(true);
+                },
+
+                messageEdit: function (event) {
+                    const message = event.getParameter("message");
+                    const context = message.getBindingContext();
+
+                    if (context) {
+                        const path = `${context.getPath()}/text`;
+
+                        model.setProperty(path, event.getParameter("value"));
+                    }
+                },
+
+                messageDelete: function (event) {
+                    const message = event.getParameter("message");
+                    const context = message.getBindingContext();
+
+                    if (context) {
+                        const index = Number(context.getPath().split("/").pop());
+                        const messages = model.getProperty("/messages");
+
+                        messages.splice(index, 1);
+                        model.refresh(true);
+                    }
+                }
+            });
+
+            feed.setModel(model);
+            feed.bindAggregation("messages", {
+                path: "/messages",
+                template: messageTemplate,
+                templateShareable: false
+            });
+            feed.placeAt("content");
+
+            setTimeout(function () {
+                feed.setLoading(false);
+            }, 1600);
+        });
+    </script>
+</head>
+
+<body class="sapUiBody">
+    <div id="content"></div>
+</body>
+
+</html>
