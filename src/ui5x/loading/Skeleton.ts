@@ -81,6 +81,32 @@ export default class Skeleton extends Control {
 
     static renderer: typeof SkeletonRenderer = SkeletonRenderer;
 
+    onAfterRendering(): void {
+        this._synchronizeAnimation();
+    }
+
+    /*
+     * A CSS animation starts when its element is first rendered, so skeletons
+     * created in a later pass - Fill mode measuring more rows, a changed
+     * skeletonRows, a table gaining a column - would shimmer out of phase with
+     * the ones already on screen.
+     *
+     * Anchoring every animation to the origin of the document timeline puts
+     * them all at the same currentTime, so they stay in step without any
+     * coordination between the controls, across tables and containers alike.
+     */
+    private _synchronizeAnimation(): void {
+        const domRef = this.getDomRef();
+
+        if (!domRef || typeof domRef.getAnimations !== "function") {
+            return;
+        }
+
+        domRef.getAnimations({ subtree: true }).forEach((animation) => {
+            animation.startTime = 0;
+        });
+    }
+
     setLines(lines: number): this {
         return this.setProperty("lines", clampInt(lines, 1, 3));
     }
