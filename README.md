@@ -554,13 +554,14 @@ forms and `Large` emphasizes short verification codes.
 
 ### ChatFeed
 
-`ChatFeed` places a growing `sap.m.TextArea` composer above a chat-style message list. Its default `messages`
-aggregation accepts `ChatMessage` controls and can be bound directly to a model. Set
+`ChatFeed` combines a growing `sap.m.TextArea` composer with a chat-style message list. Its default
+`messages` aggregation accepts `ChatMessage` controls and can be bound directly to a model. Set
 `ownMessage` on each message to align messages from the current user to the end side.
 
 When `sendOnEnter` is enabled, Enter sends the message and Shift+Enter inserts a new line. When it
-is disabled, Enter keeps the standard multiline text-area behavior. A small Enter icon inside the
-composer indicates when keyboard submission is available.
+is disabled, Enter keeps the standard multiline text-area behavior.
+
+![Animated preview of the UI5X ChatFeed control](docs/assets/chat-feed-preview.gif)
 
 ```js
 sap.ui.require([
@@ -641,7 +642,7 @@ chronological order while initially showing the latest messages.
 | `sender`               | `string`  | `""`    | Displayed sender name.                              |
 | `ownMessage`           | `boolean` | `false` | Aligns messages from the current user to the end.   |
 | `editable`             | `boolean` | `false` | Enables inline editing with save and cancel actions. |
-| `deletable`            | `boolean` | `false` | Displays a transparent Fiori delete action.         |
+| `deletable`            | `boolean` | `false` | Displays a Fiori reject delete action.              |
 | `timestamp`            | `any`     | `null`  | Date, ISO string or numeric message timestamp.      |
 
 | Event           | Parameter              | Description                                      |
