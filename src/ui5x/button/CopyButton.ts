@@ -143,6 +143,16 @@ export default class CopyButton extends Button {
 
         try {
             await navigator.clipboard.writeText(value);
+
+            /*
+             * The button can be destroyed while the clipboard write is pending.
+             * exit() has already cleared the timers at that point, so the
+             * feedback must not schedule a new one.
+             */
+            if (this.isDestroyed()) {
+                return;
+            }
+
             this.showSuccessFeedback();
         } catch (e) {
             Log.error(
