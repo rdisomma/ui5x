@@ -40,15 +40,22 @@
     }
 }
 
+/*
+ * Hiding the shimmer with display:none makes restarting it depend on how a
+ * browser re-creates a hidden pseudo-element. Clearing animation-name instead
+ * guarantees a fresh animation whenever the shimmer is switched back on.
+ */
+
 @media (prefers-reduced-motion: reduce) {
     .ui5xSkeletonItem::after {
         animation: none;
-        display: none;
+        opacity: 0;
     }
 }
 
 .ui5xSkeletonNoAnimation .ui5xSkeletonItem::after {
-    display: none;
+    animation: none;
+    opacity: 0;
 }
 
 /* Line */
@@ -87,11 +94,21 @@
 
 .ui5xSkeletonCircle {
     width: 3rem;
+
+    /*
+     * The ratio sits on the root, which has a definite width, so the shape
+     * gets a definite height from it. Keeping the ratio on the shape instead
+     * makes its height depend on the browser recomputing an aspect-ratio flex
+     * item after a definite height was removed - exactly what switching from
+     * Rectangle to Circle does, because both types render the same element
+     * and the renderer patches it in place instead of recreating it.
+     */
+    aspect-ratio: 1 / 1;
 }
 
 .ui5xSkeletonCircle .ui5xSkeletonShape {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    height: 100%;
 
     border-radius: 50%;
 }
