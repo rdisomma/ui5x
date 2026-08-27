@@ -7,6 +7,9 @@ import "./loading/SkeletonType";
 import "./loading/SkeletonRowMode";
 import "./input/SegmentedInputSize";
 import "./input/SegmentedInputType";
+import "./chat/ChatFeedComposerPosition";
+import "./chat/ChatFeedMessageAlignment";
+import "./chat/ChatMessageAppearance";
 import Lib from "sap/ui/core/Lib";
 
 const UI5X = Lib.init({
@@ -22,6 +25,9 @@ const UI5X = Lib.init({
         "ui5x.loading.SkeletonRowMode",
         "ui5x.input.SegmentedInputSize",
         "ui5x.input.SegmentedInputType",
+        "ui5x.chat.ChatFeedComposerPosition",
+        "ui5x.chat.ChatFeedMessageAlignment",
+        "ui5x.chat.ChatMessageAppearance",
     ],
     interfaces: [],
     controls: [
@@ -32,7 +38,9 @@ const UI5X = Lib.init({
         "ui5x.layout.Accordion",
         "ui5x.layout.AccordionItem",
         "ui5x.button.CopyButton",
-        "ui5x.input.SegmentedInput"
+        "ui5x.input.SegmentedInput",
+        "ui5x.chat.ChatFeed",
+        "ui5x.chat.ChatMessage"
     ],
     elements: [],
     noLibraryCSS: false

@@ -1,0 +1,565 @@
+/*!
+ * Copyright (c) 2026 Raffaele Di Somma.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+import "../library";
+
+import Button from "sap/m/Button";
+import { ButtonType } from "sap/m/library";
+import TextArea from "sap/m/TextArea";
+import type { TextArea$LiveChangeEvent } from "sap/m/TextArea";
+import type UI5Event from "sap/ui/base/Event";
+import Control from "sap/ui/core/Control";
+import type { MetadataOptions } from "sap/ui/core/Element";
+import Icon from "sap/ui/core/Icon";
+import Lib from "sap/ui/core/Lib";
+
+import Skeleton from "../loading/Skeleton";
+import ChatFeedComposerPosition from "./ChatFeedComposerPosition";
+import ChatFeedMessageAlignment from "./ChatFeedMessageAlignment";
+import ChatMessage from "./ChatMessage";
+import ChatMessageAppearance from "./ChatMessageAppearance";
+import ChatFeedRenderer from "./renderer/ChatFeedRenderer";
+
+/**
+ * Displays a bindable conversation and a message composer.
+ *
+ * @extends sap.ui.core.Control
+ * @public
+ * @name ui5x.chat.ChatFeed
+ */
+export default class ChatFeed extends Control {
+
+    constructor(idOrSettings?: string | $ChatFeedSettings);
+    constructor(id?: string, settings?: $ChatFeedSettings);
+    constructor(id?: string, settings?: $ChatFeedSettings) {
+        super(id, settings);
+    }
+
+    static readonly metadata: MetadataOptions = {
+        library: "ui5x",
+
+        defaultAggregation: "messages",
+
+        properties: {
+            /**
+             * Defines the current composer value.
+             */
+            value: {
+                type: "string",
+                defaultValue: ""
+            },
+            /**
+             * Defines the composer placeholder.
+             */
+            placeholder: {
+                type: "string",
+                defaultValue: ""
+            },
+            /**
+             * Defines whether the composer and send action are enabled.
+             */
+            enabled: {
+                type: "boolean",
+                defaultValue: true
+            },
+            /**
+             * Defines whether the composer value can be changed.
+             */
+            editable: {
+                type: "boolean",
+                defaultValue: true
+            },
+            /**
+             * Defines whether skeleton message placeholders are displayed
+             * instead of the messages aggregation.
+             */
+            loading: {
+                type: "boolean",
+                defaultValue: false
+            },
+            /**
+             * Defines whether pressing Enter sends the current value.
+             */
+            sendOnEnter: {
+                type: "boolean",
+                defaultValue: true
+            },
+            /**
+             * Defines the send button text.
+             */
+            sendButtonText: {
+                type: "string",
+                defaultValue: ""
+            },
+            /**
+             * Defines the send button icon.
+             */
+            sendButtonIcon: {
+                type: "sap.ui.core.URI",
+                defaultValue: "sap-icon://paper-plane"
+            },
+            /**
+             * Defines the send button type.
+             */
+            sendButtonType: {
+                type: "sap.m.ButtonType",
+                defaultValue: ButtonType.Emphasized
+            },
+            /**
+             * Defines the send button tooltip.
+             */
+            sendButtonTooltip: {
+                type: "string",
+                defaultValue: ""
+            },
+            /**
+             * Defines whether the send button is displayed.
+             */
+            showSendButton: {
+                type: "boolean",
+                defaultValue: true
+            },
+            /**
+             * Defines whether the send button can be pressed.
+             */
+            sendButtonEnabled: {
+                type: "boolean",
+                defaultValue: true
+            },
+            /**
+             * Defines whether consecutive messages are grouped by date.
+             */
+            groupByDate: {
+                type: "boolean",
+                defaultValue: false
+            },
+            /**
+             * Defines whether messages marked as ownMessage use a highlighted
+             * bubble appearance.
+             */
+            highlightOwnMessage: {
+                type: "boolean",
+                defaultValue: false
+            },
+            /**
+             * Defines the appearance of messages that belong to the current
+             * user.
+             */
+            ownMessageAppearance: {
+                type: "ui5x.chat.ChatMessageAppearance",
+                defaultValue: ChatMessageAppearance.Bubble
+            },
+            /**
+             * Defines the appearance of incoming messages.
+             */
+            incomingMessageAppearance: {
+                type: "ui5x.chat.ChatMessageAppearance",
+                defaultValue: ChatMessageAppearance.Conversation
+            },
+            /**
+             * Defines whether the composer is rendered before or after the
+             * messages viewport.
+             */
+            composerPosition: {
+                type: "ui5x.chat.ChatFeedComposerPosition",
+                defaultValue: ChatFeedComposerPosition.Top
+            },
+            /**
+             * Defines whether a short conversation is aligned to the top or
+             * bottom of the messages viewport.
+             *
+             * Message order is never reversed.
+             */
+            messageAlignment: {
+                type: "ui5x.chat.ChatFeedMessageAlignment",
+                defaultValue: ChatFeedMessageAlignment.Top
+            },
+            /**
+             * Defines the reserved height and maximum height of the chat,
+             * keeping the composer position stable as the conversation grows.
+             *
+             * Percentage values require a parent with an explicit height.
+             * Set an empty value to let the chat follow its content.
+             */
+            chatMaxHeight: {
+                type: "sap.ui.core.CSSSize",
+                defaultValue: "32rem"
+            },
+            /**
+             * Defines the width of the feed.
+             */
+            width: {
+                type: "sap.ui.core.CSSSize",
+                defaultValue: "100%"
+            }
+        },
+
+        aggregations: {
+            /**
+             * Messages displayed by the feed.
+             */
+            messages: {
+                type: "ui5x.chat.ChatMessage",
+                multiple: true,
+                singularName: "message"
+            },
+            _textArea: {
+                type: "sap.m.TextArea",
+                multiple: false,
+                visibility: "hidden"
+            },
+            _sendButton: {
+                type: "sap.m.Button",
+                multiple: false,
+                visibility: "hidden"
+            },
+            _enterIcon: {
+                type: "sap.ui.core.Icon",
+                multiple: false,
+                visibility: "hidden"
+            },
+            _loadingPlaceholders: {
+                type: "ui5x.loading.Skeleton",
+                multiple: true,
+                visibility: "hidden"
+            }
+        },
+
+        events: {
+            /**
+             * Fired whenever the composer value changes through user input.
+             */
+            liveChange: {
+                parameters: {
+                    value: {
+                        type: "string"
+                    }
+                }
+            },
+            /**
+             * Fired when the current value is sent.
+             *
+             * The composer is cleared after the event is fired.
+             */
+            send: {
+                parameters: {
+                    value: {
+                        type: "string"
+                    }
+                }
+            },
+            /**
+             * Fired when an inline message edit is confirmed.
+             */
+            messageEdit: {
+                parameters: {
+                    message: {
+                        type: "ui5x.chat.ChatMessage"
+                    },
+                    value: {
+                        type: "string"
+                    }
+                }
+            },
+            /**
+             * Fired when a message delete action is pressed.
+             */
+            messageDelete: {
+                parameters: {
+                    message: {
+                        type: "ui5x.chat.ChatMessage"
+                    }
+                }
+            }
+        }
+    };
+
+    static renderer: typeof ChatFeedRenderer = ChatFeedRenderer;
+
+    private attachedMessages = new Set<ChatMessage>();
+    private wasBottomAligned = false;
+    private shouldScrollToBottom = false;
+    private forceScrollToBottom = false;
+    private hasRenderedMessages = false;
+    private renderedMessageCount = 0;
+    private renderedLastMessage: ChatMessage | null = null;
+    private renderedLastMessageKey = "";
+
+    init(): void {
+        const textArea = new TextArea(`${this.getId()}-text-area`, {
+            width: "100%",
+            rows: 1,
+            growing: true,
+            growingMaxLines: 5,
+            liveChange: (event) => this.handleLiveChange(event)
+        });
+
+        textArea.addEventDelegate({
+            onkeydown: (event: KeyboardEvent) => this.handleKeyDown(event)
+        });
+
+        this.setAggregation(
+            "_textArea",
+            textArea,
+            true
+        );
+
+        this.setAggregation(
+            "_sendButton",
+            new Button(`${this.getId()}-send`, {
+                press: () => this.submitValue(true)
+            }).addStyleClass("ui5xChatFeedSendButton"),
+            true
+        );
+
+        this.setAggregation(
+            "_enterIcon",
+            new Icon(`${this.getId()}-enter-icon`, {
+                src: "sap-icon://enter-more",
+                decorative: true
+            }).addStyleClass("ui5xChatFeedEnterHint"),
+            true
+        );
+
+        for (let index = 0; index < 3; index++) {
+            this.addAggregation(
+                "_loadingPlaceholders",
+                new Skeleton(`${this.getId()}-loading-${index}`, {
+                    width: "100%",
+                    lines: 2
+                }),
+                true
+            );
+        }
+    }
+
+    onBeforeRendering(): void {
+        const messagesDomRef = this.getDomRef("messages");
+        const bottomAligned = this.getMessageAlignment()
+            === ChatFeedMessageAlignment.Bottom;
+        const hasNewMessage = this.hasNewMessage();
+
+        this.shouldScrollToBottom = this.forceScrollToBottom
+            || hasNewMessage
+            || (bottomAligned && (
+                !this.wasBottomAligned
+                || !messagesDomRef
+                || this.isScrolledToBottom(messagesDomRef)
+            ));
+
+        this.syncComposer();
+        this.syncMessageHandlers();
+    }
+
+    onAfterRendering(): void {
+        const bottomAligned = this.getMessageAlignment()
+            === ChatFeedMessageAlignment.Bottom;
+
+        if (this.shouldScrollToBottom) {
+            const messagesDomRef = this.getDomRef("messages");
+
+            if (messagesDomRef) {
+                messagesDomRef.scrollTop = messagesDomRef.scrollHeight;
+            }
+        }
+
+        this.wasBottomAligned = bottomAligned;
+        this.shouldScrollToBottom = false;
+        this.forceScrollToBottom = false;
+        this.rememberRenderedMessages();
+    }
+
+    exit(): void {
+        this.detachMessageHandlers();
+    }
+
+    setValue(value: string): this {
+        const normalizedValue = String(value ?? "");
+
+        this.setProperty("value", normalizedValue, true);
+        this._getTextArea()?.setValue(normalizedValue);
+        this.syncSendButtonEnabled();
+
+        return this;
+    }
+
+    getSendButtonTooltip(): string {
+        if (this.isPropertyInitial("sendButtonTooltip")) {
+            return Lib.getResourceBundleFor("sap.m")?.getText(
+                "SEMANTIC_CONTROL_SEND_MESSAGE"
+            ) ?? "";
+        }
+
+        return this.getProperty("sendButtonTooltip") as string;
+    }
+
+    _getTextArea(): TextArea | null {
+        return this.getAggregation("_textArea") as TextArea | null;
+    }
+
+    _getSendButton(): Button | null {
+        return this.getAggregation("_sendButton") as Button | null;
+    }
+
+    _getEnterIcon(): Icon | null {
+        return this.getAggregation("_enterIcon") as Icon | null;
+    }
+
+    _shouldShowEnterHint(): boolean {
+        return this.getSendOnEnter()
+            && this.getEnabled()
+            && this.getEditable();
+    }
+
+    _getLoadingPlaceholders(): Skeleton[] {
+        return this.getAggregation("_loadingPlaceholders") as Skeleton[];
+    }
+
+    private syncComposer(): void {
+        const textArea = this._getTextArea();
+        const button = this._getSendButton();
+
+        textArea?.setValue(this.getValue());
+        textArea?.setPlaceholder(this.getPlaceholder());
+        textArea?.setEnabled(this.getEnabled());
+        textArea?.setEditable(this.getEditable());
+
+        button?.setText(this.getSendButtonText());
+        button?.setIcon(this.getSendButtonIcon());
+        button?.setType(this.getSendButtonType());
+        button?.setTooltip(this.getSendButtonTooltip());
+
+        this.syncSendButtonEnabled();
+    }
+
+    private isScrolledToBottom(element: Element): boolean {
+        return element.scrollHeight - element.scrollTop - element.clientHeight
+            <= 1;
+    }
+
+    private hasNewMessage(): boolean {
+        if (!this.hasRenderedMessages || this.getLoading()) {
+            return false;
+        }
+
+        const messages = this.getMessages();
+
+        if (messages.length > this.renderedMessageCount) {
+            return true;
+        }
+
+        if (messages.length === 0 || messages.length < this.renderedMessageCount) {
+            return false;
+        }
+
+        const lastMessage = messages[messages.length - 1];
+        const lastMessageKey = lastMessage.getKey();
+
+        return lastMessageKey
+            ? lastMessageKey !== this.renderedLastMessageKey
+            : lastMessage !== this.renderedLastMessage;
+    }
+
+    private rememberRenderedMessages(): void {
+        if (this.getLoading()) {
+            return;
+        }
+
+        const messages = this.getMessages();
+        const lastMessage = messages[messages.length - 1] ?? null;
+
+        this.hasRenderedMessages = true;
+        this.renderedMessageCount = messages.length;
+        this.renderedLastMessage = lastMessage;
+        this.renderedLastMessageKey = lastMessage?.getKey() ?? "";
+    }
+
+    private syncSendButtonEnabled(): void {
+        this._getSendButton()?.setEnabled(
+            this.getEnabled()
+            && this.getEditable()
+            && this.getSendButtonEnabled()
+            && Boolean(this.getValue().trim())
+        );
+    }
+
+    private handleLiveChange(event: TextArea$LiveChangeEvent): void {
+        const value = String(event.getParameter("value") ?? "");
+
+        this.setProperty("value", value, true);
+        this.syncSendButtonEnabled();
+        this.fireEvent("liveChange", { value });
+    }
+
+    private handleKeyDown(
+        event: KeyboardEvent & { originalEvent?: KeyboardEvent }
+    ): void {
+        const keyboardEvent = event.originalEvent ?? event;
+
+        if (
+            keyboardEvent.key !== "Enter"
+            || keyboardEvent.shiftKey
+            || keyboardEvent.isComposing
+            || !this.getSendOnEnter()
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.submitValue(false);
+    }
+
+    private submitValue(requireEnabledButton: boolean): void {
+        const value = this.getValue().trim();
+
+        if (
+            !value
+            || !this.getEnabled()
+            || !this.getEditable()
+            || (requireEnabledButton && !this.getSendButtonEnabled())
+        ) {
+            return;
+        }
+
+        this.forceScrollToBottom = true;
+        this.fireEvent("send", { value });
+        this.setValue("");
+    }
+
+    private syncMessageHandlers(): void {
+        this.detachMessageHandlers();
+
+        this.getMessages().forEach((message) => {
+            message.attachEvent("editPress", this.handleMessageEdit, this);
+            message.attachEvent("deletePress", this.handleMessageDelete, this);
+            this.attachedMessages.add(message);
+        });
+    }
+
+    private detachMessageHandlers(): void {
+        this.attachedMessages.forEach((message) => {
+            message.detachEvent("editPress", this.handleMessageEdit, this);
+            message.detachEvent("deletePress", this.handleMessageDelete, this);
+        });
+
+        this.attachedMessages.clear();
+    }
+
+    private handleMessageEdit(event: UI5Event): void {
+        const parameters = event.getParameters() as { value?: string };
+
+        this.fireEvent("messageEdit", {
+            message: event.getSource() as ChatMessage,
+            value: String(parameters.value ?? "")
+        });
+    }
+
+    private handleMessageDelete(event: UI5Event): void {
+        this.fireEvent("messageDelete", {
+            message: event.getSource() as ChatMessage
+        });
+    }
+}

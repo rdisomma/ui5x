@@ -1,0 +1,277 @@
+.ui5xChatFeed {
+    max-width: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    color: @sapUiText;
+    font-family: @sapUiFontFamily;
+}
+
+.ui5xChatFeedComposer {
+    width: 100%;
+
+    display: flex;
+    flex: 0 0 auto;
+    align-items: flex-end;
+    gap: 0.5rem;
+
+    box-sizing: border-box;
+    padding: 0.75rem;
+
+    border: 1px solid @sapUiGroupContentBorderColor;
+    border-radius: 1rem;
+    background: @sapUiGroupContentBackground;
+}
+
+.ui5xChatFeedComposerTop {
+    margin-bottom: 1rem;
+}
+
+.ui5xChatFeedComposerBottom {
+    margin-top: 1rem;
+}
+
+.ui5xChatFeedTextAreaWrapper {
+    position: relative;
+
+    min-width: 0;
+
+    flex: 1 1 auto;
+}
+
+.ui5xChatFeedTextAreaWrapper > .sapMInputBase {
+    width: 100%;
+}
+
+.ui5xChatFeedTextAreaWithEnterHint .sapMTextAreaInner.sapMInputBaseInner {
+    padding-inline-end: 2rem;
+}
+
+.ui5xChatFeedEnterHint {
+    position: absolute;
+    right: 0.625rem;
+    bottom: 0.625rem;
+    z-index: 1;
+
+    color: @sapUiContentLabelColor;
+
+    font-size: 0.75rem;
+
+    pointer-events: none;
+}
+
+.ui5xChatFeedSendButton {
+    flex: 0 0 auto;
+}
+
+.ui5xChatFeedMessages {
+    width: 100%;
+
+    min-height: 0;
+
+    flex: 1 1 auto;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    box-sizing: border-box;
+}
+
+.ui5xChatFeedMessagesContent {
+    width: 100%;
+    min-height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    box-sizing: border-box;
+}
+
+.ui5xChatFeedMessagesBottom .ui5xChatFeedMessagesContent {
+    justify-content: flex-end;
+}
+
+.ui5xChatFeedIncomingMessagesConversation .ui5xChatMessageIncoming .ui5xChatMessageBubble,
+.ui5xChatFeedOwnMessagesConversation .ui5xChatMessageOwn .ui5xChatMessageBubble {
+    max-width: min(42rem, 100%);
+
+    padding-inline: 0;
+
+    border-radius: 0;
+    background: transparent;
+}
+
+.ui5xChatFeedIncomingMessagesBubble .ui5xChatMessageIncoming .ui5xChatMessageBubble,
+.ui5xChatFeedOwnMessagesBubble .ui5xChatMessageOwn .ui5xChatMessageBubble {
+    border-radius: 1.125rem;
+}
+
+.ui5xChatFeedIncomingMessagesConversation .ui5xChatMessageIncoming.ui5xChatMessageHasActions .ui5xChatMessageBubble,
+.ui5xChatFeedOwnMessagesConversation .ui5xChatMessageOwn.ui5xChatMessageHasActions .ui5xChatMessageBubble {
+    min-width: 0;
+}
+
+.ui5xChatFeedIncomingMessagesConversation .ui5xChatMessageIncoming .ui5xChatMessageFooter {
+    justify-content: flex-start;
+    gap: 0.75rem;
+}
+
+.ui5xChatFeedOwnMessagesConversation .ui5xChatMessageOwn .ui5xChatMessageFooter {
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.ui5xChatFeedDateSeparator {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    margin: 0.5rem 0;
+
+    color: @sapUiContentLabelColor;
+
+    font-size: @sapMFontSmallSize;
+    line-height: 1rem;
+    text-align: center;
+}
+
+.ui5xChatFeedDateSeparator::before,
+.ui5xChatFeedDateSeparator::after {
+    display: none;
+}
+
+.ui5xChatMessage {
+    width: 100%;
+
+    display: flex;
+
+    box-sizing: border-box;
+}
+
+.ui5xChatMessageIncoming {
+    justify-content: flex-start;
+}
+
+.ui5xChatMessageOwn {
+    justify-content: flex-end;
+}
+
+.ui5xChatMessageBubble {
+    max-width: 75%;
+
+    box-sizing: border-box;
+    padding: 0.625rem 0.75rem;
+
+    border-radius: 0.75rem;
+    background: @sapUiGroupContentBackground;
+}
+
+.ui5xChatMessageHasActions .ui5xChatMessageBubble {
+    min-width: min(12rem, 75%);
+}
+
+.ui5xChatMessageEditing .ui5xChatMessageBubble {
+    width: 75%;
+}
+
+.ui5xChatFeedHighlightOwnMessage .ui5xChatMessageOwn .ui5xChatMessageBubble {
+    background: fade(@sapUiSelected, 12%);
+}
+
+.ui5xChatMessageLoadingBubble {
+    max-width: 75%;
+}
+
+.ui5xChatMessageLoadingBubbleMedium {
+    width: 18rem;
+}
+
+.ui5xChatMessageLoadingBubbleWide {
+    width: 22rem;
+}
+
+.ui5xChatMessageLoadingBubbleShort {
+    width: 13rem;
+}
+
+.ui5xChatMessageSender {
+    margin-bottom: 0.125rem;
+
+    color: @sapUiContentLabelColor;
+
+    font-size: @sapMFontSmallSize;
+    font-weight: 600;
+    line-height: 1rem;
+}
+
+.ui5xChatMessageText {
+    color: @sapUiText;
+
+    font-size: @sapMFontMediumSize;
+    line-height: 1.375rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.ui5xChatMessageEditor.sapMTextArea {
+    width: 100%;
+}
+
+.ui5xChatMessageFooter {
+    min-height: 1rem;
+
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
+    gap: 0.25rem;
+
+    margin-top: 0.25rem;
+}
+
+.ui5xChatMessageTime {
+    color: @sapUiContentLabelColor;
+
+    font-size: @sapMFontSmallSize;
+    line-height: 1rem;
+}
+
+.ui5xChatMessageActions {
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.ui5xChatMessageAction.sapMBtn {
+    width: 2rem;
+    height: 2rem;
+
+    padding: 0;
+}
+
+.ui5xChatMessageAction .sapMBtnInner {
+    min-width: 2rem;
+    height: 2rem;
+}
+
+@media (max-width: 37.5rem) {
+    .ui5xChatMessageBubble {
+        max-width: 88%;
+    }
+
+    .ui5xChatMessageHasActions .ui5xChatMessageBubble {
+        min-width: min(12rem, 88%);
+    }
+
+    .ui5xChatMessageEditing .ui5xChatMessageBubble {
+        width: 88%;
+    }
+}

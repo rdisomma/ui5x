@@ -6,5 +6,7 @@ import "ui5x/test/qunit/AccordionItem.qunit";
 import "ui5x/test/qunit/Accordion.qunit";
 import "ui5x/test/qunit/CopyButton.qunit";
 import "ui5x/test/qunit/SegmentedInput.qunit";
+import "ui5x/test/qunit/ChatMessage.qunit";
+import "ui5x/test/qunit/ChatFeed.qunit";
 
 QUnit.start();
