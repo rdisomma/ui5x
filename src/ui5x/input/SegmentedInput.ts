@@ -7,6 +7,7 @@ import "../library";
 
 import Button from "sap/m/Button";
 import { ButtonType } from "sap/m/library";
+import Localization from "sap/base/i18n/Localization";
 import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
 import Lib from "sap/ui/core/Lib";
@@ -154,10 +155,19 @@ export default class SegmentedInput extends Control {
 
     static renderer: typeof SegmentedInputRenderer = SegmentedInputRenderer;
 
-    private lastCompletedValue = "";
-    private digitValues: string[] = [];
+    /*
+     * UI5 invokes init() from the base Control constructor. These fields must
+     * therefore be type-only declarations: emitted class-field initializers
+     * would run after init() and applySettings() and overwrite the state
+     * created there.
+     */
+    private declare lastCompletedValue: string;
+    private declare digitValues: string[];
 
     init(): void {
+        this.lastCompletedValue = "";
+        this.digitValues = this.createDigitValues("");
+
         const clearText = Lib.getResourceBundleFor("sap.m")?.getText(
             "INPUT_CLEAR_ICON_ALT"
         );
@@ -202,11 +212,7 @@ export default class SegmentedInput extends Control {
         const value = this.normalizeValue(this.getValue());
 
         this.setProperty("value", value, true);
-
-        if (this.digitValues) {
-            this.digitValues = this.createDigitValues(value);
-        }
-
+        this.digitValues = this.createDigitValues(value);
         this.lastCompletedValue = "";
 
         return this;
@@ -217,11 +223,7 @@ export default class SegmentedInput extends Control {
         const value = this.normalizeValue(this.getValue());
 
         this.setProperty("value", value, true);
-
-        if (this.digitValues) {
-            this.digitValues = this.createDigitValues(value);
-        }
-
+        this.digitValues = this.createDigitValues(value);
         this.lastCompletedValue = "";
 
         return this;
@@ -241,11 +243,7 @@ export default class SegmentedInput extends Control {
         const normalizedValue = this.normalizeValue(String(value ?? ""));
 
         this.setProperty("value", normalizedValue);
-
-        if (this.digitValues) {
-            this.digitValues = this.createDigitValues(normalizedValue);
-        }
-
+        this.digitValues = this.createDigitValues(normalizedValue);
         this.lastCompletedValue = "";
 
         return this;
@@ -342,12 +340,12 @@ export default class SegmentedInput extends Control {
 
             case "ArrowLeft":
                 event.preventDefault();
-                this.focusDigit(index - 1);
+                this.focusDigit(index - this.getNavigationStep());
                 break;
 
             case "ArrowRight":
                 event.preventDefault();
-                this.focusDigit(index + 1);
+                this.focusDigit(index + this.getNavigationStep());
                 break;
 
             case "Home":
@@ -507,6 +505,14 @@ export default class SegmentedInput extends Control {
         if (clearButton) {
             clearButton.hidden = !this.digitValues.some(Boolean);
         }
+    }
+
+    /*
+     * The fields are laid out in text direction, so in right-to-left the arrow
+     * keys must move in the opposite direction of the logical index.
+     */
+    private getNavigationStep(): number {
+        return Localization.getRTL() ? -1 : 1;
     }
 
     private focusDigit(index: number): void {

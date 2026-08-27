@@ -64,9 +64,19 @@ const SegmentedInputRenderer = {
 
             if (valueState === ValueState.Error) {
                 rm.attr("aria-invalid", "true");
-                rm.attr("aria-errormessage", valueStateTextId);
-            } else if (hasValueState) {
-                rm.attr("aria-describedby", valueStateTextId);
+            }
+
+            /*
+             * The message element is only rendered for a non-empty text, so the
+             * reference must not be written when there is nothing to point to.
+             */
+            if (valueStateText) {
+                rm.attr(
+                    valueState === ValueState.Error
+                        ? "aria-errormessage"
+                        : "aria-describedby",
+                    valueStateTextId
+                );
             }
 
             const digitValue = control._getDigitValue(index);
