@@ -10,6 +10,7 @@ import type { MetadataOptions } from "sap/ui/core/Element";
 import Skeleton from "./Skeleton";
 import SkeletonType from "./SkeletonType";
 import LoadingContainerRenderer from "./renderer/LoadingContainerRenderer";
+import clampInt from "../util/clampInt";
 
 /**
  * Displays either a loading placeholder or its content.
@@ -112,7 +113,7 @@ export default class LoadingContainer extends Control {
     }
 
     setSkeletonLines(lines: number): this {
-        const normalizedLines = Math.min(3, Math.max(1, lines));
+        const normalizedLines = clampInt(lines, 1, 3);
 
         this.setProperty("skeletonLines", normalizedLines);
 

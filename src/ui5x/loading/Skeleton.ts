@@ -9,6 +9,7 @@ import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
 import SkeletonRenderer from "./renderer/SkeletonRenderer";
 import SkeletonType from "./SkeletonType";
+import clampInt from "../util/clampInt";
 
 /**
  * A placeholder control representing content while it is loading.
@@ -81,8 +82,6 @@ export default class Skeleton extends Control {
     static renderer: typeof SkeletonRenderer = SkeletonRenderer;
 
     setLines(lines: number): this {
-        const normalizedLines = Math.min(3, Math.max(1, lines));
-
-        return this.setProperty("lines", normalizedLines);
+        return this.setProperty("lines", clampInt(lines, 1, 3));
     }
 }

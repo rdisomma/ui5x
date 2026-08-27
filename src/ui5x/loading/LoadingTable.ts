@@ -21,6 +21,7 @@ import LoadingTableRenderer from "./renderer/LoadingTableRenderer";
 import Skeleton from "./Skeleton";
 import SkeletonRowMode from "./SkeletonRowMode";
 import SkeletonType from "./SkeletonType";
+import clampInt from "../util/clampInt";
 
 /**
  * Displays a grid table with skeleton rows while data is loading.
@@ -129,6 +130,9 @@ export default class LoadingTable extends Control {
      * would run after init() and overwrite the state created there.
      */
     private declare _calculatedSkeletonRows: number;
+    private declare _previousSkeletonRows: number;
+    private declare _skeletonColumnSignature: string;
+    private declare _observedRoot: Element | null;
     private declare _skeletonModel: JSONModel | null;
 
     private declare _fillUpdateFrame: number | null;
@@ -142,6 +146,9 @@ export default class LoadingTable extends Control {
 
     init(): void {
         this._calculatedSkeletonRows = 0;
+        this._previousSkeletonRows = 0;
+        this._skeletonColumnSignature = "";
+        this._observedRoot = null;
         this._fillUpdateFrame = null;
         this._resizeObserver = null;
 
@@ -167,7 +174,14 @@ export default class LoadingTable extends Control {
             threshold: 0
         });
 
-        skeletonTable.setModel(this._skeletonModel);
+        /*
+         * A named model keeps the application's default model propagating into
+         * the skeleton table. Setting the row data as the default model would
+         * shadow it, and the cloned columns carry their bindings along: any
+         * binding against the anonymous model would resolve to undefined and
+         * the column would change or disappear while loading.
+         */
+        skeletonTable.setModel(this._skeletonModel, "ui5xSkeleton");
 
         skeletonTable.addEventDelegate(
             this._skeletonTableDelegate
@@ -201,6 +215,7 @@ export default class LoadingTable extends Control {
 
         this._resizeObserver?.disconnect();
         this._resizeObserver = null;
+        this._observedRoot = null;
 
         const skeletonTable = this._getSkeletonTable();
 
@@ -241,6 +256,7 @@ export default class LoadingTable extends Control {
              * Force Fill mode to measure the available space again.
              */
             this._calculatedSkeletonRows = 0;
+            this._previousSkeletonRows = 0;
         }
 
         return this.setProperty(
@@ -252,13 +268,13 @@ export default class LoadingTable extends Control {
     setSkeletonRows(rows: number): this {
         return this.setProperty(
             "skeletonRows",
-            this._normalizeRowCount(rows)
+            clampInt(rows, 1)
         );
     }
 
     setMaxSkeletonRows(rows: number): this {
         const normalizedRows =
-            this._normalizeRowCount(rows);
+            clampInt(rows, 1);
 
         if (
             this._calculatedSkeletonRows >
@@ -281,6 +297,7 @@ export default class LoadingTable extends Control {
             mode !== this.getSkeletonRowsMode()
         ) {
             this._calculatedSkeletonRows = 0;
+            this._previousSkeletonRows = 0;
         }
 
         return this.setProperty(
@@ -293,19 +310,6 @@ export default class LoadingTable extends Control {
         return this.getAggregation(
             "_skeletonTable"
         ) as Table | null;
-    }
-
-    private _normalizeRowCount(
-        rows: number
-    ): number {
-        if (!Number.isFinite(rows)) {
-            return 1;
-        }
-
-        return Math.max(
-            1,
-            Math.floor(rows)
-        );
     }
 
     private _getEffectiveSkeletonRows(): number {
@@ -337,6 +341,28 @@ export default class LoadingTable extends Control {
             return;
         }
 
+        this._syncSkeletonTableGeometry(
+            sourceTable,
+            skeletonTable
+        );
+
+        const signature =
+            this._getSkeletonColumnSignature(sourceTable);
+
+        if (signature === this._skeletonColumnSignature) {
+            /*
+             * onBeforeRendering runs for every invalidation, including those
+             * coming from an ancestor. Rebuilding the columns each time would
+             * destroy and recreate one Skeleton per cell, so only the row data
+             * is refreshed while the column structure is unchanged.
+             */
+            this._syncSkeletonRows();
+
+            return;
+        }
+
+        this._skeletonColumnSignature = signature;
+
         /*
          * sap.ui.table.Table creates its reusable row and cell pool when the
          * rows binding is initialized. Rebind only after the skeleton columns
@@ -346,11 +372,6 @@ export default class LoadingTable extends Control {
             skeletonTable.unbindRows();
         }
 
-        this._syncSkeletonTableGeometry(
-            sourceTable,
-            skeletonTable
-        );
-
         this._syncSkeletonColumns(
             sourceTable,
             skeletonTable
@@ -359,8 +380,31 @@ export default class LoadingTable extends Control {
         this._syncSkeletonRows();
 
         skeletonTable.bindRows({
-            path: "/rows"
+            path: "ui5xSkeleton>/rows"
         });
+    }
+
+    /*
+     * Everything about the source columns that the skeleton reproduces. The
+     * animated property is part of it because it is baked into the cell
+     * template; dynamicSkeletonWidths is not, it only affects the row data.
+     */
+    private _getSkeletonColumnSignature(
+        sourceTable: Table
+    ): string {
+        return [
+            String(this.getAnimated()),
+            ...sourceTable.getColumns().map(
+                (column: Column) => [
+                    column.getId(),
+                    column.getWidth(),
+                    column.getMinWidth(),
+                    column.getVisible(),
+                    column.getHAlign(),
+                    column.getHeaderSpan()
+                ].join(",")
+            )
+        ].join("|");
     }
 
     private _syncSkeletonTableGeometry(
@@ -453,39 +497,35 @@ export default class LoadingTable extends Control {
         sourceColumn: Column,
         index: number
     ): Column {
-        const skeletonColumn =
-            sourceColumn.clone(
-                `-ui5xSkeleton-${index}`
-            ) as Column;
+        const sourceLabel = sourceColumn.getLabel();
+        const label = typeof sourceLabel === "string"
+            ? sourceLabel
+            : sourceLabel?.clone();
 
         /*
-         * Keep the visual column structure, but remove data-specific
-         * and interactive state from the cloned column.
+         * Only the geometry and the header are reproduced. Cloning the source
+         * column would build its whole cell template just to destroy it right
+         * after, and would carry the sorting, filtering and grouping state the
+         * skeleton must not expose.
          */
-        skeletonColumn.destroyTemplate();
+        return new Column({
+            label: label,
 
-        skeletonColumn.setTemplate(
-            new Skeleton({
+            width: sourceColumn.getWidth(),
+            minWidth: sourceColumn.getMinWidth(),
+            hAlign: sourceColumn.getHAlign(),
+            visible: sourceColumn.getVisible(),
+            headerSpan: sourceColumn.getHeaderSpan(),
+
+            resizable: false,
+            autoResizable: false,
+
+            template: new Skeleton({
                 type: SkeletonType.Line,
-                width: `{widths/${index}}`,
+                width: `{ui5xSkeleton>widths/${index}}`,
                 animated: this.getAnimated()
             })
-        );
-
-        skeletonColumn.setSorted(false);
-        skeletonColumn.setFiltered(false);
-        skeletonColumn.setGrouped(false);
-
-        skeletonColumn.setSortProperty();
-        skeletonColumn.setFilterProperty();
-
-        skeletonColumn.setShowSortMenuEntry(false);
-        skeletonColumn.setShowFilterMenuEntry(false);
-
-        skeletonColumn.setResizable(false);
-        skeletonColumn.setAutoResizable(false);
-
-        return skeletonColumn;
+        });
     }
 
     private _syncSkeletonRows(): void {
@@ -652,6 +692,23 @@ export default class LoadingTable extends Control {
             return;
         }
 
+        /*
+         * The new count is the one we just moved away from: the layout is
+         * flipping between two values, typically a scrollbar appearing and
+         * disappearing with the row that triggers it. Keep the current count
+         * instead of measuring forever. This detects a two-value cycle, a
+         * longer one would still need a settle counter.
+         */
+        if (
+            calculatedRows ===
+            this._previousSkeletonRows
+        ) {
+            return;
+        }
+
+        this._previousSkeletonRows =
+            this._calculatedSkeletonRows;
+
         this._calculatedSkeletonRows =
             calculatedRows;
 
@@ -664,18 +721,28 @@ export default class LoadingTable extends Control {
     }
 
     private _updateResizeObservation(): void {
-        this._resizeObserver?.disconnect();
+        const shouldObserve =
+            this.getLoading() &&
+            this.getSkeletonRowsMode() ===
+                SkeletonRowMode.Fill &&
+            typeof ResizeObserver !== "undefined";
 
-        if (
-            !this.getLoading() ||
-            this.getSkeletonRowsMode() !==
-                SkeletonRowMode.Fill ||
-            typeof ResizeObserver === "undefined"
-        ) {
+        const root = shouldObserve
+            ? this.getDomRef()
+            : null;
+
+        /*
+         * observe() invokes the callback once on its own, so re-observing an
+         * unchanged target would schedule a measurement for every rendering.
+         * apiVersion 2 patches the root element in place, so an unchanged
+         * reference here really means an unchanged target.
+         */
+        if (root === this._observedRoot) {
             return;
         }
 
-        const root = this.getDomRef();
+        this._resizeObserver?.disconnect();
+        this._observedRoot = root;
 
         if (!root) {
             return;

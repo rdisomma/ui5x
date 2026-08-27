@@ -15,6 +15,7 @@ import ColumnListItem from "sap/m/ColumnListItem";
 import Skeleton from "../loading/Skeleton";
 import SkeletonType from "../loading/SkeletonType";
 import SkeletonRowMode from "./SkeletonRowMode";
+import clampInt from "../util/clampInt";
 
 import LoadingResponsiveTableRenderer from "./renderer/LoadingResponsiveTableRenderer";
 
@@ -120,10 +121,12 @@ export default class LoadingResponsiveTable extends Control {
      * would run after init() and overwrite the state created there.
      */
     private declare _calculatedSkeletonRows: number;
+    private declare _skeletonSignature: string;
     private declare _onWindowResize: () => void;
 
     init(): void {
         this._calculatedSkeletonRows = 0;
+        this._skeletonSignature = "";
 
         this._onWindowResize = (): void => {
             if (
@@ -173,7 +176,20 @@ export default class LoadingResponsiveTable extends Control {
     setSkeletonRows(rows: number): this {
         return this.setProperty(
             "skeletonRows",
-            Math.max(1, rows)
+            clampInt(rows, 1)
+        );
+    }
+
+    setMaxSkeletonRows(rows: number): this {
+        const normalizedRows = clampInt(rows, 1);
+
+        if (this._calculatedSkeletonRows > normalizedRows) {
+            this._calculatedSkeletonRows = normalizedRows;
+        }
+
+        return this.setProperty(
+            "maxSkeletonRows",
+            normalizedRows
         );
     }
 
@@ -187,11 +203,14 @@ export default class LoadingResponsiveTable extends Control {
             SkeletonRowMode.Fill
         ) {
             /*
-             * Before the first DOM measurement, use skeletonRows
-             * as a sensible fallback.
+             * Before the first DOM measurement, skeletonRows is the fallback.
+             * maxSkeletonRows also applies to this initial render so Fill mode
+             * never creates an unnecessarily large first layout.
              */
-            return this._calculatedSkeletonRows ||
-                this.getSkeletonRows();
+            return Math.min(
+                this.getMaxSkeletonRows(),
+                this._calculatedSkeletonRows || this.getSkeletonRows()
+            );
         }
 
         return this.getSkeletonRows();
@@ -204,6 +223,20 @@ export default class LoadingResponsiveTable extends Control {
         if (!sourceTable || !skeletonTable) {
             return;
         }
+
+        const signature = this._getSkeletonSignature(sourceTable);
+
+        if (signature === this._skeletonSignature) {
+            /*
+             * onBeforeRendering runs for every invalidation, including those
+             * coming from an ancestor. Rebuilding would destroy and recreate
+             * one Skeleton per cell, so nothing is done while the structure
+             * and the row count are unchanged.
+             */
+            return;
+        }
+
+        this._skeletonSignature = signature;
 
         skeletonTable.destroyColumns();
         skeletonTable.destroyItems();
@@ -258,6 +291,26 @@ export default class LoadingResponsiveTable extends Control {
                 })
             );
         }
+    }
+
+    /*
+     * Everything the skeleton reproduces: the source columns, the number of
+     * rows and the two properties baked into the generated cells.
+     */
+    private _getSkeletonSignature(sourceTable: Table): string {
+        return [
+            this._getEffectiveSkeletonRows(),
+            this.getAnimated(),
+            this.getDynamicSkeletonWidths(),
+            ...sourceTable.getColumns().map(
+                (column: Column) => [
+                    column.getId(),
+                    column.getWidth(),
+                    column.getVisible(),
+                    column.getHAlign()
+                ].join(",")
+            )
+        ].join("|");
     }
 
     private _updateCalculatedSkeletonRows(): void {
