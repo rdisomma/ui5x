@@ -36,6 +36,9 @@ views, from JavaScript or from TypeScript.
 ## Compatibility
 
 - Developed and tested against OpenUI5 `1.151.0`
+- Themes: `sap_horizon`, `sap_horizon_dark`, `sap_horizon_hcb`, `sap_horizon_hcw`,
+  `sap_fiori_3`, `sap_fiori_3_dark`, `sap_fiori_3_hcb`, `sap_fiori_3_hcw`.
+  Any other theme falls back to the base theme
 - Tested with SAPUI5 `1.151.0` in SAP Business Application Studio
 - Built using public UI5 APIs
 - Compatibility with older UI5 versions has not been validated yet

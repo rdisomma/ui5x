@@ -1,0 +1,36 @@
+/*!
+ * Copyright (c) 2026 Raffaele Di Somma.
+ * Licensed under the Apache License, Version 2.0.
+ */
+
+/*
+ * High contrast themes replace the subtle tints of the standard themes with
+ * strong values. A skeleton at 15% alpha measures 1.39:1 against the HCB
+ * background, well below the 3:1 the WCAG asks for a non-text component, and
+ * the loading state would read as an empty surface.
+ *
+ * Only the variables are redefined: LESS resolves them lazily and the last
+ * declaration wins, so importing this file after the theme is enough for the
+ * rules in base to pick the new values up.
+ */
+
+@ui5xSkeletonBaseColor: fade(@sapUiContentForegroundBorderColor, 55%);
+@ui5xSkeletonHighlightColor: fade(@sapUiContentForegroundBorderColor, 85%);
+
+/*
+ * The bubble appearance relies on a background that equals the surface colour
+ * in high contrast, so an own message became indistinguishable from a
+ * conversation one. High contrast draws with borders instead of fills, and
+ * that is also what makes the highlight readable here.
+ */
+
+.ui5xChatFeedIncomingMessagesBubble .ui5xChatMessageIncoming .ui5xChatMessageBubble,
+.ui5xChatFeedOwnMessagesBubble .ui5xChatMessageOwn .ui5xChatMessageBubble {
+    border: 0.0625rem solid @sapUiContentForegroundBorderColor;
+}
+
+.ui5xChatFeedHighlightOwnMessage.ui5xChatFeedOwnMessagesBubble
+.ui5xChatMessageOwn .ui5xChatMessageBubble {
+    border-color: @sapUiSelected;
+    border-width: 0.125rem;
+}
