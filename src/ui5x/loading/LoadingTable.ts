@@ -8,6 +8,7 @@ import "../library";
 import Control from "sap/ui/core/Control";
 import Table from "sap/ui/table/Table";
 import Column from "sap/ui/table/Column";
+import RowAction from "sap/ui/table/RowAction";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import {
     SelectionMode,
@@ -403,9 +404,22 @@ export default class LoadingTable extends Control {
             sourceTable.getSelectionBehavior()
         );
 
-        skeletonTable.setRowActionCount(
-            sourceTable.getRowActionCount()
-        );
+        /*
+         * sap.ui.table reserves the row action area only when a template is
+         * set. Copying rowActionCount alone lets the skeleton columns take the
+         * space the real table gives to row actions, so the columns shift when
+         * the data arrives. The template stays empty: row actions must remain
+         * unavailable while loading.
+         */
+        const rowActionCount = sourceTable.getRowActionTemplate()
+            ? sourceTable.getRowActionCount()
+            : 0;
+
+        skeletonTable.setRowActionCount(rowActionCount);
+
+        if (rowActionCount > 0 && !skeletonTable.getRowActionTemplate()) {
+            skeletonTable.setRowActionTemplate(new RowAction());
+        }
 
         skeletonTable.clearSelection();
     }
