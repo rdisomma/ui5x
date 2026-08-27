@@ -201,6 +201,20 @@
     background: fade(@sapUiSelected, 12%);
 }
 
+/*
+ * The Conversation appearance has no bubble to tint: it clears the inline
+ * padding and the radius, so a background alone renders as a square band that
+ * bleeds into the text. Mark the message with an accent bar on the side it
+ * hugs instead, the way sap.m.ListItemBase highlights a flat list item.
+ */
+.ui5xChatFeedHighlightOwnMessage.ui5xChatFeedOwnMessagesConversation
+.ui5xChatMessageOwn .ui5xChatMessageBubble {
+    padding-inline-end: 0.75rem;
+
+    border-inline-end: 0.1875rem solid @sapUiSelected;
+    background: transparent;
+}
+
 .ui5xChatMessageLoadingBubble {
     max-width: 75%;
 }
