@@ -160,7 +160,7 @@ export default class SegmentedInput extends Control {
     init(): void {
         const clearText = Lib.getResourceBundleFor("sap.m")?.getText(
             "INPUT_CLEAR_ICON_ALT"
-        ) ?? "Clear";
+        );
 
         this.setAggregation(
             "_clearButton",
