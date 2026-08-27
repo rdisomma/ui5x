@@ -16,22 +16,24 @@
 
         body.sapUiBody {
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            flex-direction: column;
 
             background: var(--sapBackgroundColor);
         }
 
+        #toolbar {
+            flex: 0 0 auto;
+        }
+
         #content {
-            width: 640px;
-            height: 360px;
+            flex: 1 1 auto;
+            overflow: auto;
 
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
 
+            padding: 1.5rem;
             box-sizing: border-box;
         }
     </style>
@@ -45,21 +47,50 @@
     </script>
 
     <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
         sap.ui.require([
             "ui5x/library",
             "ui5x/loading/Skeleton",
+            "ui5x/test/demo/DemoToolbar",
             "sap/m/VBox",
             "sap/m/HBox",
             "sap/m/FlexItemData"
         ], function (
             library,
             Skeleton,
+            DemoToolbar,
             VBox,
             HBox,
             FlexItemData
         ) {
+            "use strict";
 
-            new VBox({
+            const avatar = new Skeleton({
+                type: "Circle"
+            });
+
+            const paragraph = new Skeleton({
+                type: "Line",
+                lines: 3,
+                layoutData: new FlexItemData({
+                    growFactor: 1,
+                    baseSize: "0"
+                })
+            });
+
+            const block = new Skeleton({
+                type: "Rectangle",
+                width: "100%"
+            });
+
+            const skeletons = [avatar, paragraph, block];
+
+            const surface = new VBox({
                 width: "24rem",
                 gap: "1rem",
                 items: [
@@ -68,32 +99,84 @@
                         alignItems: "Center",
                         gap: "1rem",
                         items: [
-                            new Skeleton({
-                                type: "Circle"
-                            }),
-
-                            new Skeleton({
-                                type: "Line",
-                                lines: 3,
-                                layoutData: new FlexItemData({
-                                    growFactor: 1,
-                                    baseSize: "0"
-                                })
-                            })
+                            avatar,
+                            paragraph
                         ]
                     }),
 
-                    new Skeleton({
-                        type: "Rectangle",
-                        width: "100%"
-                    })
+                    block
                 ]
-            }).placeAt("content");
+            });
+
+            surface.placeAt("content");
+
+            DemoToolbar.place("Skeleton", [
+                DemoToolbar.label("Shown types"),
+
+                DemoToolbar.toggle(
+                    "Line",
+                    paragraph.getVisible(),
+                    function (pressed) {
+                        paragraph.setVisible(pressed);
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Rectangle",
+                    block.getVisible(),
+                    function (pressed) {
+                        block.setVisible(pressed);
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Circle",
+                    avatar.getVisible(),
+                    function (pressed) {
+                        avatar.setVisible(pressed);
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Paragraph lines"),
+                DemoToolbar.choice(
+                    [1, 2, 3],
+                    paragraph.getLines(),
+                    function (key) {
+                        paragraph.setLines(Number(key));
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Width"),
+                DemoToolbar.choice(
+                    ["24rem", "32rem", "100%"],
+                    surface.getWidth(),
+                    function (key) {
+                        surface.setWidth(key);
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Animated",
+                    skeletons.every(function (skeleton) {
+                        return skeleton.getAnimated();
+                    }),
+                    function (pressed) {
+                        skeletons.forEach(function (skeleton) {
+                            skeleton.setAnimated(pressed);
+                        });
+                    }
+                )
+            ]);
         });
     </script>
 </head>
 
 <body class="sapUiBody">
+    <div id="toolbar"></div>
     <div id="content"></div>
 </body>
 

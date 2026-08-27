@@ -16,22 +16,24 @@
 
         body.sapUiBody {
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            flex-direction: column;
 
             background: var(--sapBackgroundColor);
         }
 
+        #toolbar {
+            flex: 0 0 auto;
+        }
+
         #content {
-            width: 1280px;
-            height: 720px;
+            flex: 1 1 auto;
+            overflow: auto;
 
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
 
+            padding: 1.5rem;
             box-sizing: border-box;
         }
 
@@ -118,9 +120,16 @@
     </script>
 
     <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
         sap.ui.require([
             "ui5x/library",
             "ui5x/loading/LoadingResponsiveTable",
+            "ui5x/test/demo/DemoToolbar",
             "sap/ui/model/json/JSONModel",
             "sap/m/Table",
             "sap/m/Column",
@@ -134,6 +143,7 @@
         ], function (
             library,
             LoadingResponsiveTable,
+            DemoToolbar,
             JSONModel,
             Table,
             Column,
@@ -389,33 +399,95 @@
                 }
             ];
 
-            new VBox({
+            const surface = new VBox({
                 width: "64rem",
                 items: [
                     loadingTable
                 ]
-            })
-                .addStyleClass("showcaseTable")
-                .placeAt("content");
+            }).addStyleClass("showcaseTable");
 
-            function play() {
-                model.setProperty("/rows", []);
-                loadingTable.setLoading(true);
+            surface.placeAt("content");
 
-                setTimeout(function () {
-                    model.setProperty("/rows", loadedRows);
-                    loadingTable.setLoading(false);
-                }, 1800);
-
-                setTimeout(play, 4400);
+            function setLoading(loading) {
+                model.setProperty("/rows", loading ? [] : loadedRows);
+                loadingTable.setLoading(loading);
             }
 
-            play();
+            setLoading(true);
+
+            DemoToolbar.place("LoadingResponsiveTable", [
+                DemoToolbar.toggle(
+                    "Loading",
+                    loadingTable.getLoading(),
+                    setLoading
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Rows mode"),
+                DemoToolbar.choice(
+                    ["Fixed", "Fill"],
+                    loadingTable.getSkeletonRowsMode(),
+                    function (key) {
+                        loadingTable.setSkeletonRowsMode(key);
+                    }
+                ),
+
+                DemoToolbar.label("Rows"),
+                DemoToolbar.number(
+                    loadingTable.getSkeletonRows(),
+                    1,
+                    20,
+                    function (value) {
+                        loadingTable.setSkeletonRows(value);
+                    }
+                ),
+
+                DemoToolbar.label("Max rows"),
+                DemoToolbar.number(
+                    loadingTable.getMaxSkeletonRows(),
+                    1,
+                    20,
+                    function (value) {
+                        loadingTable.setMaxSkeletonRows(value);
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.toggle(
+                    "Dynamic widths",
+                    loadingTable.getDynamicSkeletonWidths(),
+                    function (pressed) {
+                        loadingTable.setDynamicSkeletonWidths(pressed);
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Animated",
+                    loadingTable.getAnimated(),
+                    function (pressed) {
+                        loadingTable.setAnimated(pressed);
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Width"),
+                DemoToolbar.choice(
+                    ["64rem", "80rem", "100%"],
+                    surface.getWidth(),
+                    function (key) {
+                        surface.setWidth(key);
+                    }
+                )
+            ]);
         });
     </script>
 </head>
 
 <body class="sapUiBody sapUiSizeCompact">
+    <div id="toolbar"></div>
     <div id="content"></div>
 </body>
 

@@ -16,22 +16,24 @@
 
         body.sapUiBody {
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            flex-direction: column;
 
             background: var(--sapBackgroundColor);
         }
 
+        #toolbar {
+            flex: 0 0 auto;
+        }
+
         #content {
-            width: 720px;
-            height: 405px;
+            flex: 1 1 auto;
+            overflow: auto;
 
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
 
+            padding: 1.5rem;
             box-sizing: border-box;
         }
 
@@ -86,10 +88,17 @@
     </script>
 
     <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
         sap.ui.require([
             "ui5x/library",
             "ui5x/layout/Accordion",
             "ui5x/layout/AccordionItem",
+            "ui5x/test/demo/DemoToolbar",
             "sap/m/VBox",
             "sap/m/HBox",
             "sap/m/Text",
@@ -98,6 +107,7 @@
             library,
             Accordion,
             AccordionItem,
+            DemoToolbar,
             VBox,
             HBox,
             Text,
@@ -239,54 +249,91 @@
                 ]
             }).addStyleClass("showcaseAccordion");
 
-            new VBox({
+            const surface = new VBox({
                 width: "35rem",
 
                 items: [
                     accordion
                 ]
-            })
-                .addStyleClass("showcaseSurface")
-                .placeAt("content");
+            }).addStyleClass("showcaseSurface");
 
-            function showItem(item) {
-                generalItem.setExpanded(
-                    item === generalItem
-                );
+            surface.placeAt("content");
 
-                appearanceItem.setExpanded(
-                    item === appearanceItem
-                );
+            const items = [
+                generalItem,
+                appearanceItem,
+                notificationsItem
+            ];
 
-                notificationsItem.setExpanded(
-                    item === notificationsItem
-                );
+            function expandAll(expanded) {
+                items.forEach(function (item) {
+                    if (item.getToggleable()) {
+                        item.setExpanded(expanded);
+                    }
+                });
             }
 
-            function play() {
-                showItem(generalItem);
+            DemoToolbar.place("Accordion", [
+                DemoToolbar.toggle(
+                    "Multiple expansion",
+                    accordion.getMultipleExpansion(),
+                    function (pressed) {
+                        accordion.setMultipleExpansion(pressed);
+                    }
+                ),
 
-                setTimeout(function () {
-                    showItem(appearanceItem);
-                }, 1800);
+                DemoToolbar.toggle(
+                    "Enabled",
+                    items.every(function (item) {
+                        return item.getEnabled();
+                    }),
+                    function (pressed) {
+                        items.forEach(function (item) {
+                            item.setEnabled(pressed);
+                        });
+                    }
+                ),
 
-                setTimeout(function () {
-                    showItem(notificationsItem);
-                }, 3600);
+                DemoToolbar.toggle(
+                    "First section pinned",
+                    !generalItem.getToggleable(),
+                    function (pressed) {
+                        if (pressed) {
+                            generalItem.setExpanded(true);
+                        }
 
-                setTimeout(function () {
-                    showItem(generalItem);
-                }, 5400);
+                        generalItem.setToggleable(!pressed);
+                    }
+                ),
 
-                setTimeout(play, 7200);
-            }
+                DemoToolbar.separator(),
 
-            play();
+                DemoToolbar.action("Expand all", function () {
+                    accordion.setMultipleExpansion(true);
+                    expandAll(true);
+                }),
+
+                DemoToolbar.action("Collapse all", function () {
+                    expandAll(false);
+                }),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Width"),
+                DemoToolbar.choice(
+                    ["35rem", "48rem", "100%"],
+                    surface.getWidth(),
+                    function (key) {
+                        surface.setWidth(key);
+                    }
+                )
+            ]);
         });
     </script>
 </head>
 
 <body class="sapUiBody sapUiSizeCompact">
+    <div id="toolbar"></div>
     <div id="content"></div>
 </body>
 

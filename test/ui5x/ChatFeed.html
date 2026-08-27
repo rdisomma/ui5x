@@ -16,24 +16,25 @@
 
         body.sapUiBody {
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            flex-direction: column;
 
             background: var(--sapBackgroundColor);
         }
 
+        #toolbar {
+            flex: 0 0 auto;
+        }
+
         #content {
-            width: 720px;
-            height: 405px;
+            flex: 1 1 auto;
+            overflow: auto;
 
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
 
-            box-sizing: border-box;
             padding: 1.5rem;
+            box-sizing: border-box;
         }
 
         .showcaseChat {
@@ -50,12 +51,19 @@
     </script>
 
     <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
         sap.ui.require([
             "ui5x/chat/ChatFeed",
             "ui5x/chat/ChatFeedComposerPosition",
             "ui5x/chat/ChatFeedMessageAlignment",
             "ui5x/chat/ChatMessage",
             "ui5x/chat/ChatMessageAppearance",
+            "ui5x/test/demo/DemoToolbar",
             "sap/ui/model/json/JSONModel"
         ], function (
             ChatFeed,
@@ -63,6 +71,7 @@
             ChatFeedMessageAlignment,
             ChatMessage,
             ChatMessageAppearance,
+            DemoToolbar,
             JSONModel
         ) {
             "use strict";
@@ -88,6 +97,14 @@
                 }
             ];
 
+            let messageId = initialMessages.length;
+
+            function nextId() {
+                messageId += 1;
+
+                return String(messageId);
+            }
+
             function createInitialMessages() {
                 return initialMessages.map(function (message) {
                     return { ...message };
@@ -112,7 +129,7 @@
             const feed = new ChatFeed({
                 value: "{/draft}",
                 placeholder: "Write a message",
-                loading: true,
+                loading: false,
                 sendOnEnter: true,
                 sendButtonText: "",
                 sendButtonIcon: "sap-icon://paper-plane",
@@ -132,7 +149,7 @@
                     const messages = model.getProperty("/messages");
 
                     messages.push({
-                        id: "4",
+                        id: nextId(),
                         text: event.getParameter("value"),
                         sender: "You",
                         ownMessage: true,
@@ -179,89 +196,132 @@
                 .addStyleClass("showcaseChat")
                 .placeAt("content");
 
-            function wait(milliseconds) {
-                return new Promise(function (resolve) {
-                    window.setTimeout(resolve, milliseconds);
-                });
-            }
+            DemoToolbar.place("ChatFeed", [
+                DemoToolbar.toggle(
+                    "Loading",
+                    feed.getLoading(),
+                    function (pressed) {
+                        feed.setLoading(pressed);
+                    }
+                ),
 
-            async function typeMessage(text) {
-                feed._getTextArea().focus();
+                DemoToolbar.separator(),
 
-                for (let index = 1; index <= text.length; index += 1) {
-                    feed.setValue(text.slice(0, index));
-                    await wait(35);
-                }
-            }
+                DemoToolbar.label("Composer"),
+                DemoToolbar.choice(
+                    ["Top", "Bottom"],
+                    feed.getComposerPosition(),
+                    function (key) {
+                        feed.setComposerPosition(key);
+                    }
+                ),
 
-            function resetConversation() {
-                feed.setLoading(true);
-                feed.setValue("");
-                model.setProperty("/messages", createInitialMessages());
-            }
+                DemoToolbar.label("Alignment"),
+                DemoToolbar.choice(
+                    ["Top", "Bottom"],
+                    feed.getMessageAlignment(),
+                    function (key) {
+                        feed.setMessageAlignment(key);
+                    }
+                ),
 
-            function addStatusUpdate() {
-                const messages = model.getProperty("/messages");
+                DemoToolbar.separator(),
 
-                messages.push({
-                    id: "3",
-                    text: "It was shipped this morning.",
-                    sender: "Anna",
-                    ownMessage: false,
-                    editable: false,
-                    deletable: false,
-                    timestamp: "2026-08-27T09:10:00"
-                });
+                DemoToolbar.label("Own messages"),
+                DemoToolbar.choice(
+                    ["Bubble", "Conversation"],
+                    feed.getOwnMessageAppearance(),
+                    function (key) {
+                        feed.setOwnMessageAppearance(key);
+                    }
+                ),
 
-                model.refresh(true);
-            }
+                DemoToolbar.label("Incoming"),
+                DemoToolbar.choice(
+                    ["Bubble", "Conversation"],
+                    feed.getIncomingMessageAppearance(),
+                    function (key) {
+                        feed.setIncomingMessageAppearance(key);
+                    }
+                ),
 
-            function addIncomingReply() {
-                const messages = model.getProperty("/messages");
+                DemoToolbar.separator(),
 
-                messages.push({
-                    id: "5",
-                    text: "Sure! I've sent the tracking link and delivery details.",
-                    sender: "Anna",
-                    ownMessage: false,
-                    editable: false,
-                    deletable: false,
-                    timestamp: "2026-08-27T10:19:00"
-                });
+                DemoToolbar.toggle(
+                    "Group by date",
+                    feed.getGroupByDate(),
+                    function (pressed) {
+                        feed.setGroupByDate(pressed);
+                    }
+                ),
 
-                model.refresh(true);
-            }
+                DemoToolbar.toggle(
+                    "Highlight own",
+                    feed.getHighlightOwnMessage(),
+                    function (pressed) {
+                        feed.setHighlightOwnMessage(pressed);
+                    }
+                ),
 
-            async function play() {
-                resetConversation();
+                DemoToolbar.toggle(
+                    "Send button",
+                    feed.getShowSendButton(),
+                    function (pressed) {
+                        feed.setShowSendButton(pressed);
+                    }
+                ),
 
-                await wait(1100);
-                feed.setLoading(false);
+                DemoToolbar.toggle(
+                    "Enabled",
+                    feed.getEnabled(),
+                    function (pressed) {
+                        feed.setEnabled(pressed);
+                    }
+                ),
 
-                await wait(600);
-                addStatusUpdate();
+                DemoToolbar.separator(),
 
-                await wait(700);
-                await typeMessage(
-                    "Great! Could you send me the tracking link and confirm the delivery date?"
-                );
+                DemoToolbar.label("Height"),
+                DemoToolbar.choice(
+                    ["22rem", "32rem", "100%"],
+                    feed.getChatMaxHeight(),
+                    function (key) {
+                        feed.setChatMaxHeight(key);
+                    }
+                ),
 
-                await wait(300);
-                feed._getSendButton().firePress();
+                /*
+                 * An incoming message recreates the bound ChatMessage
+                 * controls, so it also shows that an open editor keeps its
+                 * unconfirmed draft.
+                 */
+                DemoToolbar.action("Incoming message", function () {
+                    const messages = model.getProperty("/messages");
 
-                await wait(900);
-                addIncomingReply();
+                    messages.push({
+                        id: nextId(),
+                        text: "Sure! I've sent the tracking link.",
+                        sender: "Anna",
+                        ownMessage: false,
+                        editable: false,
+                        deletable: false,
+                        timestamp: "2026-08-27T10:19:00"
+                    });
 
-                await wait(2200);
-                play();
-            }
+                    model.refresh(true);
+                }),
 
-            play();
+                DemoToolbar.action("Reset", function () {
+                    feed.setValue("");
+                    model.setProperty("/messages", createInitialMessages());
+                })
+            ]);
         });
     </script>
 </head>
 
 <body class="sapUiBody sapUiSizeCompact">
+    <div id="toolbar"></div>
     <div id="content"></div>
 </body>
 

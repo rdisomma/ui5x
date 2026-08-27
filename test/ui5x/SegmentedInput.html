@@ -16,22 +16,24 @@
 
         body.sapUiBody {
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            flex-direction: column;
 
             background: var(--sapBackgroundColor);
         }
 
+        #toolbar {
+            flex: 0 0 auto;
+        }
+
         #content {
-            width: 720px;
-            height: 405px;
+            flex: 1 1 auto;
+            overflow: auto;
 
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
 
+            padding: 1.5rem;
             box-sizing: border-box;
         }
 
@@ -68,14 +70,22 @@
     </script>
 
     <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
         sap.ui.require([
             "ui5x/input/SegmentedInput",
+            "ui5x/test/demo/DemoToolbar",
             "sap/base/Log",
             "sap/m/HBox",
             "sap/m/Label",
             "sap/m/VBox"
         ], function (
             SegmentedInput,
+            DemoToolbar,
             Log,
             HBox,
             Label,
@@ -107,51 +117,53 @@
                 };
             }
 
+            /*
+             * The toolbar drives every entry at once, so the shared settings
+             * are the single source of truth for its initial values. Each
+             * entry keeps only what the toolbar does not change.
+             */
+            const sharedSettings = {
+                inputType: "Alphanumeric",
+                size: "Medium",
+                showSeparators: true,
+                separatorInterval: 4,
+                showClearIcon: true
+            };
+
             const entries = [
                 createEntry({
                     label: "One-time code",
-                    value: "482931",
                     initialText: "Enter the six-digit code",
                     completeState: "None",
                     completeText: "Code verified",
                     settings: {
-                        digits: 6,
-                        inputType: "Numeric",
-                        size: "Large",
-                        showSeparators: true,
-                        separatorInterval: 2
+                        ...sharedSettings,
+                        digits: 6
                     }
                 }),
                 createEntry({
                     label: "License key",
-                    value: "UI5X2026",
                     initialText: "Enter the product key",
                     completeState: "Success",
                     completeText: "License key accepted",
                     settings: {
-                        digits: 8,
-                        inputType: "Alphanumeric",
-                        size: "Small",
-                        showSeparators: true,
-                        separatorInterval: 4,
-                        showClearIcon: true
+                        ...sharedSettings,
+                        digits: 8
                     }
                 }),
                 createEntry({
                     label: "Fiscal code",
-                    value: "RSSMRA85T10A562S",
                     initialText: "Enter a valid fiscal code",
                     completeState: "Error",
                     completeText: "Invalid fiscal code",
                     settings: {
-                        digits: 16,
-                        inputType: "Alphanumeric",
-                        size: "Medium",
-                        showSeparators: false,
-                        showClearIcon: true
+                        ...sharedSettings,
+                        digits: 16
                     }
                 })
             ];
+
+            const reference = entries[0].control;
 
             function createRow(entry) {
                 return new HBox({
@@ -163,81 +175,112 @@
                 }).addStyleClass("showcaseRow");
             }
 
-            new VBox({
+            const surface = new VBox({
                 width: "100%",
                 items: entries.map(createRow)
-            })
-                .addStyleClass("showcaseGrid")
-                .placeAt("content");
+            }).addStyleClass("showcaseGrid");
 
-            function wait(milliseconds) {
-                return new Promise(function (resolve) {
-                    window.setTimeout(resolve, milliseconds);
+            surface.placeAt("content");
+
+            function forEachControl(callback) {
+                entries.forEach(function (entry) {
+                    callback(entry.control, entry);
                 });
             }
 
-            async function enterCharacter(entry, index) {
-                let field;
+            function resetEntry(control, entry) {
+                control.clear();
+                control.setValueState("None");
+                control.setValueStateText(entry.initialText);
+                control.removeStyleClass("showcaseComplete");
+            }
 
-                while (!field) {
-                    field = document.getElementById(
-                        `${entry.control.getId()}-digit-${index}`
-                    );
-
-                    if (!field) {
-                        await wait(50);
+            DemoToolbar.place("SegmentedInput", [
+                DemoToolbar.label("Size"),
+                DemoToolbar.choice(
+                    ["Small", "Medium", "Large"],
+                    reference.getSize(),
+                    function (key) {
+                        forEachControl(function (control) {
+                            control.setSize(key);
+                        });
                     }
-                }
+                ),
 
-                field.focus();
-                field.value = entry.value[index];
-                field.dispatchEvent(new InputEvent("input", {
-                    bubbles: true,
-                    data: entry.value[index],
-                    inputType: "insertText"
-                }));
-            }
+                DemoToolbar.separator(),
 
-            async function typeEntry(entry) {
-                for (let index = 0; index < entry.value.length; index += 1) {
-                    await enterCharacter(entry, index);
-                    await wait(90);
-                }
+                DemoToolbar.label("Input type"),
+                DemoToolbar.choice(
+                    ["Numeric", "Alphanumeric"],
+                    reference.getInputType(),
+                    function (key) {
+                        forEachControl(function (control) {
+                            control.setInputType(key);
+                        });
+                    }
+                ),
 
-                await wait(350);
-            }
+                DemoToolbar.separator(),
 
-            function resetEntry(entry) {
-                entry.control.clear();
-                entry.control.setValueState("None");
-                entry.control.setValueStateText(entry.initialText);
-                entry.control.removeStyleClass("showcaseComplete");
-            }
+                DemoToolbar.toggle(
+                    "Separators",
+                    reference.getShowSeparators(),
+                    function (pressed) {
+                        forEachControl(function (control) {
+                            control.setShowSeparators(pressed);
+                        });
+                    }
+                ),
 
-            async function play() {
-                entries.forEach(resetEntry);
+                DemoToolbar.label("Interval"),
+                DemoToolbar.number(
+                    reference.getSeparatorInterval(),
+                    1,
+                    8,
+                    function (value) {
+                        forEachControl(function (control) {
+                            control.setSeparatorInterval(value);
+                        });
+                    }
+                ),
 
-                await wait(700);
+                DemoToolbar.toggle(
+                    "Clear icon",
+                    reference.getShowClearIcon(),
+                    function (pressed) {
+                        forEachControl(function (control) {
+                            control.setShowClearIcon(pressed);
+                        });
+                    }
+                ),
 
-                for (const entry of entries) {
-                    await typeEntry(entry);
-                }
+                DemoToolbar.separator(),
 
-                await wait(1600);
+                DemoToolbar.label("Value state"),
+                DemoToolbar.choice(
+                    ["None", "Success", "Warning", "Error"],
+                    reference.getValueState(),
+                    function (key) {
+                        forEachControl(function (control, entry) {
+                            control.setValueState(key);
+                            control.setValueStateText(
+                                key === "None" ? entry.initialText : entry.completeText
+                            );
+                            control.addStyleClass("showcaseComplete");
+                        });
+                    }
+                ),
 
-                entries.forEach(resetEntry);
-
-                await wait(900);
-
-               play();
-            }
-
-            play();
+                DemoToolbar.action("Clear all", function () {
+                    forEachControl(resetEntry);
+                })
+            ]);
         });
     </script>
 </head>
 
 <body class="sapUiBody sapUiSizeCompact">
+    <div id="toolbar"></div>
     <div id="content"></div>
 </body>
 

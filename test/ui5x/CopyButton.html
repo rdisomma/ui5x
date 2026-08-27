@@ -16,22 +16,24 @@
 
         body.sapUiBody {
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            flex-direction: column;
 
             background: var(--sapBackgroundColor);
         }
 
+        #toolbar {
+            flex: 0 0 auto;
+        }
+
         #content {
-            width: 720px;
-            height: 405px;
+            flex: 1 1 auto;
+            overflow: auto;
 
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
 
+            padding: 1.5rem;
             box-sizing: border-box;
         }
 
@@ -57,135 +59,152 @@
     </script>
 
     <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
         sap.ui.require([
             "ui5x/library",
             "ui5x/button/CopyButton",
+            "ui5x/test/demo/DemoToolbar",
             "sap/m/VBox",
             "sap/m/HBox"
         ], function (
             library,
             CopyButton,
+            DemoToolbar,
             VBox,
             HBox
         ) {
             "use strict";
 
             /*
-             * A timer-generated press has no browser user activation, so the
-             * real Clipboard API rejects it. Stub only the write operation in
-             * this visual demo: firePress() still exercises the component's
-             * complete press and success-feedback flow.
+             * The toolbar drives both buttons, so their shared configuration
+             * is the single source of truth for its initial values. Only the
+             * text / icon-only distinction is fixed, because successText is
+             * ignored on an icon-only button.
              */
-            Object.defineProperty(navigator.clipboard, "writeText", {
-                configurable: true,
-                value: function () {
-                    return Promise.resolve();
-                }
-            });
-
             const sharedSettings = {
-                value: "UI5X",
-                width: "7rem"
+                value: "npm i @raffaeledisomma/ui5x",
+                type: "Default",
+                successText: "Copied",
+                successIcon: "sap-icon://accept",
+                successType: "Accept",
+                iconFirst: true
             };
-
-            const defaultButton = new CopyButton({
-                ...sharedSettings,
-                text: "Copy"
-            });
 
             const textButton = new CopyButton({
                 ...sharedSettings,
                 text: "Copy",
-                successText: "Copied"
-            });
-
-            const acceptButton = new CopyButton({
-                value: "npm i @raffaeledisomma/ui5x",
-                width: "7rem",
-                text: "Copy",
-                successText: "Done",
-                successType: "Accept"
+                width: "9rem"
             });
 
             const iconOnlyButton = new CopyButton({
-                value: "UI5X",
-                width: "7rem",
-                type: "Transparent",
+                ...sharedSettings,
                 tooltip: "Copy value"
             });
 
-            const trailingIconButton = new CopyButton({
-                ...sharedSettings,
-                text: "Copy",
-                iconFirst: false,
-                type: "Transparent",
-                successText: "Copied"
-            });
-
-            const preserveIconButton = new CopyButton({
-                ...sharedSettings,
-                text: "Copy",
-                type: "Emphasized",
-                successIcon: "",
-                successText: "Copied"
-            });
-
-            function createRow(items) {
-                return new HBox({
-                    width: "100%",
-                    justifyContent: "SpaceBetween",
-                    alignItems: "Center",
-                    items
-                }).addStyleClass("showcaseGridRow");
-            }
-
             const buttons = [
-                defaultButton,
                 textButton,
-                acceptButton,
-                iconOnlyButton,
-                trailingIconButton,
-                preserveIconButton
+                iconOnlyButton
             ];
+
+            const reference = textButton;
 
             new VBox({
                 items: [
-                    createRow([
-                        defaultButton,
-                        textButton,
-                        acceptButton
-                    ]),
-
-                    createRow([
-                        iconOnlyButton,
-                        trailingIconButton,
-                        preserveIconButton
-                    ])
+                    new HBox({
+                        width: "100%",
+                        justifyContent: "Center",
+                        alignItems: "Center",
+                        gap: "1.5rem",
+                        items: buttons
+                    }).addStyleClass("showcaseGridRow")
                 ]
             })
                 .addStyleClass("showcaseGrid")
                 .placeAt("content");
 
-            /*
-             * Trigger the real press event on every variant at the same time.
-             * The interval leaves the restored state visible before the next
-             * cycle, producing a clean loop without a mouse cursor.
-             */
-            function pressAll() {
-                buttons.forEach(function (button) {
-                    button.firePress();
-                });
-            }
+            DemoToolbar.place("CopyButton", [
+                DemoToolbar.label("Button type"),
+                DemoToolbar.choice(
+                    ["Default", "Emphasized", "Transparent"],
+                    reference.getType(),
+                    function (key) {
+                        buttons.forEach(function (button) {
+                            button.setType(key);
+                        });
+                    }
+                ),
 
-            setTimeout(function () {
-                pressAll();
-                window.setInterval(pressAll, 3200);
-            }, 800);
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Success type"),
+                DemoToolbar.choice(
+                    ["Default", "Accept", "Emphasized"],
+                    reference.getSuccessType(),
+                    function (key) {
+                        buttons.forEach(function (button) {
+                            button.setSuccessType(key);
+                        });
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.toggle(
+                    "Success text",
+                    Boolean(reference.getSuccessText()),
+                    function (pressed) {
+                        buttons.forEach(function (button) {
+                            button.setSuccessText(pressed ? "Copied" : "");
+                        });
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Success icon",
+                    Boolean(reference.getSuccessIcon()),
+                    function (pressed) {
+                        buttons.forEach(function (button) {
+                            button.setSuccessIcon(
+                                pressed ? "sap-icon://accept" : ""
+                            );
+                        });
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Icon first",
+                    reference.getIconFirst(),
+                    function (pressed) {
+                        buttons.forEach(function (button) {
+                            button.setIconFirst(pressed);
+                        });
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                /*
+                 * The presses run inside this click handler, so they keep the
+                 * user activation the Clipboard API requires and every variant
+                 * shows its success feedback at the same time.
+                 */
+                DemoToolbar.action("Press all", function () {
+                    buttons.forEach(function (button) {
+                        button.firePress();
+                    });
+                })
+            ]);
         });
     </script>
 </head>
 
 <body class="sapUiBody sapUiSizeCompact">
+    <div id="toolbar"></div>
     <div id="content"></div>
 </body>
 

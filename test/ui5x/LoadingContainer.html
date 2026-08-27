@@ -16,22 +16,24 @@
 
         body.sapUiBody {
             display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
+            flex-direction: column;
 
             background: var(--sapBackgroundColor);
         }
 
+        #toolbar {
+            flex: 0 0 auto;
+        }
+
         #content {
-            width: 640px;
-            height: 360px;
+            flex: 1 1 auto;
+            overflow: auto;
 
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
 
+            padding: 1.5rem;
             box-sizing: border-box;
         }
 
@@ -89,10 +91,17 @@
     </script>
 
     <script>
+        sap.ui.loader.config({
+            paths: {
+                "ui5x/test": "/test-resources/ui5x"
+            }
+        });
+
         sap.ui.require([
             "ui5x/library",
             "ui5x/loading/Skeleton",
             "ui5x/loading/LoadingContainer",
+            "ui5x/test/demo/DemoToolbar",
             "sap/m/VBox",
             "sap/m/HBox",
             "sap/m/Text",
@@ -105,6 +114,7 @@
             library,
             Skeleton,
             LoadingContainer,
+            DemoToolbar,
             VBox,
             HBox,
             Text,
@@ -123,59 +133,61 @@
              * Rectangle -> MessageStrip
              */
 
-            const placeholder = new VBox({
-                width: "100%",
-                height: "11.25rem",
-                justifyContent: "SpaceBetween",
-                items: [
-                    new HBox({
-                        width: "100%",
-                        alignItems: "Center",
-                        gap: "1rem",
-                        items: [
-                            new Skeleton({
-                                type: "Circle",
-                                width: "3rem"
-                            }),
+            function createPlaceholder() {
+                return new VBox({
+                    width: "100%",
+                    height: "11.25rem",
+                    justifyContent: "SpaceBetween",
+                    items: [
+                        new HBox({
+                            width: "100%",
+                            alignItems: "Center",
+                            gap: "1rem",
+                            items: [
+                                new Skeleton({
+                                    type: "Circle",
+                                    width: "3rem"
+                                }),
 
-                            new VBox({
-                                gap: "0.5rem",
-                                items: [
-                                    new Skeleton({
-                                        type: "Line",
-                                        width: "10rem"
-                                    }),
+                                new VBox({
+                                    gap: "0.5rem",
+                                    items: [
+                                        new Skeleton({
+                                            type: "Line",
+                                            width: "10rem"
+                                        }),
 
-                                    new Skeleton({
-                                        type: "Line",
-                                        width: "14rem"
+                                        new Skeleton({
+                                            type: "Line",
+                                            width: "14rem"
+                                        })
+                                    ],
+                                    layoutData: new FlexItemData({
+                                        growFactor: 1,
+                                        baseSize: "0"
                                     })
-                                ],
-                                layoutData: new FlexItemData({
-                                    growFactor: 1,
-                                    baseSize: "0"
+                                }),
+
+                                new Skeleton({
+                                    type: "Line",
+                                    width: "3.5rem"
                                 })
-                            }),
+                            ]
+                        }),
 
-                            new Skeleton({
-                                type: "Line",
-                                width: "3.5rem"
-                            })
-                        ]
-                    }),
+                        new Skeleton({
+                            type: "Line",
+                            lines: 3,
+                            width: "100%"
+                        }),
 
-                    new Skeleton({
-                        type: "Line",
-                        lines: 3,
-                        width: "100%"
-                    }),
-
-                    new Skeleton({
-                        type: "Rectangle",
-                        width: "100%"
-                    })
-                ]
-            }).addStyleClass("showcaseState");
+                        new Skeleton({
+                            type: "Rectangle",
+                            width: "100%"
+                        })
+                    ]
+                }).addStyleClass("showcaseState");
+            }
 
 
             /*
@@ -251,7 +263,7 @@
 
             const loadingContainer = new LoadingContainer({
                 loading: true,
-                placeholder: placeholder,
+                placeholder: createPlaceholder(),
                 content: content
             });
 
@@ -260,36 +272,99 @@
              * Stable showcase surface
              */
 
-            new VBox({
+            const surface = new VBox({
                 width: "26rem",
                 items: [
                     loadingContainer
                 ]
-            })
-                .addStyleClass("showcasePanel")
-                .placeAt("content");
+            }).addStyleClass("showcasePanel");
 
+            surface.placeAt("content");
+
+
+            const skeletonTypeChoice = DemoToolbar.choice(
+                ["Line", "Rectangle", "Circle"],
+                loadingContainer.getSkeletonType(),
+                function (key) {
+                    loadingContainer.setSkeletonType(key);
+                }
+            );
+
+            const skeletonLinesChoice = DemoToolbar.choice(
+                [1, 2, 3],
+                loadingContainer.getSkeletonLines(),
+                function (key) {
+                    loadingContainer.setSkeletonLines(Number(key));
+                }
+            );
 
             /*
-             * Automatic loop for recording
+             * skeletonType and skeletonLines only configure the built-in
+             * placeholder, so they are disabled while a custom placeholder is
+             * provided. Otherwise the buttons would look active and change
+             * nothing.
              */
+            function syncDefaultSkeletonKnobs() {
+                const usesCustomPlaceholder =
+                    Boolean(loadingContainer.getPlaceholder());
 
-            function play() {
-                loadingContainer.setLoading(true);
-
-                setTimeout(function () {
-                    loadingContainer.setLoading(false);
-                }, 1800);
-
-                setTimeout(play, 4200);
+                skeletonTypeChoice.setEnabled(!usesCustomPlaceholder);
+                skeletonLinesChoice.setEnabled(!usesCustomPlaceholder);
             }
 
-            play();
+            syncDefaultSkeletonKnobs();
+
+            DemoToolbar.place("LoadingContainer", [
+                DemoToolbar.toggle(
+                    "Loading",
+                    loadingContainer.getLoading(),
+                    function (pressed) {
+                        loadingContainer.setLoading(pressed);
+                    }
+                ),
+
+                DemoToolbar.toggle(
+                    "Custom placeholder",
+                    Boolean(loadingContainer.getPlaceholder()),
+                    function (pressed) {
+                        /*
+                         * Setting a 0..1 aggregation destroys the previous
+                         * value, so the custom placeholder is rebuilt whenever
+                         * it is switched back on.
+                         */
+                        loadingContainer.setPlaceholder(
+                            pressed ? createPlaceholder() : null
+                        );
+
+                        syncDefaultSkeletonKnobs();
+                    }
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Default skeleton"),
+                skeletonTypeChoice,
+
+                DemoToolbar.label("Lines"),
+                skeletonLinesChoice,
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Width"),
+                DemoToolbar.choice(
+                    ["26rem", "38rem", "100%"],
+                    surface.getWidth(),
+                    function (key) {
+                        surface.setWidth(key);
+                    }
+                )
+            ]);
         });
     </script>
 </head>
 
 <body class="sapUiBody">
+    <div id="toolbar"></div>
     <div id="content"></div>
 </body>
 
