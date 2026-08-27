@@ -42,9 +42,6 @@ QUnit.test("Defaults and composer controls", function (assert) {
     assert.ok(feed._getTextArea() instanceof TextArea, "The composer uses sap.m.TextArea");
     assert.ok(feed._getTextArea()?.getGrowing(), "The composer grows with multiline content");
     assert.strictEqual(feed._getTextArea()?.getGrowingMaxLines(), 5, "The composer stops growing after five lines");
-    assert.strictEqual(feed._getEnterIcon()?.getSrc(), "sap-icon://enter-more", "The Enter hint uses a standard UI5 icon");
-    assert.strictEqual(feed._getEnterIcon()?.getTooltip(), null, "The decorative Enter hint has no tooltip");
-
     feed.destroy();
 });
 
@@ -173,34 +170,6 @@ QUnit.test("Sending a new message always scrolls to the end", function (assert) 
 
             assert.ok(maximumScroll > 0, "The updated conversation remains scrollable");
             assert.ok(Math.abs((messageLog?.scrollTop ?? 0) - maximumScroll) <= 1, "The newly sent message is visible at the bottom");
-
-            feed.destroy();
-            done();
-        }
-    });
-
-    feed.placeAt("qunit-fixture");
-});
-
-QUnit.test("The Enter hint follows keyboard submission availability", function (assert) {
-    const done = assert.async();
-    const feed = new ChatFeed({ sendOnEnter: true });
-    let renderingCount = 0;
-
-    feed.addEventDelegate({
-        onAfterRendering: () => {
-            renderingCount++;
-
-            if (renderingCount === 1) {
-                assert.ok(feed.getDomRef()?.querySelector(".ui5xChatFeedEnterHint"), "The hint is rendered when Enter sends");
-                assert.ok(feed.getDomRef()?.querySelector(".ui5xChatFeedTextAreaWithEnterHint"), "The text area reserves space for the hint");
-
-                feed.setSendOnEnter(false);
-                return;
-            }
-
-            assert.notOk(feed.getDomRef()?.querySelector(".ui5xChatFeedEnterHint"), "The hint is removed when Enter inserts a new line");
-            assert.notOk(feed.getDomRef()?.querySelector(".ui5xChatFeedTextAreaWithEnterHint"), "The text area restores its normal padding");
 
             feed.destroy();
             done();
@@ -545,7 +514,6 @@ QUnit.test("Visibility and editability are reflected by the composer", function 
     feed.addEventDelegate({
         onAfterRendering: () => {
             assert.notOk(feed._getTextArea()?.getEditable(), "The internal text area is read-only");
-            assert.notOk(feed.getDomRef()?.querySelector(".ui5xChatFeedEnterHint"), "The Enter hint is hidden for a read-only composer");
             assert.notOk(document.getElementById(`${feed.getId()}-send`), "The send button is not rendered");
 
             feed.destroy();

@@ -165,7 +165,7 @@ export default class ChatMessage extends Control {
             new Button(`${this.getId()}-delete`, {
                 icon: "sap-icon://delete",
                 tooltip: deleteText,
-                type: ButtonType.Transparent,
+                type: ButtonType.Reject,
                 press: () => this.fireEvent("deletePress")
             }).addStyleClass("ui5xChatMessageAction"),
             true

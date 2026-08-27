@@ -57,22 +57,8 @@ const ChatFeedRenderer = {
         if (textArea) {
             rm.openStart("div", `${feed.getId()}-text-area-wrapper`);
             rm.class("ui5xChatFeedTextAreaWrapper");
-
-            if (feed._shouldShowEnterHint()) {
-                rm.class("ui5xChatFeedTextAreaWithEnterHint");
-            }
-
             rm.openEnd();
             rm.renderControl(textArea);
-
-            if (feed._shouldShowEnterHint()) {
-                const enterIcon = feed._getEnterIcon();
-
-                if (enterIcon) {
-                    rm.renderControl(enterIcon);
-                }
-            }
-
             rm.close("div");
         }
 

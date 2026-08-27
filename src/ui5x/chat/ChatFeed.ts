@@ -12,7 +12,6 @@ import type { TextArea$LiveChangeEvent } from "sap/m/TextArea";
 import type UI5Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
 import type { MetadataOptions } from "sap/ui/core/Element";
-import Icon from "sap/ui/core/Icon";
 import Lib from "sap/ui/core/Lib";
 
 import Skeleton from "../loading/Skeleton";
@@ -215,11 +214,6 @@ export default class ChatFeed extends Control {
                 multiple: false,
                 visibility: "hidden"
             },
-            _enterIcon: {
-                type: "sap.ui.core.Icon",
-                multiple: false,
-                visibility: "hidden"
-            },
             _loadingPlaceholders: {
                 type: "ui5x.loading.Skeleton",
                 multiple: true,
@@ -314,15 +308,6 @@ export default class ChatFeed extends Control {
             true
         );
 
-        this.setAggregation(
-            "_enterIcon",
-            new Icon(`${this.getId()}-enter-icon`, {
-                src: "sap-icon://enter-more",
-                decorative: true
-            }).addStyleClass("ui5xChatFeedEnterHint"),
-            true
-        );
-
         for (let index = 0; index < 3; index++) {
             this.addAggregation(
                 "_loadingPlaceholders",
@@ -401,16 +386,6 @@ export default class ChatFeed extends Control {
 
     _getSendButton(): Button | null {
         return this.getAggregation("_sendButton") as Button | null;
-    }
-
-    _getEnterIcon(): Icon | null {
-        return this.getAggregation("_enterIcon") as Icon | null;
-    }
-
-    _shouldShowEnterHint(): boolean {
-        return this.getSendOnEnter()
-            && this.getEnabled()
-            && this.getEditable();
     }
 
     _getLoadingPlaceholders(): Skeleton[] {
