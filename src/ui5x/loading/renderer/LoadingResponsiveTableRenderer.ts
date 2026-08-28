@@ -33,6 +33,13 @@ const LoadingResponsiveTableRenderer = {
                  */
                 rm.openStart("div");
                 rm.class("ui5xLoadingResponsiveTableSkeleton");
+
+                const rowHeight = control.getSkeletonRowHeight();
+
+                if (rowHeight) {
+                    rm.style("--ui5xSkeletonRowHeight", rowHeight);
+                }
+
                 rm.attr("aria-hidden", "true");
                 rm.attr("inert", "");
                 rm.openEnd();

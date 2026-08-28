@@ -1,4 +1,5 @@
 import SkeletonRowMode from "ui5x/loading/SkeletonRowMode";
+import { CSSSize } from "sap/ui/core/library";
 import Table from "sap/m/Table";
 import { PropertyBindingInfo } from "sap/ui/base/ManagedObject";
 import { $ControlSettings } from "sap/ui/core/Control";
@@ -37,6 +38,17 @@ declare module "./LoadingResponsiveTable" {
         to produce a more natural loading appearance.
          */
         dynamicSkeletonWidths?: boolean | PropertyBindingInfo | `{${string}}`;
+
+        /**
+         * Defines the height of every skeleton row.
+        
+        sap.m.Table sizes its rows on their content, so skeleton rows
+        are shorter than rows carrying real data and the table grows
+        when the data arrives. Set this to the height the application
+        rows end up with to keep the two identical. An empty value
+        leaves the rows content-driven.
+         */
+        skeletonRowHeight?: CSSSize | PropertyBindingInfo | `{${string}}`;
 
         /**
          * Defines whether skeleton animations are enabled.
@@ -181,6 +193,43 @@ declare module "./LoadingResponsiveTable" {
          * @returns Reference to "this" in order to allow method chaining
          */
         setDynamicSkeletonWidths(dynamicSkeletonWidths: boolean): this;
+
+        // property: skeletonRowHeight
+
+        /**
+         * Gets current value of property "skeletonRowHeight".
+         *
+         * Defines the height of every skeleton row.
+        
+        sap.m.Table sizes its rows on their content, so skeleton rows
+        are shorter than rows carrying real data and the table grows
+        when the data arrives. Set this to the height the application
+        rows end up with to keep the two identical. An empty value
+        leaves the rows content-driven.
+         *
+         * Default value is: ""
+         * @returns Value of property "skeletonRowHeight"
+         */
+        getSkeletonRowHeight(): CSSSize;
+
+        /**
+         * Sets a new value for property "skeletonRowHeight".
+         *
+         * Defines the height of every skeleton row.
+        
+        sap.m.Table sizes its rows on their content, so skeleton rows
+        are shorter than rows carrying real data and the table grows
+        when the data arrives. Set this to the height the application
+        rows end up with to keep the two identical. An empty value
+        leaves the rows content-driven.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: ""
+         * @param [skeletonRowHeight=""] New value for property "skeletonRowHeight"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setSkeletonRowHeight(skeletonRowHeight: CSSSize): this;
 
         // property: animated
 

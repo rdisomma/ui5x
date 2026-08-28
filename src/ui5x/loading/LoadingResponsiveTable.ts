@@ -11,6 +11,7 @@ import type { MetadataOptions } from "sap/ui/core/Element";
 import Table from "sap/m/Table";
 import Column from "sap/m/Column";
 import ColumnListItem from "sap/m/ColumnListItem";
+import type Toolbar from "sap/m/Toolbar";
 
 import Skeleton from "../loading/Skeleton";
 import SkeletonType from "../loading/SkeletonType";
@@ -81,6 +82,20 @@ export default class LoadingResponsiveTable extends Control {
             dynamicSkeletonWidths: {
                 type: "boolean",
                 defaultValue: false
+            },
+
+            /**
+             * Defines the height of every skeleton row.
+             *
+             * sap.m.Table sizes its rows on their content, so skeleton rows
+             * are shorter than rows carrying real data and the table grows
+             * when the data arrives. Set this to the height the application
+             * rows end up with to keep the two identical. An empty value
+             * leaves the rows content-driven.
+             */
+            skeletonRowHeight: {
+                type: "sap.ui.core.CSSSize",
+                defaultValue: ""
             },
 
             /**
@@ -261,6 +276,8 @@ export default class LoadingResponsiveTable extends Control {
             sourceTable.getShowSeparators()
         );
 
+        this._syncSkeletonToolbars(sourceTable, skeletonTable);
+
         const columns = sourceTable.getColumns();
 
         columns.forEach(
@@ -288,8 +305,34 @@ export default class LoadingResponsiveTable extends Control {
                                 animated: this.getAnimated()
                             })
                     )
-                })
+                }).addStyleClass("ui5xLoadingResponsiveTableRow")
             );
+        }
+    }
+
+    /*
+     * The toolbars sit above the rows and take vertical space, so leaving them
+     * out makes the table grow when the data arrives. They are cloned rather
+     * than shared: the application keeps its own, and the renderer marks the
+     * whole skeleton inert, so the copies cannot be interacted with.
+     */
+    private _syncSkeletonToolbars(
+        sourceTable: Table,
+        skeletonTable: Table
+    ): void {
+        const headerToolbar = sourceTable.getHeaderToolbar();
+        const infoToolbar = sourceTable.getInfoToolbar();
+
+        if (headerToolbar) {
+            skeletonTable.setHeaderToolbar(headerToolbar.clone() as Toolbar);
+        } else {
+            skeletonTable.destroyHeaderToolbar();
+        }
+
+        if (infoToolbar) {
+            skeletonTable.setInfoToolbar(infoToolbar.clone() as Toolbar);
+        } else {
+            skeletonTable.destroyInfoToolbar();
         }
     }
 
@@ -302,6 +345,8 @@ export default class LoadingResponsiveTable extends Control {
             this._getEffectiveSkeletonRows(),
             this.getAnimated(),
             this.getDynamicSkeletonWidths(),
+            sourceTable.getHeaderToolbar()?.getId() ?? "",
+            sourceTable.getInfoToolbar()?.getId() ?? "",
             ...sourceTable.getColumns().map(
                 (column: Column) => [
                     column.getId(),

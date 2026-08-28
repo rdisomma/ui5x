@@ -1,3 +1,16 @@
 .ui5xLoadingResponsiveTable .ui5xSkeleton {
     display: flex;
 }
+
+/*
+ * skeletonRowHeight is published by the renderer as a custom property. The
+ * row carries a class of ours rather than a sap.m one, and its cells are
+ * reached structurally, so no internal class name is relied upon.
+ */
+
+.ui5xLoadingResponsiveTableRow,
+.ui5xLoadingResponsiveTableRow > td {
+    height: var(--ui5xSkeletonRowHeight, auto);
+
+    box-sizing: border-box;
+}
