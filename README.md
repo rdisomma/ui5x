@@ -4,15 +4,12 @@
 
 Advanced controls for OpenUI5 and SAPUI5.
 
-UI5X is an open-source library of higher-level controls for OpenUI5 and SAPUI5. The standard
-libraries cover the building blocks thoroughly; what they leave to each application are the
-presentation and interaction patterns that current interfaces are expected to provide. UI5X
-packages those as controls, with their behaviour, their state handling and their accessibility
-included.
+UI5X adds higher-level controls to OpenUI5 and SAPUI5. The standard libraries stop at the
+building blocks, so anything composed from them gets rebuilt in every project. UI5X ships those
+compositions as controls, with the theming, accessibility and state handling already done.
 
-Each control extends `sap.ui.core.Control`, or the standard control it specialises — `CopyButton`
-extends `sap.m.Button` — and uses public UI5 APIs only. They are declared, bound, themed and
-rendered like any standard UI5 control: from XML views, from JavaScript or from TypeScript.
+Each one extends `sap.ui.core.Control` or the standard control it specialises. None of them touch
+a private API. You declare and bind them from XML views, JavaScript or TypeScript.
 
 > UI5X is in early development. APIs may change before version 1.0.
 
@@ -73,6 +70,11 @@ on the first failing assertion, so it can be used as a CI gate.
 
 `npm run test:unit:browser` opens the same suite in a visible browser, which is
 easier to debug.
+
+To check a control by hand, `npm start` serves the demo pages under
+`test-resources/ui5x/`. Each one carries a toolbar that changes the layout and the behaviour of
+its control, and a theme selector covering every theme the library ships, which is the practical
+way to look at the dark and high-contrast palettes.
 
 ### UI5 library dependencies
 

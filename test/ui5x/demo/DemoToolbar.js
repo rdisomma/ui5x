@@ -15,22 +15,28 @@ sap.ui.define([
     "sap/m/OverflowToolbar",
     "sap/m/SegmentedButton",
     "sap/m/SegmentedButtonItem",
+    "sap/m/Select",
     "sap/m/StepInput",
     "sap/m/Title",
     "sap/m/ToggleButton",
     "sap/m/ToolbarSeparator",
-    "sap/m/ToolbarSpacer"
+    "sap/m/ToolbarSpacer",
+    "sap/ui/core/Item",
+    "sap/ui/core/Theming"
 ], function (
     Button,
     Label,
     OverflowToolbar,
     SegmentedButton,
     SegmentedButtonItem,
+    Select,
     StepInput,
     Title,
     ToggleButton,
     ToolbarSeparator,
-    ToolbarSpacer
+    ToolbarSpacer,
+    Item,
+    Theming
 ) {
     "use strict";
 
@@ -103,6 +109,39 @@ sap.ui.define([
         );
     }
 
+    /*
+     * Switching the theme at runtime is the only practical way to check the
+     * dark and high contrast palettes, so every page carries the full list of
+     * themes the library ships.
+     */
+    function theme() {
+        var themes = [
+            "sap_horizon",
+            "sap_horizon_dark",
+            "sap_horizon_hcb",
+            "sap_horizon_hcw",
+            "sap_fiori_3",
+            "sap_fiori_3_dark",
+            "sap_fiori_3_hcb",
+            "sap_fiori_3_hcw"
+        ];
+
+        return new Select({
+            selectedKey: Theming.getTheme(),
+            autoAdjustWidth: true,
+
+            items: themes.map(function (name) {
+                return new Item({ key: name, text: name });
+            }),
+
+            change: function (event) {
+                Theming.setTheme(
+                    event.getParameter("selectedItem").getKey()
+                );
+            }
+        });
+    }
+
     function place(title, items) {
         return new OverflowToolbar({
             width: "100%",
@@ -111,6 +150,9 @@ sap.ui.define([
                 .concat(items)
                 .concat([
                     new ToolbarSpacer(),
+                    new ToolbarSeparator(),
+                    label("Theme"),
+                    theme(),
                     new ToolbarSeparator(),
                     label("Density"),
                     density()
