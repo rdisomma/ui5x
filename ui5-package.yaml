@@ -3,9 +3,12 @@ specVersion: "4.0"
 metadata:
   name: ui5x
 
-type: library
+type: module
 
+# The library is mounted outside /resources/, which a SAP Fiori tools project
+# reserves for the SAPUI5 runtime. Consumers map the namespace onto this path
+# with sap.ui5/resourceRoots and need no proxy or routing change.
 resources:
   configuration:
     paths:
-      src: resources
+      /thirdparty/ui5x/: ./resources/ui5x/
