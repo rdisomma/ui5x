@@ -92,6 +92,11 @@
             "ui5x/loading/LoadingTable",
             "ui5x/test/demo/DemoToolbar",
             "sap/ui/model/json/JSONModel",
+            "sap/m/Button",
+            "sap/m/OverflowToolbar",
+            "sap/m/SearchField",
+            "sap/m/Title",
+            "sap/m/ToolbarSpacer",
             "sap/ui/table/Table",
             "sap/ui/table/Column",
             "sap/ui/table/RowAction",
@@ -106,6 +111,11 @@
             LoadingTable,
             DemoToolbar,
             JSONModel,
+            Button,
+            OverflowToolbar,
+            SearchField,
+            Title,
+            ToolbarSpacer,
             Table,
             Column,
             RowAction,
@@ -158,6 +168,18 @@
 
             const sourceTable = new Table({
                 width: "100%",
+
+                extension: [
+                    new OverflowToolbar({
+                        content: [
+                            new Title({ text: "Customers" }),
+                            new ToolbarSpacer(),
+                            new SearchField({ width: "14rem" }),
+                            new Button({ icon: "sap-icon://sort" }),
+                            new Button({ icon: "sap-icon://filter" })
+                        ]
+                    })
+                ],
 
                 visibleRowCount: 5,
                 visibleRowCountMode: "Fixed",
