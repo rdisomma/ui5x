@@ -296,18 +296,39 @@ export default class LoadingResponsiveTable extends Control {
             skeletonTable.addItem(
                 new ColumnListItem({
                     cells: columns.map(
-                        (_column, columnIndex) =>
-                            new Skeleton({
-                                type: SkeletonType.Line,
-                                width: this.getDynamicSkeletonWidths()
-                                    ? this._getSkeletonWidth(row, columnIndex)
-                                    : "100%",
-                                animated: this.getAnimated()
-                            })
+                        (column, columnIndex) =>
+                            this._createSkeletonCell(column, row, columnIndex)
                     )
                 }).addStyleClass("ui5xLoadingResponsiveTableRow")
             );
         }
+    }
+
+    private _createSkeletonCell(
+        sourceColumn: Column,
+        row: number,
+        columnIndex: number
+    ): Skeleton {
+        const skeleton = new Skeleton({
+            type: SkeletonType.Line,
+            width: this.getDynamicSkeletonWidths()
+                ? this._getSkeletonWidth(row, columnIndex)
+                : "100%",
+            animated: this.getAnimated()
+        });
+
+        return this._alignSkeleton(skeleton, sourceColumn.getHAlign());
+    }
+
+    /*
+     * Begin and Initial already place the bar at the start of the cell.
+     */
+    private _alignSkeleton(skeleton: Skeleton, alignment: string): Skeleton {
+        if (["End", "Center", "Left", "Right"].includes(alignment)) {
+            skeleton.addStyleClass(`ui5xSkeletonAlign${alignment}`);
+        }
+
+        return skeleton;
     }
 
     /*

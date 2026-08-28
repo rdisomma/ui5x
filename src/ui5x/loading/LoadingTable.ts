@@ -558,12 +558,31 @@ export default class LoadingTable extends Control {
             resizable: false,
             autoResizable: false,
 
-            template: new Skeleton({
-                type: SkeletonType.Line,
-                width: `{ui5xSkeleton>widths/${index}}`,
-                animated: this.getAnimated()
-            })
+            template: this._createSkeletonCell(sourceColumn, index)
         });
+    }
+
+    private _createSkeletonCell(
+        sourceColumn: Column,
+        index: number
+    ): Skeleton {
+        const skeleton = new Skeleton({
+            type: SkeletonType.Line,
+            width: `{ui5xSkeleton>widths/${index}}`,
+            animated: this.getAnimated()
+        });
+
+        const alignment = sourceColumn.getHAlign();
+
+        /*
+         * A skeleton is a block-level box, so the text-align a column sets
+         * does not move it. Begin and Initial already start at the cell edge.
+         */
+        if (["End", "Center", "Left", "Right"].includes(alignment)) {
+            skeleton.addStyleClass(`ui5xSkeletonAlign${alignment}`);
+        }
+
+        return skeleton;
     }
 
     private _syncSkeletonRows(): void {

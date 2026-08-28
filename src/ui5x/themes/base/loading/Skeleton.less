@@ -134,3 +134,35 @@
 
     border-radius: 50%;
 }
+
+/* Alignment inside a table cell */
+
+/*
+ * A skeleton is a block-level box inside the cell, so the text-align a column
+ * sets does not move it. With dynamic widths the bar is narrower than the
+ * cell, and the difference shows.
+ */
+
+.ui5xSkeletonAlignEnd {
+    margin-inline-start: auto;
+}
+
+.ui5xSkeletonAlignCenter {
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+}
+
+/*
+ * Left and Right are physical alignments, unlike Begin and End, so they keep
+ * their side in right-to-left.
+ */
+
+.ui5xSkeletonAlignRight {
+    /* @noflip */
+    margin-left: auto;
+}
+
+.ui5xSkeletonAlignLeft {
+    /* @noflip */
+    margin-right: auto;
+}

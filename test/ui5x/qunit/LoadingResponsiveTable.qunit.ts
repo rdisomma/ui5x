@@ -1,6 +1,7 @@
 import Column from "sap/m/Column";
 import ColumnListItem from "sap/m/ColumnListItem";
 import Table from "sap/m/Table";
+import Toolbar from "sap/m/Toolbar";
 import Text from "sap/m/Text";
 
 import LoadingResponsiveTable from "ui5x/loading/LoadingResponsiveTable";
@@ -39,6 +40,54 @@ QUnit.test("The resize handler exists when init registers it", function (assert)
     );
 
     loadingTable.destroy();
+});
+
+QUnit.test("Skeleton cells follow the column alignment and the toolbars are mirrored", function (assert) {
+    const done = assert.async();
+    const sourceTable = new Table({
+        headerToolbar: new Toolbar({ content: [new Text({ text: "Customers" })] }),
+        columns: [
+            new Column({ header: new Text({ text: "Name" }) }),
+            new Column({ hAlign: "End", header: new Text({ text: "Revenue" }) })
+        ]
+    });
+    const loadingTable = new LoadingResponsiveTable({
+        loading: true,
+        skeletonRows: 1,
+        dynamicSkeletonWidths: true,
+        table: sourceTable
+    });
+
+    loadingTable.addEventDelegate({
+        onAfterRendering: () => {
+            const skeletonTable = loadingTable._getSkeletonTable()!;
+            const cells = (skeletonTable.getItems()[0] as ColumnListItem)
+                .getCells();
+
+            assert.ok(
+                skeletonTable.getHeaderToolbar(),
+                "The header toolbar is reproduced, so its height is reserved"
+            );
+            assert.notStrictEqual(
+                skeletonTable.getHeaderToolbar(),
+                sourceTable.getHeaderToolbar(),
+                "It is a copy, the application keeps its own"
+            );
+            assert.notOk(
+                cells[0].hasStyleClass("ui5xSkeletonAlignEnd"),
+                "A column aligned at the start needs no alignment class"
+            );
+            assert.ok(
+                cells[1].hasStyleClass("ui5xSkeletonAlignEnd"),
+                "A column aligned at the end pushes its skeleton over"
+            );
+
+            loadingTable.destroy();
+            done();
+        }
+    });
+
+    loadingTable.placeAt("qunit-fixture");
 });
 
 QUnit.test("Skeleton table mirrors columns, rows and visual settings", function (assert) {
