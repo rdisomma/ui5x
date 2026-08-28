@@ -1,0 +1,67 @@
+name: Demos
+
+# Manual for now. Add a push trigger once the repository is public and Pages is
+# enabled under Settings > Pages with "GitHub Actions" as the source:
+#
+#   on:
+#     push:
+#       branches: [main]
+#     workflow_dispatch:
+#
+# Deploying to Pages from a private repository needs a paid GitHub plan, so
+# until then this workflow would fail on every push.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+          cache: npm
+
+      - name: Cache the OpenUI5 libraries
+        uses: actions/cache@v4
+        with:
+          path: ~/.ui5/framework
+          key: ui5-${{ runner.os }}-${{ hashFiles('ui5.yaml') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the demo site
+        run: npm run demo:site
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: demo-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
