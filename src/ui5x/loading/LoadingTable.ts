@@ -363,6 +363,8 @@ export default class LoadingTable extends Control {
 
         this._skeletonColumnSignature = signature;
 
+        this._syncSkeletonExtensions(sourceTable, skeletonTable);
+
         /*
          * sap.ui.table.Table creates its reusable row and cell pool when the
          * rows binding is initialized. Rebind only after the skeleton columns
@@ -385,6 +387,36 @@ export default class LoadingTable extends Control {
     }
 
     /*
+     * An extension is where a grid table carries its toolbar, and both it and
+     * the footer take vertical space, so leaving them out makes the table grow
+     * once the data arrives. They are cloned rather than shared: the
+     * application keeps its own, and the renderer marks the whole skeleton
+     * inert, so the copies cannot be interacted with.
+     *
+     * The deprecated title and toolbar aggregations are not reproduced.
+     */
+    private _syncSkeletonExtensions(
+        sourceTable: Table,
+        skeletonTable: Table
+    ): void {
+        skeletonTable.destroyExtension();
+
+        sourceTable.getExtension().forEach((extension) => {
+            skeletonTable.addExtension(extension.clone());
+        });
+
+        const footer = sourceTable.getFooter();
+
+        if (footer) {
+            skeletonTable.setFooter(
+                typeof footer === "string" ? footer : footer.clone()
+            );
+        } else {
+            skeletonTable.destroyFooter();
+        }
+    }
+
+    /*
      * Everything about the source columns that the skeleton reproduces. The
      * animated property is part of it because it is baked into the cell
      * template; dynamicSkeletonWidths is not, it only affects the row data.
@@ -392,8 +424,14 @@ export default class LoadingTable extends Control {
     private _getSkeletonColumnSignature(
         sourceTable: Table
     ): string {
+        const footer = sourceTable.getFooter();
+
         return [
             String(this.getAnimated()),
+            sourceTable.getExtension()
+                .map((extension) => extension.getId())
+                .join(","),
+            typeof footer === "string" ? footer : footer?.getId() ?? "",
             ...sourceTable.getColumns().map(
                 (column: Column) => [
                     column.getId(),
