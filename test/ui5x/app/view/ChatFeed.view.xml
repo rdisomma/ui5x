@@ -1,0 +1,76 @@
+<mvc:View
+    controllerName="ui5x.test.app.controller.ChatFeed"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:ui5x="ui5x.chat"
+    height="100%">
+
+    <Page showHeader="false" class="sapUiContentPadding">
+
+        <content>
+            <ui5x:ChatFeed
+                value="{settings>/value}"
+                placeholder="Write a message"
+                chatMaxHeight="26rem"
+                loading="{settings>/loading}"
+                composerPosition="{settings>/composerPosition}"
+                messageAlignment="{settings>/messageAlignment}"
+                ownMessageAppearance="{settings>/ownMessageAppearance}"
+                incomingMessageAppearance="{settings>/incomingMessageAppearance}"
+                messageTimestampFormat="{settings>/messageTimestampFormat}"
+                groupByDate="{settings>/groupByDate}"
+                highlightOwnMessage="{settings>/highlightOwnMessage}"
+                send=".onSend"
+                messageEdit=".onMessageEdit"
+                messageDelete=".onMessageDelete"
+                messages="{data>/messages}">
+
+                <ui5x:messages>
+                    <ui5x:ChatMessage
+                        key="{data>id}"
+                        text="{data>text}"
+                        sender="{data>sender}"
+                        ownMessage="{data>ownMessage}"
+                        editable="{data>editable}"
+                        deletable="{data>deletable}"
+                        timestamp="{data>timestamp}" />
+                </ui5x:messages>
+            </ui5x:ChatFeed>
+        </content>
+
+        <footer>
+            <OverflowToolbar>
+                <ToggleButton text="Loading" pressed="{settings>/loading}" />
+                <ToggleButton text="Group by date" pressed="{settings>/groupByDate}" />
+                <ToggleButton text="Highlight own" pressed="{settings>/highlightOwnMessage}" />
+
+                <ToolbarSeparator />
+
+                <Label text="Composer" />
+                <SegmentedButton selectedKey="{settings>/composerPosition}">
+                    <items>
+                        <SegmentedButtonItem key="Top" text="Top" />
+                        <SegmentedButtonItem key="Bottom" text="Bottom" />
+                    </items>
+                </SegmentedButton>
+
+                <Label text="Own messages" />
+                <SegmentedButton selectedKey="{settings>/ownMessageAppearance}">
+                    <items>
+                        <SegmentedButtonItem key="Bubble" text="Bubble" />
+                        <SegmentedButtonItem key="Conversation" text="Conversation" />
+                    </items>
+                </SegmentedButton>
+
+                <Label text="Timestamp" />
+                <SegmentedButton selectedKey="{settings>/messageTimestampFormat}">
+                    <items>
+                        <SegmentedButtonItem key="None" text="None" />
+                        <SegmentedButtonItem key="Time" text="Time" />
+                        <SegmentedButtonItem key="DateTime" text="DateTime" />
+                    </items>
+                </SegmentedButton>
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

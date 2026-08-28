@@ -1,0 +1,130 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "ui5x.test.app",
+    "type": "application",
+    "title": "UI5X",
+    "description": "Advanced controls for OpenUI5 and SAPUI5",
+    "applicationVersion": {
+      "version": "1.0.0"
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.tnt": {},
+        "sap.ui.table": {},
+        "ui5x": {}
+      }
+    },
+    "rootView": {
+      "viewName": "ui5x.test.app.view.App",
+      "type": "XML",
+      "id": "app",
+      "async": true
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "type": "View",
+        "viewType": "XML",
+        "path": "ui5x.test.app.view",
+        "controlId": "pages",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "default",
+          "target": "Skeleton"
+        },
+        {
+          "pattern": "Skeleton",
+          "name": "Skeleton",
+          "target": "Skeleton"
+        },
+        {
+          "pattern": "LoadingContainer",
+          "name": "LoadingContainer",
+          "target": "LoadingContainer"
+        },
+        {
+          "pattern": "LoadingResponsiveTable",
+          "name": "LoadingResponsiveTable",
+          "target": "LoadingResponsiveTable"
+        },
+        {
+          "pattern": "LoadingTable",
+          "name": "LoadingTable",
+          "target": "LoadingTable"
+        },
+        {
+          "pattern": "Accordion",
+          "name": "Accordion",
+          "target": "Accordion"
+        },
+        {
+          "pattern": "CopyButton",
+          "name": "CopyButton",
+          "target": "CopyButton"
+        },
+        {
+          "pattern": "SegmentedInput",
+          "name": "SegmentedInput",
+          "target": "SegmentedInput"
+        },
+        {
+          "pattern": "ChatFeed",
+          "name": "ChatFeed",
+          "target": "ChatFeed"
+        }
+      ],
+      "targets": {
+        "Skeleton": {
+          "id": "Skeleton",
+          "name": "Skeleton"
+        },
+        "LoadingContainer": {
+          "id": "LoadingContainer",
+          "name": "LoadingContainer"
+        },
+        "LoadingResponsiveTable": {
+          "id": "LoadingResponsiveTable",
+          "name": "LoadingResponsiveTable"
+        },
+        "LoadingTable": {
+          "id": "LoadingTable",
+          "name": "LoadingTable"
+        },
+        "Accordion": {
+          "id": "Accordion",
+          "name": "Accordion"
+        },
+        "CopyButton": {
+          "id": "CopyButton",
+          "name": "CopyButton"
+        },
+        "SegmentedInput": {
+          "id": "SegmentedInput",
+          "name": "SegmentedInput"
+        },
+        "ChatFeed": {
+          "id": "ChatFeed",
+          "name": "ChatFeed"
+        }
+      }
+    }
+  }
+}

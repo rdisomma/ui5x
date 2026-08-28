@@ -1,0 +1,39 @@
+<mvc:View
+    controllerName="ui5x.test.app.controller.Accordion"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:ui5x="ui5x.layout"
+    height="100%">
+
+    <Page showHeader="false" class="sapUiContentPadding">
+
+        <content>
+            <ui5x:Accordion
+                width="35rem"
+                multipleExpansion="{settings>/multipleExpansion}">
+
+                <ui5x:AccordionItem title="General information" expanded="true" enabled="{settings>/enabled}">
+                    <VBox>
+                        <Text text="Acme S.p.A." />
+                        <ObjectStatus text="Active" state="Success" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </ui5x:AccordionItem>
+
+                <ui5x:AccordionItem title="Appearance" enabled="{settings>/enabled}">
+                    <Text text="Uses the active UI5 theme and adapts to every supported variant." />
+                </ui5x:AccordionItem>
+
+                <ui5x:AccordionItem title="Notifications" enabled="{settings>/enabled}">
+                    <Text text="Receive notifications when workspace activity requires attention." />
+                </ui5x:AccordionItem>
+            </ui5x:Accordion>
+        </content>
+
+        <footer>
+            <OverflowToolbar>
+                <ToggleButton text="Multiple expansion" pressed="{settings>/multipleExpansion}" />
+                <ToggleButton text="Enabled" pressed="{settings>/enabled}" />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

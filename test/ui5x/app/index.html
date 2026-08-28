@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>UI5X</title>
+
+    <style>
+        html, body { height: 100%; margin: 0; }
+    </style>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-async="true"
+        data-sap-ui-compat-version="edge"
+        data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-resource-roots='{"ui5x.test": "/test-resources/ui5x"}'>
+    </script>
+</head>
+
+<body class="sapUiBody">
+    <div
+        data-sap-ui-component
+        data-name="ui5x.test.app"
+        data-id="container"
+        data-height="100%"
+        data-settings='{"id": "ui5x"}'>
+    </div>
+</body>
+
+</html>

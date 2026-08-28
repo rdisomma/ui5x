@@ -17,7 +17,7 @@
   "homepage": "https://github.com/rdisomma/ui5x#readme",
   "scripts": {
     "start": "run-p \"interfaces:watch\" \"start:server\"",
-    "start:server": "ui5 serve --open test-resources/ui5x/Skeleton.html",
+    "start:server": "ui5 serve --open test-resources/ui5x/app/index.html",
     "interfaces": "npx @ui5/ts-interface-generator",
     "interfaces:watch": "npx @ui5/ts-interface-generator --watch",
     "typecheck": "tsc --noEmit",

@@ -1,0 +1,42 @@
+<mvc:View
+    controllerName="ui5x.test.app.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:tnt="sap.tnt"
+    xmlns="sap.m"
+    height="100%">
+
+    <tnt:ToolPage id="page">
+
+        <tnt:header>
+            <tnt:ToolHeader>
+                <Title text="UI5X" level="H1" />
+                <ToolbarSpacer />
+                <Text text="Advanced controls for OpenUI5 and SAPUI5" />
+            </tnt:ToolHeader>
+        </tnt:header>
+
+        <tnt:sideContent>
+            <tnt:SideNavigation
+                id="navigation"
+                selectedKey="{app>/control}"
+                itemSelect=".onNavigate">
+
+                <tnt:NavigationList>
+                    <tnt:NavigationListItem text="Skeleton" key="Skeleton" icon="sap-icon://border" />
+                    <tnt:NavigationListItem text="LoadingContainer" key="LoadingContainer" icon="sap-icon://sys-help-2" />
+                    <tnt:NavigationListItem text="LoadingResponsiveTable" key="LoadingResponsiveTable" icon="sap-icon://table-view" />
+                    <tnt:NavigationListItem text="LoadingTable" key="LoadingTable" icon="sap-icon://grid" />
+                    <tnt:NavigationListItem text="Accordion" key="Accordion" icon="sap-icon://expand-group" />
+                    <tnt:NavigationListItem text="CopyButton" key="CopyButton" icon="sap-icon://copy" />
+                    <tnt:NavigationListItem text="SegmentedInput" key="SegmentedInput" icon="sap-icon://key-user-settings" />
+                    <tnt:NavigationListItem text="ChatFeed" key="ChatFeed" icon="sap-icon://discussion" />
+                </tnt:NavigationList>
+            </tnt:SideNavigation>
+        </tnt:sideContent>
+
+        <tnt:mainContents>
+            <NavContainer id="pages" height="100%" />
+        </tnt:mainContents>
+
+    </tnt:ToolPage>
+</mvc:View>

@@ -1,0 +1,59 @@
+<mvc:View
+    controllerName="ui5x.test.app.controller.SegmentedInput"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:ui5x="ui5x.input"
+    height="100%">
+
+    <Page showHeader="false" class="sapUiContentPadding">
+
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Label text="One-time code" labelFor="code" />
+
+                <ui5x:SegmentedInput
+                    id="code"
+                    digits="{settings>/digits}"
+                    inputType="{settings>/inputType}"
+                    size="{settings>/size}"
+                    showSeparators="{settings>/showSeparators}"
+                    separatorInterval="{settings>/separatorInterval}"
+                    showClearIcon="{settings>/showClearIcon}"
+                    enabled="{settings>/enabled}"
+                    editable="{settings>/editable}"
+                    valueStateText="Enter the code you received" />
+            </VBox>
+        </content>
+
+        <footer>
+            <OverflowToolbar>
+                <Label text="Digits" />
+                <StepInput value="{settings>/digits}" min="1" max="12" width="5.5rem" />
+
+                <Label text="Type" />
+                <SegmentedButton selectedKey="{settings>/inputType}">
+                    <items>
+                        <SegmentedButtonItem key="Numeric" text="Numeric" />
+                        <SegmentedButtonItem key="Alphanumeric" text="Alphanumeric" />
+                    </items>
+                </SegmentedButton>
+
+                <Label text="Size" />
+                <SegmentedButton selectedKey="{settings>/size}">
+                    <items>
+                        <SegmentedButtonItem key="Small" text="Small" />
+                        <SegmentedButtonItem key="Medium" text="Medium" />
+                        <SegmentedButtonItem key="Large" text="Large" />
+                    </items>
+                </SegmentedButton>
+
+                <ToolbarSeparator />
+
+                <ToggleButton text="Separators" pressed="{settings>/showSeparators}" />
+                <ToggleButton text="Clear icon" pressed="{settings>/showClearIcon}" />
+                <ToggleButton text="Enabled" pressed="{settings>/enabled}" />
+                <ToggleButton text="Editable" pressed="{settings>/editable}" />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>
