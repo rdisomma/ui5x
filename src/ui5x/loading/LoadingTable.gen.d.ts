@@ -57,101 +57,190 @@ declare module "./LoadingTable" {
         // property: loading
 
         /**
+         * Gets current value of property "loading".
+         *
          * Defines whether skeleton rows are displayed instead of
         the actual table.
+         *
+         * Default value is: false
+         * @returns Value of property "loading"
          */
         getLoading(): boolean;
 
         /**
+         * Sets a new value for property "loading".
+         *
          * Defines whether skeleton rows are displayed instead of
         the actual table.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: false
+         * @param [loading=false] New value for property "loading"
+         * @returns Reference to "this" in order to allow method chaining
          */
         setLoading(loading: boolean): this;
 
         // property: skeletonRows
 
         /**
+         * Gets current value of property "skeletonRows".
+         *
          * Defines the number of skeleton rows displayed while loading.
         
         In Fill mode, this value is used as the initial fallback before
         the available space can be measured.
+         *
+         * Default value is: 5
+         * @returns Value of property "skeletonRows"
          */
         getSkeletonRows(): number;
 
         /**
+         * Sets a new value for property "skeletonRows".
+         *
          * Defines the number of skeleton rows displayed while loading.
         
         In Fill mode, this value is used as the initial fallback before
         the available space can be measured.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: 5
+         * @param [skeletonRows=5] New value for property "skeletonRows"
+         * @returns Reference to "this" in order to allow method chaining
          */
         setSkeletonRows(skeletonRows: number): this;
 
         // property: maxSkeletonRows
 
         /**
+         * Gets current value of property "maxSkeletonRows".
+         *
          * Defines the maximum number of skeleton rows rendered when
         skeletonRowsMode is Fill.
+         *
+         * Default value is: 10
+         * @returns Value of property "maxSkeletonRows"
          */
         getMaxSkeletonRows(): number;
 
         /**
+         * Sets a new value for property "maxSkeletonRows".
+         *
          * Defines the maximum number of skeleton rows rendered when
         skeletonRowsMode is Fill.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: 10
+         * @param [maxSkeletonRows=10] New value for property "maxSkeletonRows"
+         * @returns Reference to "this" in order to allow method chaining
          */
         setMaxSkeletonRows(maxSkeletonRows: number): this;
 
         // property: skeletonRowsMode
 
         /**
+         * Gets current value of property "skeletonRowsMode".
+         *
          * Defines how the number of skeleton rows is determined.
+         *
+         * Default value is: "SkeletonRowMode.Fixed"
+         * @returns Value of property "skeletonRowsMode"
          */
         getSkeletonRowsMode(): SkeletonRowMode;
 
         /**
+         * Sets a new value for property "skeletonRowsMode".
+         *
          * Defines how the number of skeleton rows is determined.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: "SkeletonRowMode.Fixed"
+         * @param [skeletonRowsMode="SkeletonRowMode.Fixed"] New value for property "skeletonRowsMode"
+         * @returns Reference to "this" in order to allow method chaining
          */
         setSkeletonRowsMode(skeletonRowsMode: SkeletonRowMode): this;
 
         // property: dynamicSkeletonWidths
 
         /**
+         * Gets current value of property "dynamicSkeletonWidths".
+         *
          * Defines whether skeleton cells use varying widths
         to produce a more natural loading appearance.
+         *
+         * Default value is: false
+         * @returns Value of property "dynamicSkeletonWidths"
          */
         getDynamicSkeletonWidths(): boolean;
 
         /**
+         * Sets a new value for property "dynamicSkeletonWidths".
+         *
          * Defines whether skeleton cells use varying widths
         to produce a more natural loading appearance.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: false
+         * @param [dynamicSkeletonWidths=false] New value for property "dynamicSkeletonWidths"
+         * @returns Reference to "this" in order to allow method chaining
          */
         setDynamicSkeletonWidths(dynamicSkeletonWidths: boolean): this;
 
         // property: animated
 
         /**
+         * Gets current value of property "animated".
+         *
          * Defines whether skeleton animations are enabled.
+         *
+         * Default value is: true
+         * @returns Value of property "animated"
          */
         getAnimated(): boolean;
 
         /**
+         * Sets a new value for property "animated".
+         *
          * Defines whether skeleton animations are enabled.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: true
+         * @param [animated=true] New value for property "animated"
+         * @returns Reference to "this" in order to allow method chaining
          */
         setAnimated(animated: boolean): this;
 
         // aggregation: table
 
         /**
+         * Gets content of aggregation "table".
+         *
          * The table containing the actual application data.
          */
         getTable(): Table;
 
         /**
+         * Sets the aggregated table.
+         *
          * The table containing the actual application data.
+         *
+         * @param table The table to set
+         * @returns Reference to "this" in order to allow method chaining
          */
         setTable(table: Table): this;
 
         /**
+         * Destroys the table in the aggregation "table".
+         *
          * The table containing the actual application data.
+         *
+         * @returns Reference to "this" in order to allow method chaining
          */
         destroyTable(): this;
     }
