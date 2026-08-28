@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# A new push supersedes the run still going for the same branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Report every version that fails, not only the first one.
+      fail-fast: false
+      matrix:
+        # The lowest version UI5 CLI 4 supports, and the current LTS.
+        # Node.js 21 is deliberately absent: UI5 CLI 4 does not support it.
+        node-version: ["20.11", "22"]
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      # The UI5 CLI downloads the OpenUI5 libraries into ~/.ui5. Both the test
+      # run and the build need them, and they are large enough to be worth
+      # keeping between runs.
+      - name: Cache the OpenUI5 libraries
+        uses: actions/cache@v4
+        with:
+          path: ~/.ui5/framework
+          key: ui5-${{ runner.os }}-${{ hashFiles('ui5.yaml') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate the control interfaces
+        run: npm run interfaces
+
+      # The generated declarations are committed, so a change to a control's
+      # metadata without regenerating them has to fail here rather than reach
+      # consumers as a wrong type.
+      - name: Check the generated interfaces are up to date
+        run: git diff --exit-code -- '*.gen.d.ts'
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Run the test suite
+        run: npm test
+
+      - name: Build the library
+        run: npx ui5 build --clean-dest

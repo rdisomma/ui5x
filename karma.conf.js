@@ -19,7 +19,20 @@ module.exports = function (config) {
             testpage: "test-resources/ui5x/qunit/unitTests.qunit.html"
         },
 
-        browsers: ["ChromeHeadless"],
+        browsers: [
+            process.env.CI ? "ChromeHeadlessCI" : "ChromeHeadless"
+        ],
+
+        customLaunchers: {
+            /*
+             * CI containers run as root, where Chrome refuses to start its
+             * sandbox.
+             */
+            ChromeHeadlessCI: {
+                base: "ChromeHeadless",
+                flags: ["--no-sandbox", "--disable-gpu"]
+            }
+        },
 
         reporters: ["progress"],
 
