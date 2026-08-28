@@ -4,11 +4,14 @@
 
 Advanced controls for OpenUI5 and SAPUI5.
 
-UI5X is an open-source control library for the interaction patterns the standard UI5 libraries
-leave to the application: loading states that mirror the shape of the content, expandable
-sections, segmented value entry, conversation feeds.
+UI5X is an open-source library of higher-level controls for OpenUI5 and SAPUI5. The standard
+libraries cover the building blocks thoroughly; what they leave to each application are the
+presentation and interaction patterns that current interfaces are expected to provide. UI5X
+packages those as controls, with their behaviour, their state handling and their accessibility
+included.
 
-Its controls extend `sap.ui.core.Control` and use public UI5 APIs, so they are declared, bound and
+Each control extends `sap.ui.core.Control`, or the standard control it specialises — `CopyButton`
+extends `sap.m.Button` — and uses public UI5 APIs only. They are declared, bound, themed and
 rendered like any standard UI5 control: from XML views, from JavaScript or from TypeScript.
 
 > UI5X is in early development. APIs may change before version 1.0.
@@ -34,8 +37,18 @@ rendered like any standard UI5 control: from XML views, from JavaScript or from 
   optional grouping, three sizes, value-state feedback, paste support and a Fiori clear action.
 - **`ChatFeed`** — combines a configurable message composer with a bindable conversation. Messages
   can be aligned by current user, grouped by date and expose edit or delete actions.
-- **Accessibility-aware** — the container exposes `aria-busy` while loading, skeletons are
-  hidden from assistive technologies, and animations respect `prefers-reduced-motion`.
+- **Accessibility-aware** — loading containers expose `aria-busy`, skeleton content is kept out
+  of the accessibility tree, and animations respect `prefers-reduced-motion`. The interactive
+  controls implement the UI5 focus and labelling contracts (`getFocusDomRef`, `getIdForLabel`,
+  `getAccessibilityInfo`), so `focus()` and a `sap.m.Label` behave as they do on a standard
+  control.
+- **Theme coverage** — the `sap_horizon` and `sap_fiori_3` families, each in light, dark and both
+  high-contrast variants, with the right-to-left stylesheets generated alongside them. The
+  high-contrast themes replace the subtle tints of the standard palettes so placeholders stay
+  above the 3:1 contrast ratio instead of disappearing into the background.
+- **Verified on every change** — the QUnit suite runs headless in CI against the lowest supported
+  Node.js versions and the current LTS, together with the type check, the generated interfaces
+  and a full library build.
 - **TypeScript first** — written in TypeScript and shipped with type definitions, while remaining
   fully usable from JavaScript applications. Built with UI5 CLI 4 for OpenUI5 and SAPUI5.
 
