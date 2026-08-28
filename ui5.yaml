@@ -22,6 +22,11 @@ server:
   customMiddleware:
     - name: ui5-tooling-transpile-middleware
       afterMiddleware: compression
+      configuration:
+        # The middleware regenerates the .gen.d.ts files while serving, and
+        # without this it writes less JSDoc than `npm run interfaces` does.
+        # The two would then keep overwriting each other's output.
+        generateTsInterfacesJsDoc: verbose
 metadata:
   name: ui5x
   copyright: |-
