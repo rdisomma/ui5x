@@ -348,6 +348,7 @@ table and the bottom of the viewport, using `skeletonRows` as the initial fallba
 | `skeletonRows`          | `int`                          | `5`     | Rows rendered in `Fixed` mode and fallback for `Fill`. |
 | `maxSkeletonRows`       | `int`                          | `10`    | Maximum rows calculated in `Fill` mode.               |
 | `skeletonRowsMode`      | `ui5x.loading.SkeletonRowMode` | `Fixed` | Row-count strategy: `Fixed` or `Fill`.                |
+| `skeletonRowHeight`     | `sap.ui.core.CSSSize` | `""`      | Height of every skeleton row. `sap.m.Table` sizes rows on their content, so skeleton rows are shorter than rows carrying data and the table grows when it arrives; set this to the height the application rows end up with. |
 | `dynamicSkeletonWidths` | `boolean`                      | `false` | Vary skeleton widths across cells.                    |
 | `animated`              | `boolean`                      | `true`  | Enable the skeleton shimmer animation.                |
 

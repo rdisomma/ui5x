@@ -57,6 +57,17 @@
          * skeleton table geometrically identical.
          */
 
+        /*
+         * The application pins the height of its own rows. The skeleton rows
+         * follow through skeletonRowHeight, not through this rule.
+         */
+        .appTable .sapMListTblRow,
+        .appTable .sapMListTblCell {
+            height: 3.5rem;
+
+            box-sizing: border-box;
+        }
+
         .showcaseTable .sapMListTblHeader {
             height: 2.75rem;
         }
@@ -69,17 +80,6 @@
             vertical-align: middle;
         }
 
-        .showcaseTable .sapMListTblRow {
-            height: 3.5rem;
-        }
-
-        .showcaseTable .sapMListTblCell {
-            height: 3.5rem;
-
-            box-sizing: border-box;
-
-            vertical-align: middle;
-        }
 
         /*
          * Softer separators make the table feel less spreadsheet-like.
@@ -131,7 +131,12 @@
             "ui5x/loading/LoadingResponsiveTable",
             "ui5x/test/demo/DemoToolbar",
             "sap/ui/model/json/JSONModel",
+            "sap/m/Button",
+            "sap/m/OverflowToolbar",
+            "sap/m/SearchField",
             "sap/m/Table",
+            "sap/m/Title",
+            "sap/m/ToolbarSpacer",
             "sap/m/Column",
             "sap/m/ColumnListItem",
             "sap/m/Text",
@@ -145,7 +150,12 @@
             LoadingResponsiveTable,
             DemoToolbar,
             JSONModel,
+            Button,
+            OverflowToolbar,
+            SearchField,
             Table,
+            Title,
+            ToolbarSpacer,
             Column,
             ColumnListItem,
             Text,
@@ -165,6 +175,17 @@
                 width: "100%",
                 fixedLayout: true,
                 showSeparators: "Inner",
+
+                headerToolbar: new OverflowToolbar({
+                    content: [
+                        new Title({ text: "Customers" }),
+                        new ToolbarSpacer(),
+                        new SearchField({ width: "14rem" }),
+                        new Button({ icon: "sap-icon://sort" }),
+                        new Button({ icon: "sap-icon://filter" })
+                    ]
+                }),
+
 
                 columns: [
                     new Column({
@@ -205,6 +226,8 @@
                     })
                 ]
             });
+
+            sourceTable.addStyleClass("appTable");
 
             sourceTable.bindItems({
                 path: "/rows",
@@ -292,6 +315,7 @@
 
                 animated: true,
                 dynamicSkeletonWidths: true,
+                skeletonRowHeight: "3.5rem",
 
                 table: sourceTable
             });
@@ -416,6 +440,19 @@
                     "Loading",
                     loadingTable.getLoading(),
                     setLoading
+                ),
+
+                DemoToolbar.separator(),
+
+                DemoToolbar.label("Row height"),
+                DemoToolbar.choice(
+                    ["auto", "3.5rem", "5rem"],
+                    loadingTable.getSkeletonRowHeight() || "auto",
+                    function (key) {
+                        loadingTable.setSkeletonRowHeight(
+                            key === "auto" ? "" : key
+                        );
+                    }
                 ),
 
                 DemoToolbar.separator(),
