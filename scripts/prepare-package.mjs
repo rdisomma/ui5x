@@ -21,7 +21,18 @@ const packageJson = {
     repository: rootPackage.repository,
     keywords: rootPackage.keywords,
 
-    types: "index.d.ts"
+    homepage: rootPackage.homepage,
+    bugs: rootPackage.bugs,
+
+    types: "index.d.ts",
+
+    /*
+     * A scoped package is published as restricted unless this says otherwise,
+     * which fails on an account without a paid plan.
+     */
+    publishConfig: {
+        access: "public"
+    }
 };
 
 for (const key of Object.keys(packageJson)) {
