@@ -116,6 +116,11 @@ Then install the generated tarball in your UI5 application:
 npm install ../ui5x/raffaeledisomma-ui5x-0.1.0.tgz
 ```
 
+UI5X has no npm dependencies of its own, so installing it adds one package and nothing else.
+Whatever `npm audit` reports afterwards comes from the application's own dependency tree, not
+from here. The UI5 libraries it needs at runtime are listed under
+[UI5 library dependencies](#ui5-library-dependencies).
+
 For applications using a UI5 descriptor, declare UI5X as a library dependency in `manifest.json`:
 
 ```json
