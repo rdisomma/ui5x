@@ -1,6 +1,14 @@
 @ui5xSkeletonBaseColor: fade(@sapUiContentForegroundBorderColor, 15%);
 @ui5xSkeletonHighlightColor: fade(@sapUiContentForegroundBorderColor, 24%);
 
+/*
+ * The shimmer travels one band, and the band tiles. Both lengths are absolute
+ * on purpose: a percentage of the element would be recomputed against a new
+ * base whenever the element is resized, and the highlight would jump by the
+ * difference. Column resizing and window resizing do that continuously.
+ */
+@ui5xSkeletonShimmerLength: 16rem;
+
 .ui5xSkeleton {
     display: inline-flex;
     box-sizing: border-box;
@@ -20,23 +28,37 @@
     content: "";
 
     position: absolute;
-    inset: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
 
-    transform: translateX(-100%);
+    /*
+     * Reaching one band beyond the start edge keeps the element covered for
+     * the whole travel.
+     */
+    left: -@ui5xSkeletonShimmerLength;
 
-    background: linear-gradient(
+    background-image: linear-gradient(
         90deg,
         transparent 0%,
         @ui5xSkeletonHighlightColor 50%,
         transparent 100%
     );
 
-    animation: ui5xSkeletonShimmer 1.3s ease-in-out infinite;
+    background-repeat: repeat-x;
+    background-size: @ui5xSkeletonShimmerLength 100%;
+
+    /*
+     * Travelling exactly one band over a repeating one lands on a state that
+     * is identical to the start, so the loop has no seam. Linear keeps the
+     * speed constant instead of stalling at both ends of every cycle.
+     */
+    animation: ui5xSkeletonShimmer 1.3s linear infinite;
 }
 
 @keyframes ui5xSkeletonShimmer {
     100% {
-        transform: translateX(100%);
+        transform: translateX(@ui5xSkeletonShimmerLength);
     }
 }
 
