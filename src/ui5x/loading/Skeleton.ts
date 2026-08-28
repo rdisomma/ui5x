@@ -94,6 +94,9 @@ export default class Skeleton extends Control {
      * Anchoring every animation to the origin of the document timeline puts
      * them all at the same currentTime, so they stay in step without any
      * coordination between the controls, across tables and containers alike.
+     *
+     * An animation already anchored is left alone: re-rendering must not touch
+     * one that is running.
      */
     private _synchronizeAnimation(): void {
         const domRef = this.getDomRef();
@@ -103,7 +106,9 @@ export default class Skeleton extends Control {
         }
 
         domRef.getAnimations({ subtree: true }).forEach((animation) => {
-            animation.startTime = 0;
+            if (animation.startTime !== 0) {
+                animation.startTime = 0;
+            }
         });
     }
 
