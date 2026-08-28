@@ -384,16 +384,16 @@ QUnit.test("Clear icon and clear API empty every field", function (assert) {
 
     input.addEventDelegate({
         onAfterRendering: () => {
-            const clearButton = document.getElementById(
-                `${input.getId()}-clear`
-            ) as HTMLButtonElement;
             const digitInputs = Array.from(
                 input.getDomRef()?.querySelectorAll<HTMLInputElement>(
                     ".ui5xSegmentedInputDigit"
                 ) ?? []
             );
 
-            assert.notOk(clearButton.hidden, "The clear icon is visible when a value exists");
+            assert.ok(
+                document.getElementById(`${input.getId()}-clear`),
+                "The clear icon is rendered when a value exists"
+            );
             assert.strictEqual(
                 input._getClearButton().getType(),
                 ButtonType.Transparent,
@@ -405,7 +405,15 @@ QUnit.test("Clear icon and clear API empty every field", function (assert) {
             assert.strictEqual(input.getValue(), "", "Clicking the icon clears the value");
             assert.ok(digitInputs.every((digitInput) => !digitInput.value), "Every field is empty");
             assert.deepEqual(liveValues, [""], "The user action fires liveChange");
-            assert.ok(clearButton.hidden, "The clear icon is hidden after clearing");
+            /*
+             * The button is a real control now, so it leaves the DOM on the
+             * next rendering rather than through a hidden attribute written
+             * straight onto its node.
+             */
+            assert.notOk(
+                input._getClearButton().getVisible(),
+                "The clear icon is hidden after clearing"
+            );
             assert.strictEqual(document.activeElement, digitInputs[0], "Focus returns to the first field");
 
             input.setValue("9876");

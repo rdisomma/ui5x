@@ -63,9 +63,11 @@ QUnit.test("Skeleton table mirrors grid geometry and remains presentation-only",
             const skeletonTable = loadingTable._getSkeletonTable()!;
 
             if (renderingCount === 1) {
-                const rows = skeletonTable.getModel()?.getProperty("/rows") as Array<{
-                    widths: string[];
-                }>;
+                const rows = skeletonTable
+                    .getModel("ui5xSkeleton")
+                    ?.getProperty("/rows") as Array<{
+                        widths: string[];
+                    }>;
                 const skeletonWrapper = root.querySelector(
                     ".ui5xLoadingTableSkeleton"
                 ) as HTMLElement;
