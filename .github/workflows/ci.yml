@@ -21,9 +21,11 @@ jobs:
       # Report every version that fails, not only the first one.
       fail-fast: false
       matrix:
-        # The lowest version UI5 CLI 4 supports, and the current LTS.
-        # Node.js 21 is deliberately absent: UI5 CLI 4 does not support it.
-        node-version: ["20.11", "22"]
+        # The two lowest versions the toolchain runs on, plus the current LTS.
+        # The lower bounds are not UI5 CLI's (^20.11 || >=22): the interface
+        # generator requires yargs, which is ESM only, and require() of an ESM
+        # module needs Node.js 20.19 or 22.12.
+        node-version: ["20.19", "22.12", "24"]
 
     steps:
       - name: Check out the repository

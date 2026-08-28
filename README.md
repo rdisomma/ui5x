@@ -59,7 +59,9 @@ easier to debug.
 
 ## Development requirements
 
-- Node.js `20.11+` or `22+` (Node.js 21 is not supported by UI5 CLI 4)
+- Node.js `20.19+` or `22.12+` (Node.js 21 is not supported by UI5 CLI 4).
+  UI5 CLI 4 itself accepts `20.11+`, but the interface generator loads an
+  ESM-only dependency, and `require()` of an ES module needs those versions
 - npm `8+`
 - UI5 CLI `4`
 
