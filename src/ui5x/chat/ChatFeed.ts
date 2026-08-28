@@ -21,6 +21,7 @@ import ChatFeedComposerPosition from "./ChatFeedComposerPosition";
 import ChatFeedMessageAlignment from "./ChatFeedMessageAlignment";
 import ChatMessage from "./ChatMessage";
 import ChatMessageAppearance from "./ChatMessageAppearance";
+import ChatMessageTimestampFormat from "./ChatMessageTimestampFormat";
 import ChatFeedRenderer from "./renderer/ChatFeedRenderer";
 
 /**
@@ -135,6 +136,17 @@ export default class ChatFeed extends Control {
             groupByDate: {
                 type: "boolean",
                 defaultValue: false
+            },
+            /**
+             * Defines how the timestamp of each message is displayed.
+             *
+             * Time alone relies on the date being clear from elsewhere, so a
+             * feed without date separators is usually better served by
+             * {@link ui5x.chat.ChatMessageTimestampFormat.DateTime}.
+             */
+            messageTimestampFormat: {
+                type: "ui5x.chat.ChatMessageTimestampFormat",
+                defaultValue: ChatMessageTimestampFormat.Time
             },
             /**
              * Defines whether messages marked as ownMessage use a highlighted

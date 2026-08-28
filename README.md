@@ -628,6 +628,7 @@ sap.ui.require([
     sendOnEnter: true,
     sendButtonText: "Send",
     groupByDate: true,
+    messageTimestampFormat: "Time",
     ownMessageAppearance: "Bubble",
     incomingMessageAppearance: "Conversation",
     composerPosition: "Bottom",
@@ -680,6 +681,7 @@ chronological order while initially showing the latest messages.
 | `sendButtonTooltip`      | `string`              | `sap.m localized text`      | Accessible send button tooltip.                  |
 | `showSendButton`         | `boolean`             | `true`                     | Displays the send button.                        |
 | `sendButtonEnabled`      | `boolean`             | `true`                     | Enables the button independently from Enter.    |
+| `messageTimestampFormat` | `ui5x.chat.ChatMessageTimestampFormat` | `Time`    | Displays each timestamp as `Time`, as `DateTime`, or hides it with `None`. Without date separators, `Time` alone leaves the day ambiguous. |
 | `groupByDate`            | `boolean`             | `false`                    | Inserts date separators between message groups. |
 | `highlightOwnMessage`    | `boolean`             | `false`                    | Highlights every message marked as `ownMessage`. |
 | `ownMessageAppearance`   | `ui5x.chat.ChatMessageAppearance` | `Bubble`          | Selects the appearance of messages from the current user. |

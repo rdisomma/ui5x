@@ -10,6 +10,7 @@ import "./input/SegmentedInputType";
 import "./chat/ChatFeedComposerPosition";
 import "./chat/ChatFeedMessageAlignment";
 import "./chat/ChatMessageAppearance";
+import "./chat/ChatMessageTimestampFormat";
 import Lib from "sap/ui/core/Lib";
 
 const UI5X = Lib.init({
@@ -28,6 +29,7 @@ const UI5X = Lib.init({
         "ui5x.chat.ChatFeedComposerPosition",
         "ui5x.chat.ChatFeedMessageAlignment",
         "ui5x.chat.ChatMessageAppearance",
+        "ui5x.chat.ChatMessageTimestampFormat",
     ],
     interfaces: [],
     controls: [

@@ -2,6 +2,7 @@ import ChatMessage from "ui5x/chat/ChatMessage";
 import Event from "sap/ui/base/Event";
 import { URI } from "sap/ui/core/library";
 import { ButtonType } from "sap/m/library";
+import ChatMessageTimestampFormat from "ui5x/chat/ChatMessageTimestampFormat";
 import ChatMessageAppearance from "ui5x/chat/ChatMessageAppearance";
 import ChatFeedComposerPosition from "ui5x/chat/ChatFeedComposerPosition";
 import ChatFeedMessageAlignment from "ui5x/chat/ChatFeedMessageAlignment";
@@ -82,6 +83,18 @@ declare module "./ChatFeed" {
          * Defines whether consecutive messages are grouped by date.
          */
         groupByDate?: boolean | PropertyBindingInfo | `{${string}}`;
+
+        /**
+         * /**
+                     * Defines how the timestamp of each message is displayed.
+                     *
+                     * Time alone relies on the date being clear from elsewhere, so a
+                     * feed without date separators is usually better served by
+                     *
+        {@link ui5x.chat.ChatMessageTimestampFormat.DateTime}
+        .
+         */
+        messageTimestampFormat?: ChatMessageTimestampFormat | PropertyBindingInfo | `{${string}}`;
 
         /**
          * Defines whether messages marked as ownMessage use a highlighted
@@ -484,6 +497,45 @@ declare module "./ChatFeed" {
          * @returns Reference to "this" in order to allow method chaining
          */
         setGroupByDate(groupByDate: boolean): this;
+
+        // property: messageTimestampFormat
+
+        /**
+         * Gets current value of property "messageTimestampFormat".
+         *
+         * /**
+                     * Defines how the timestamp of each message is displayed.
+                     *
+                     * Time alone relies on the date being clear from elsewhere, so a
+                     * feed without date separators is usually better served by
+                     *
+        {@link ui5x.chat.ChatMessageTimestampFormat.DateTime}
+        .
+         *
+         * Default value is: "ChatMessageTimestampFormat.Time"
+         * @returns Value of property "messageTimestampFormat"
+         */
+        getMessageTimestampFormat(): ChatMessageTimestampFormat;
+
+        /**
+         * Sets a new value for property "messageTimestampFormat".
+         *
+         * /**
+                     * Defines how the timestamp of each message is displayed.
+                     *
+                     * Time alone relies on the date being clear from elsewhere, so a
+                     * feed without date separators is usually better served by
+                     *
+        {@link ui5x.chat.ChatMessageTimestampFormat.DateTime}
+        .
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: "ChatMessageTimestampFormat.Time"
+         * @param [messageTimestampFormat="ChatMessageTimestampFormat.Time"] New value for property "messageTimestampFormat"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setMessageTimestampFormat(messageTimestampFormat: ChatMessageTimestampFormat): this;
 
         // property: highlightOwnMessage
 

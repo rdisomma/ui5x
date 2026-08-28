@@ -247,6 +247,15 @@
 
                 DemoToolbar.separator(),
 
+                DemoToolbar.label("Timestamp"),
+                DemoToolbar.choice(
+                    ["None", "Time", "DateTime"],
+                    feed.getMessageTimestampFormat(),
+                    function (key) {
+                        feed.setMessageTimestampFormat(key);
+                    }
+                ),
+
                 DemoToolbar.toggle(
                     "Group by date",
                     feed.getGroupByDate(),

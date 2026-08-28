@@ -8,6 +8,7 @@ import ChatFeedComposerPosition from "ui5x/chat/ChatFeedComposerPosition";
 import ChatFeedMessageAlignment from "ui5x/chat/ChatFeedMessageAlignment";
 import ChatMessage from "ui5x/chat/ChatMessage";
 import ChatMessageAppearance from "ui5x/chat/ChatMessageAppearance";
+import ChatMessageTimestampFormat from "ui5x/chat/ChatMessageTimestampFormat";
 
 QUnit.module("ui5x.chat.ChatFeed");
 
@@ -501,6 +502,40 @@ QUnit.test("Messages bind from a model, group by date and forward actions", func
     });
 
     feed.placeAt("qunit-fixture");
+});
+
+QUnit.test("The feed decides how message timestamps are displayed", function (assert) {
+    const message = new ChatMessage({
+        text: "Of course",
+        timestamp: "2026-08-26T16:45:00"
+    });
+    const feed = new ChatFeed({ messages: [message] });
+
+    const time = message._getFormattedTime();
+
+    assert.ok(time, "The time of day is displayed by default");
+
+    feed.setMessageTimestampFormat(ChatMessageTimestampFormat.None);
+    assert.strictEqual(message._getFormattedTime(), "", "None hides the timestamp");
+
+    feed.setMessageTimestampFormat(ChatMessageTimestampFormat.DateTime);
+    const dateTime = message._getFormattedTime();
+
+    assert.notStrictEqual(dateTime, time, "DateTime differs from the time alone");
+    assert.ok(dateTime.length > time.length, "DateTime carries the date as well");
+
+    feed.destroy();
+});
+
+QUnit.test("A message outside a feed keeps the time of day", function (assert) {
+    const message = new ChatMessage({
+        text: "Standalone",
+        timestamp: "2026-08-26T16:45:00"
+    });
+
+    assert.ok(message._getFormattedTime(), "The timestamp is still formatted");
+
+    message.destroy();
 });
 
 QUnit.test("Only one message editor is open at a time", function (assert) {

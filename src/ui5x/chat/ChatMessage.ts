@@ -15,6 +15,7 @@ import DateFormat from "sap/ui/core/format/DateFormat";
 import Lib from "sap/ui/core/Lib";
 
 import ChatMessageRenderer from "./renderer/ChatMessageRenderer";
+import ChatMessageTimestampFormat from "./ChatMessageTimestampFormat";
 
 /**
  * Displays a message inside a ChatFeed.
@@ -375,16 +376,41 @@ export default class ChatMessage extends Control {
     }
 
     _getFormattedTime(): string {
+        const format = this._getTimestampFormat();
+
+        if (format === ChatMessageTimestampFormat.None) {
+            return "";
+        }
+
         const timestamp = this.getTimestamp();
         const date = this._getTimestampDate();
 
         if (date) {
-            return DateFormat.getTimeInstance({ style: "short" }).format(date);
+            const formatter = format === ChatMessageTimestampFormat.DateTime
+                ? DateFormat.getDateTimeInstance({ style: "short" })
+                : DateFormat.getTimeInstance({ style: "short" });
+
+            return formatter.format(date);
         }
 
         return timestamp === null || timestamp === undefined
             ? ""
             : String(timestamp);
+    }
+
+    /*
+     * How to display the timestamp is a decision about the whole feed, so it
+     * lives on the parent. The parent is read structurally to keep ChatMessage
+     * independent from ChatFeed, and a message used on its own falls back to
+     * the time of day.
+     */
+    private _getTimestampFormat(): ChatMessageTimestampFormat {
+        const parent = this.getParent() as unknown as {
+            getMessageTimestampFormat?: () => ChatMessageTimestampFormat;
+        } | null;
+
+        return parent?.getMessageTimestampFormat?.()
+            ?? ChatMessageTimestampFormat.Time;
     }
 
     _getDateKey(): string {
