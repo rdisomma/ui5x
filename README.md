@@ -43,6 +43,18 @@ views, from JavaScript or from TypeScript.
 - Built using public UI5 APIs
 - Compatibility with older UI5 versions has not been validated yet
 
+## Tests
+
+```sh
+npm test
+```
+
+Runs the QUnit suite in headless Chrome through karma. The run exits non-zero
+on the first failing assertion, so it can be used as a CI gate.
+
+`npm run test:unit:browser` opens the same suite in a visible browser, which is
+easier to debug.
+
 ## Development requirements
 
 - Node.js `20.11+` or `22+` (Node.js 21 is not supported by UI5 CLI 4)
