@@ -6,7 +6,7 @@
     <version>0.1.0</version>
     <copyright>Copyright (c) 2026 Raffaele Di Somma</copyright>
     <title>UI5X</title>
-    <documentation>Modern UX extensions for OpenUI5 and SAPUI5.</documentation>
+    <documentation>Advanced controls for OpenUI5 and SAPUI5.</documentation>
 
     <dependencies>
         <dependency>

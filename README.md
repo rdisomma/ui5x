@@ -2,22 +2,26 @@
 
 [![CI](https://github.com/rdisomma/ui5x/actions/workflows/ci.yml/badge.svg)](https://github.com/rdisomma/ui5x/actions/workflows/ci.yml)
 
-Modern UX extensions for OpenUI5 and SAPUI5.
+Advanced controls for OpenUI5 and SAPUI5.
 
-UI5X is an open-source UI5 control library. Its controls extend `sap.ui.core.Control` and use
-public UI5 APIs, so they are declared, bound and rendered like any standard UI5 control: from XML
-views, from JavaScript or from TypeScript.
+UI5X is an open-source control library for the interaction patterns the standard UI5 libraries
+leave to the application: loading states that mirror the shape of the content, expandable
+sections, segmented value entry, conversation feeds.
+
+Its controls extend `sap.ui.core.Control` and use public UI5 APIs, so they are declared, bound and
+rendered like any standard UI5 control: from XML views, from JavaScript or from TypeScript.
 
 > UI5X is in early development. APIs may change before version 1.0.
 
 ## Features
 
 - **`Skeleton`** — a placeholder in the shape of the content you are waiting for: a paragraph of
-  lines, a block, or an avatar disc. Animated by default, hidden from screen readers, and styled using UI5 theme parameters so it can adapt to the active UI5 theme.
+  lines, a block, or an avatar disc. Animated by default, hidden from screen readers, and styled
+  with UI5 theme parameters so it follows the active theme.
 - **`LoadingContainer`** — swaps between a placeholder and the real content: bind `loading` to a
   model flag and the container does the switch for you, with no manual visibility juggling. It
-  ships with a built-in skeleton and accepts any UI5 control as a custom placeholder when the default does not match your
-  layout.
+  ships with a built-in skeleton and accepts any UI5 control as a custom placeholder when the
+  default does not match your layout.
 - **`LoadingResponsiveTable`** — wraps a responsive `sap.m.Table` and replaces its rows with
   matching skeleton cells while data is loading. It supports fixed and viewport-filling row counts.
 - **`LoadingTable`** — wraps a grid `sap.ui.table.Table` and renders a matching, presentation-only
@@ -56,6 +60,20 @@ on the first failing assertion, so it can be used as a CI gate.
 
 `npm run test:unit:browser` opens the same suite in a visible browser, which is
 easier to debug.
+
+### UI5 library dependencies
+
+UI5X declares three OpenUI5 libraries, which are loaded together with it:
+
+| Library        | Required by |
+| -------------- | ----------- |
+| `sap.ui.core`  | Every control |
+| `sap.m`        | `CopyButton` (which extends `sap.m.Button`), `ChatFeed`, `ChatMessage`, `SegmentedInput`, `LoadingResponsiveTable` |
+| `sap.ui.table` | `LoadingTable` only |
+
+`sap.m` in turn brings `sap.ui.layout` and `sap.ui.unified`, the latter shared with
+`sap.ui.table`. An application that uses no grid table still loads `sap.ui.table`, which is the
+one dependency UI5X could drop by moving `LoadingTable` out of the library.
 
 ## Development requirements
 
@@ -140,11 +158,13 @@ server:
 
 This allows locally installed UI5 libraries such as UI5X to be resolved before requests fall
 back to the SAPUI5 server.
-Alternatively, projects providing a local UI5 configuration can use a corresponding `start-local` script, if available.
+Alternatively, projects providing a local UI5 configuration can use a corresponding
+`start-local` script, if available.
 
 #### Production build
 
-To include UI5X in the application's build output, add it to the UI5 builder dependencies in ui5.yaml:
+To include UI5X in the application's build output, add it to the UI5 builder dependencies in
+ui5.yaml:
 
 ```yaml
 builder:
