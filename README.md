@@ -1,5 +1,7 @@
 # UI5X
 
+[![CI](https://github.com/rdisomma/ui5x/actions/workflows/ci.yml/badge.svg)](https://github.com/rdisomma/ui5x/actions/workflows/ci.yml)
+
 Modern UX extensions for OpenUI5 and SAPUI5.
 
 UI5X is an open-source UI5 control library. Its controls extend `sap.ui.core.Control` and use
