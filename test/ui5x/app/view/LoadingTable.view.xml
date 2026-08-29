@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="ui5x.test.app.controller.LoadingTable"
+    controllerName="ui5x.test.app.controller.Base"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:table="sap.ui.table"
@@ -7,76 +7,49 @@
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
+        <ui5x:LoadingTable
+            loading="{settings>/loadingTable/loading}"
+            skeletonRows="{settings>/loadingTable/skeletonRows}"
+            maxSkeletonRows="{settings>/loadingTable/maxSkeletonRows}"
+            skeletonRowsMode="{settings>/loadingTable/skeletonRowsMode}"
+            dynamicSkeletonWidths="{settings>/loadingTable/dynamicSkeletonWidths}"
+            animated="{settings>/loadingTable/animated}">
 
-        <content>
-            <ui5x:LoadingTable
-                loading="{settings>/loading}"
-                skeletonRows="{settings>/skeletonRows}"
-                maxSkeletonRows="{settings>/maxSkeletonRows}"
-                skeletonRowsMode="{settings>/skeletonRowsMode}"
-                dynamicSkeletonWidths="{settings>/dynamicSkeletonWidths}"
-                animated="{settings>/animated}">
+            <ui5x:table>
+                <table:Table rows="{customers>/rows}" visibleRowCount="5" selectionMode="None" rowHeight="44">
 
-                <ui5x:table>
-                    <table:Table rows="{data>/rows}" visibleRowCount="5" selectionMode="None" rowHeight="44">
+                    <table:extension>
+                        <OverflowToolbar>
+                            <Title text="Customers" level="H3" />
+                            <ToolbarSpacer />
+                            <SearchField width="14rem" />
+                            <Button icon="sap-icon://sort" />
+                        </OverflowToolbar>
+                    </table:extension>
 
-                        <table:extension>
-                            <OverflowToolbar>
-                                <Title text="Customers" level="H3" />
-                                <ToolbarSpacer />
-                                <SearchField width="14rem" />
-                                <Button icon="sap-icon://sort" />
-                            </OverflowToolbar>
-                        </table:extension>
+                    <table:columns>
+                        <table:Column width="auto" minWidth="200">
+                            <Text text="Customer" />
+                            <table:template><Text text="{customers>name}" wrapping="false" /></table:template>
+                        </table:Column>
 
-                        <table:columns>
-                            <table:Column width="auto" minWidth="200">
-                                <Text text="Customer" />
-                                <table:template><Text text="{data>name}" wrapping="false" /></table:template>
-                            </table:Column>
+                        <table:Column width="auto" minWidth="180">
+                            <Text text="Company" />
+                            <table:template><Text text="{customers>company}" wrapping="false" /></table:template>
+                        </table:Column>
 
-                            <table:Column width="auto" minWidth="180">
-                                <Text text="Company" />
-                                <table:template><Text text="{data>company}" wrapping="false" /></table:template>
-                            </table:Column>
+                        <table:Column width="auto" minWidth="140">
+                            <Text text="Status" />
+                            <table:template><ObjectStatus text="{customers>status}" state="{customers>state}" /></table:template>
+                        </table:Column>
 
-                            <table:Column width="auto" minWidth="140">
-                                <Text text="Status" />
-                                <table:template><ObjectStatus text="{data>status}" state="{data>state}" /></table:template>
-                            </table:Column>
-
-                            <table:Column width="auto" minWidth="140" hAlign="End">
-                                <Text text="Revenue" />
-                                <table:template><ObjectNumber number="{data>amount}" unit="EUR" /></table:template>
-                            </table:Column>
-                        </table:columns>
-                    </table:Table>
-                </ui5x:table>
-            </ui5x:LoadingTable>
-        </content>
-
-        <footer>
-            <OverflowToolbar>
-                <ToggleButton text="Loading" pressed="{settings>/loading}" />
-
-                <ToolbarSeparator />
-
-                <Label text="Rows" />
-                <StepInput value="{settings>/skeletonRows}" min="1" max="10" width="5.5rem" />
-
-                <Label text="Mode" />
-                <SegmentedButton selectedKey="{settings>/skeletonRowsMode}">
-                    <items>
-                        <SegmentedButtonItem key="Fixed" text="Fixed" />
-                        <SegmentedButtonItem key="Fill" text="Fill" />
-                    </items>
-                </SegmentedButton>
-
-                <ToolbarSpacer />
-
-                <ToggleButton text="Dynamic widths" pressed="{settings>/dynamicSkeletonWidths}" />
-                <ToggleButton text="Animated" pressed="{settings>/animated}" />
-            </OverflowToolbar>
-        </footer>
+                        <table:Column width="auto" minWidth="140" hAlign="End">
+                            <Text text="Revenue" />
+                            <table:template><ObjectNumber number="{customers>amount}" unit="EUR" /></table:template>
+                        </table:Column>
+                    </table:columns>
+                </table:Table>
+            </ui5x:table>
+        </ui5x:LoadingTable>
     </Page>
 </mvc:View>

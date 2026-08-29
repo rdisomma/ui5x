@@ -1,0 +1,29 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m">
+
+    <Popover
+        title="Accordion settings"
+        contentWidth="24rem"
+        placement="Bottom"
+        class="sapUiSizeCompact">
+
+        <List>
+            <InputListItem label="Open several at once">
+                <Switch state="{settings>/accordion/multipleExpansion}" />
+            </InputListItem>
+
+            <InputListItem label="Sections can be opened">
+                <Switch state="{settings>/accordion/itemsEnabled}" />
+            </InputListItem>
+
+            <InputListItem label="Width">
+                <Input textAlign="Begin" value="{settings>/accordion/width}" width="9rem" />
+            </InputListItem>
+        </List>
+
+        <endButton>
+            <Button text="Reset" press=".onResetSettings" />
+        </endButton>
+    </Popover>
+</core:FragmentDefinition>

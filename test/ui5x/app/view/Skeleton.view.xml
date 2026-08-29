@@ -1,51 +1,15 @@
 <mvc:View
-    controllerName="ui5x.test.app.controller.Skeleton"
+    controllerName="ui5x.test.app.controller.Base"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:ui5x="ui5x.loading"
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
-
-        <content>
-            <ui5x:Skeleton
-                type="{settings>/type}"
-                lines="{settings>/lines}"
-                width="{settings>/width}"
-                animated="{settings>/animated}" />
-        </content>
-
-        <footer>
-            <OverflowToolbar>
-                <Label text="Type" />
-                <SegmentedButton selectedKey="{settings>/type}">
-                    <items>
-                        <SegmentedButtonItem key="Line" text="Line" />
-                        <SegmentedButtonItem key="Rectangle" text="Rectangle" />
-                        <SegmentedButtonItem key="Circle" text="Circle" />
-                    </items>
-                </SegmentedButton>
-
-                <ToolbarSeparator />
-
-                <Label text="Lines" />
-                <StepInput value="{settings>/lines}" min="1" max="3" width="5.5rem" />
-
-                <ToolbarSeparator />
-
-                <Label text="Width" />
-                <SegmentedButton selectedKey="{settings>/width}">
-                    <items>
-                        <SegmentedButtonItem key="12rem" text="12rem" />
-                        <SegmentedButtonItem key="24rem" text="24rem" />
-                        <SegmentedButtonItem key="100%" text="100%" />
-                    </items>
-                </SegmentedButton>
-
-                <ToolbarSpacer />
-
-                <ToggleButton text="Animated" pressed="{settings>/animated}" />
-            </OverflowToolbar>
-        </footer>
+        <ui5x:Skeleton
+            type="{settings>/skeleton/type}"
+            lines="{settings>/skeleton/lines}"
+            width="{settings>/skeleton/width}"
+            animated="{settings>/skeleton/animated}" />
     </Page>
 </mvc:View>

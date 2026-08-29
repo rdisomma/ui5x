@@ -1,46 +1,23 @@
 <mvc:View
-    controllerName="ui5x.test.app.controller.LoadingContainer"
+    controllerName="ui5x.test.app.controller.Base"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:ui5x="ui5x.loading"
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
+        <ui5x:LoadingContainer
+            loading="{settings>/loadingContainer/loading}"
+            skeletonType="{settings>/loadingContainer/skeletonType}"
+            skeletonLines="{settings>/loadingContainer/skeletonLines}">
 
-        <content>
-            <ui5x:LoadingContainer
-                loading="{settings>/loading}"
-                skeletonType="{settings>/skeletonType}"
-                skeletonLines="{settings>/skeletonLines}">
-
-                <ui5x:content>
-                    <VBox class="sapUiSmallMargin">
-                        <Title text="Project overview" level="H3" />
-                        <Text text="Bind loading to the flag your application already has, and the container swaps the placeholder for this content." />
-                        <MessageStrip text="Content loaded successfully." type="Information" class="sapUiSmallMarginTop" />
-                    </VBox>
-                </ui5x:content>
-            </ui5x:LoadingContainer>
-        </content>
-
-        <footer>
-            <OverflowToolbar>
-                <ToggleButton text="Loading" pressed="{settings>/loading}" />
-
-                <ToolbarSeparator />
-
-                <Label text="Placeholder" />
-                <SegmentedButton selectedKey="{settings>/skeletonType}">
-                    <items>
-                        <SegmentedButtonItem key="Line" text="Line" />
-                        <SegmentedButtonItem key="Rectangle" text="Rectangle" />
-                        <SegmentedButtonItem key="Circle" text="Circle" />
-                    </items>
-                </SegmentedButton>
-
-                <Label text="Lines" />
-                <StepInput value="{settings>/skeletonLines}" min="1" max="3" width="5.5rem" />
-            </OverflowToolbar>
-        </footer>
+            <ui5x:content>
+                <VBox>
+                    <Title text="Project overview" level="H3" />
+                    <Text text="Bind loading to the flag your application already has, and the container swaps the placeholder for this content." />
+                    <MessageStrip text="Content loaded successfully." type="Information" class="sapUiSmallMarginTop" />
+                </VBox>
+            </ui5x:content>
+        </ui5x:LoadingContainer>
     </Page>
 </mvc:View>

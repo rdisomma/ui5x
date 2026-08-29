@@ -10,7 +10,8 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
             return {
                 accordion: {
                     multipleExpansion: false,
-                    width: "100%"
+                    itemsEnabled: true,
+                    width: "35rem"
                 },
                 chatFeed: {
                     value: "",
@@ -33,12 +34,56 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                     chatMaxHeight: "100%",
                     width: "100%"
                 },
-                copyButton: {},
-                loadingContainer: {},
-                loadingResponsiveTable: {},
-                loadingTable: {},
-                segmentedInput: {},
-                skeleton: {}
+                copyButton: {
+                    value: "npm i @raffaeledisomma/ui5x",
+                    text: "Copy",
+                    type: "Default",
+                    successText: "Copied",
+                    successType: "Accept",
+                    iconFirst: true
+                },
+                loadingContainer: {
+                    loading: true,
+                    skeletonType: "Line",
+                    skeletonLines: 3
+                },
+                loadingResponsiveTable: {
+                    loading: true,
+                    skeletonRows: 4,
+                    maxSkeletonRows: 10,
+                    skeletonRowsMode: "Fixed",
+                    skeletonRowHeight: "3rem",
+                    dynamicSkeletonWidths: true,
+                    animated: true
+                },
+                loadingTable: {
+                    loading: true,
+                    skeletonRows: 5,
+                    maxSkeletonRows: 10,
+                    skeletonRowsMode: "Fixed",
+                    dynamicSkeletonWidths: true,
+                    animated: true
+                },
+                segmentedInput: {
+                    digits: 6,
+                    inputType: "Numeric",
+                    size: "Medium",
+                    showSeparators: true,
+                    separatorInterval: 3,
+                    value: "",
+                    valueState: "None",
+                    valueStateText: "Enter the code you received",
+                    showClearIcon: true,
+                    enabled: true,
+                    editable: true,
+                    required: false
+                },
+                skeleton: {
+                    type: "Line",
+                    lines: 3,
+                    width: "24rem",
+                    animated: true
+                }
             };
         },
 

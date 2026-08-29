@@ -1,0 +1,48 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m">
+
+    <Popover
+        title="LoadingResponsiveTable settings"
+        contentWidth="26rem"
+        placement="Bottom"
+        class="sapUiSizeCompact">
+
+        <List>
+            <InputListItem label="Show the placeholder">
+                <Switch state="{settings>/loadingResponsiveTable/loading}" />
+            </InputListItem>
+
+            <InputListItem label="How many rows">
+                <Select selectedKey="{settings>/loadingResponsiveTable/skeletonRowsMode}" width="11rem">
+                    <core:Item key="Fixed" text="A fixed number" />
+                    <core:Item key="Fill" text="As many as fit" />
+                </Select>
+            </InputListItem>
+
+            <InputListItem label="Number of rows">
+                <StepInput value="{settings>/loadingResponsiveTable/skeletonRows}" min="1" max="10" width="6rem" />
+            </InputListItem>
+
+            <InputListItem label="Most rows when filling">
+                <StepInput value="{settings>/loadingResponsiveTable/maxSkeletonRows}" min="1" max="20" width="6rem" />
+            </InputListItem>
+
+            <InputListItem label="Row height">
+                <Input textAlign="Begin" value="{settings>/loadingResponsiveTable/skeletonRowHeight}" width="9rem" placeholder="automatic" />
+            </InputListItem>
+
+            <InputListItem label="Vary the placeholder widths">
+                <Switch state="{settings>/loadingResponsiveTable/dynamicSkeletonWidths}" />
+            </InputListItem>
+
+            <InputListItem label="Shimmer animation">
+                <Switch state="{settings>/loadingResponsiveTable/animated}" />
+            </InputListItem>
+        </List>
+
+        <endButton>
+            <Button text="Reset" press=".onResetSettings" />
+        </endButton>
+    </Popover>
+</core:FragmentDefinition>

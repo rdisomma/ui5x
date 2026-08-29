@@ -131,6 +131,14 @@
       "chatFeed": {
         "type": "sap.ui.model.json.JSONModel",
         "uri": "mock/chatFeed.json"
+      },
+      "accordion": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "mock/accordion.json"
+      },
+      "customers": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "mock/customers.json"
       }
     }
   }

@@ -1,60 +1,29 @@
 <mvc:View
-    controllerName="ui5x.test.app.controller.CopyButton"
+    controllerName="ui5x.test.app.controller.Base"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:ui5x="ui5x.button"
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
+        <HBox alignItems="Center">
+            <ui5x:CopyButton
+                text="{settings>/copyButton/text}"
+                width="9rem"
+                value="{settings>/copyButton/value}"
+                type="{settings>/copyButton/type}"
+                successType="{settings>/copyButton/successType}"
+                successText="{settings>/copyButton/successText}"
+                iconFirst="{settings>/copyButton/iconFirst}"
+                class="sapUiTinyMarginEnd" />
 
-        <content>
-            <HBox alignItems="Center" class="sapUiSmallMargin">
-                <ui5x:CopyButton
-                    text="Copy"
-                    width="9rem"
-                    value="npm i @raffaeledisomma/ui5x"
-                    type="{settings>/type}"
-                    successType="{settings>/successType}"
-                    successText="{settings>/successText}"
-                    iconFirst="{settings>/iconFirst}"
-                    class="sapUiTinyMarginEnd" />
-
-                <ui5x:CopyButton
-                    tooltip="Copy value"
-                    value="npm i @raffaeledisomma/ui5x"
-                    type="{settings>/type}"
-                    successType="{settings>/successType}"
-                    successText="{settings>/successText}"
-                    iconFirst="{settings>/iconFirst}" />
-            </HBox>
-        </content>
-
-        <footer>
-            <OverflowToolbar>
-                <Label text="Button type" />
-                <SegmentedButton selectedKey="{settings>/type}">
-                    <items>
-                        <SegmentedButtonItem key="Default" text="Default" />
-                        <SegmentedButtonItem key="Emphasized" text="Emphasized" />
-                        <SegmentedButtonItem key="Transparent" text="Transparent" />
-                    </items>
-                </SegmentedButton>
-
-                <ToolbarSeparator />
-
-                <Label text="Success type" />
-                <SegmentedButton selectedKey="{settings>/successType}">
-                    <items>
-                        <SegmentedButtonItem key="Default" text="Default" />
-                        <SegmentedButtonItem key="Accept" text="Accept" />
-                        <SegmentedButtonItem key="Emphasized" text="Emphasized" />
-                    </items>
-                </SegmentedButton>
-
-                <ToolbarSpacer />
-
-                <ToggleButton text="Icon first" pressed="{settings>/iconFirst}" />
-            </OverflowToolbar>
-        </footer>
+            <ui5x:CopyButton
+                tooltip="Copy value"
+                value="{settings>/copyButton/value}"
+                type="{settings>/copyButton/type}"
+                successType="{settings>/copyButton/successType}"
+                successText="{settings>/copyButton/successText}"
+                iconFirst="{settings>/copyButton/iconFirst}" />
+        </HBox>
     </Page>
 </mvc:View>

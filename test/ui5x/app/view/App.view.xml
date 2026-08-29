@@ -12,8 +12,8 @@
                 <Title text="UI5X" level="H1" />
                 <ToolbarSpacer />
                 <Button
-                    text="Edit behaviours"
-                    icon="sap-icon://action-settings"
+                    text="Play with it"
+                    icon="sap-icon://palette"
                     type="Emphasized"
                     press=".onOpenSettings" />
             </tnt:ToolHeader>

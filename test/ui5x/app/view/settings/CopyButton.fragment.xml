@@ -1,0 +1,49 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m">
+
+    <Popover
+        title="CopyButton settings"
+        contentWidth="26rem"
+        placement="Bottom"
+        class="sapUiSizeCompact">
+
+        <List>
+            <InputListItem label="Text to copy">
+                <Input textAlign="Begin" value="{settings>/copyButton/value}" width="11rem" />
+            </InputListItem>
+
+            <InputListItem label="Button text">
+                <Input textAlign="Begin" value="{settings>/copyButton/text}" width="11rem" />
+            </InputListItem>
+
+            <InputListItem label="Button style">
+                <Select selectedKey="{settings>/copyButton/type}" width="9rem">
+                    <core:Item key="Default" text="Default" />
+                    <core:Item key="Emphasized" text="Emphasized" />
+                    <core:Item key="Transparent" text="Transparent" />
+                </Select>
+            </InputListItem>
+
+            <InputListItem label="Text after copying">
+                <Input textAlign="Begin" value="{settings>/copyButton/successText}" width="11rem" />
+            </InputListItem>
+
+            <InputListItem label="Style after copying">
+                <Select selectedKey="{settings>/copyButton/successType}" width="9rem">
+                    <core:Item key="Default" text="Default" />
+                    <core:Item key="Accept" text="Accept" />
+                    <core:Item key="Emphasized" text="Emphasized" />
+                </Select>
+            </InputListItem>
+
+            <InputListItem label="Icon before the text">
+                <Switch state="{settings>/copyButton/iconFirst}" />
+            </InputListItem>
+        </List>
+
+        <endButton>
+            <Button text="Reset" press=".onResetSettings" />
+        </endButton>
+    </Popover>
+</core:FragmentDefinition>

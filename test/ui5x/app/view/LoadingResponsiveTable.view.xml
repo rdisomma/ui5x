@@ -1,86 +1,51 @@
 <mvc:View
-    controllerName="ui5x.test.app.controller.LoadingResponsiveTable"
+    controllerName="ui5x.test.app.controller.Base"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:ui5x="ui5x.loading"
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
+        <ui5x:LoadingResponsiveTable
+            loading="{settings>/loadingResponsiveTable/loading}"
+            skeletonRows="{settings>/loadingResponsiveTable/skeletonRows}"
+            maxSkeletonRows="{settings>/loadingResponsiveTable/maxSkeletonRows}"
+            skeletonRowsMode="{settings>/loadingResponsiveTable/skeletonRowsMode}"
+            skeletonRowHeight="{settings>/loadingResponsiveTable/skeletonRowHeight}"
+            dynamicSkeletonWidths="{settings>/loadingResponsiveTable/dynamicSkeletonWidths}"
+            animated="{settings>/loadingResponsiveTable/animated}">
 
-        <content>
-            <ui5x:LoadingResponsiveTable
-                loading="{settings>/loading}"
-                skeletonRows="{settings>/skeletonRows}"
-                skeletonRowsMode="{settings>/skeletonRowsMode}"
-                skeletonRowHeight="{settings>/skeletonRowHeight}"
-                dynamicSkeletonWidths="{settings>/dynamicSkeletonWidths}"
-                animated="{settings>/animated}">
+            <ui5x:table>
+                <Table items="{customers>/rows}" fixedLayout="true">
 
-                <ui5x:table>
-                    <Table items="{data>/rows}" fixedLayout="true" class="ui5xDemoTable">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Customers" level="H3" />
+                            <ToolbarSpacer />
+                            <SearchField width="14rem" />
+                            <Button icon="sap-icon://sort" />
+                        </OverflowToolbar>
+                    </headerToolbar>
 
-                        <headerToolbar>
-                            <OverflowToolbar>
-                                <Title text="Customers" level="H3" />
-                                <ToolbarSpacer />
-                                <SearchField width="14rem" />
-                                <Button icon="sap-icon://sort" />
-                            </OverflowToolbar>
-                        </headerToolbar>
+                    <columns>
+                        <Column><Text text="Customer" /></Column>
+                        <Column><Text text="Company" /></Column>
+                        <Column><Text text="Status" /></Column>
+                        <Column hAlign="End"><Text text="Revenue" /></Column>
+                    </columns>
 
-                        <columns>
-                            <Column><Text text="Customer" /></Column>
-                            <Column><Text text="Company" /></Column>
-                            <Column><Text text="Status" /></Column>
-                            <Column hAlign="End"><Text text="Revenue" /></Column>
-                        </columns>
-
-                        <items>
-                            <ColumnListItem>
-                                <cells>
-                                    <Text text="{data>name}" />
-                                    <Text text="{data>company}" />
-                                    <ObjectStatus text="{data>status}" state="{data>state}" />
-                                    <ObjectNumber number="{data>amount}" unit="EUR" />
-                                </cells>
-                            </ColumnListItem>
-                        </items>
-                    </Table>
-                </ui5x:table>
-            </ui5x:LoadingResponsiveTable>
-        </content>
-
-        <footer>
-            <OverflowToolbar>
-                <ToggleButton text="Loading" pressed="{settings>/loading}" />
-
-                <ToolbarSeparator />
-
-                <Label text="Rows" />
-                <StepInput value="{settings>/skeletonRows}" min="1" max="10" width="5.5rem" />
-
-                <Label text="Mode" />
-                <SegmentedButton selectedKey="{settings>/skeletonRowsMode}">
                     <items>
-                        <SegmentedButtonItem key="Fixed" text="Fixed" />
-                        <SegmentedButtonItem key="Fill" text="Fill" />
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{customers>name}" />
+                                <Text text="{customers>company}" />
+                                <ObjectStatus text="{customers>status}" state="{customers>state}" />
+                                <ObjectNumber number="{customers>amount}" unit="EUR" />
+                            </cells>
+                        </ColumnListItem>
                     </items>
-                </SegmentedButton>
-
-                <Label text="Row height" />
-                <SegmentedButton selectedKey="{settings>/skeletonRowHeight}">
-                    <items>
-                        <SegmentedButtonItem key="" text="auto" />
-                        <SegmentedButtonItem key="3rem" text="3rem" />
-                        <SegmentedButtonItem key="4rem" text="4rem" />
-                    </items>
-                </SegmentedButton>
-
-                <ToolbarSpacer />
-
-                <ToggleButton text="Dynamic widths" pressed="{settings>/dynamicSkeletonWidths}" />
-                <ToggleButton text="Animated" pressed="{settings>/animated}" />
-            </OverflowToolbar>
-        </footer>
+                </Table>
+            </ui5x:table>
+        </ui5x:LoadingResponsiveTable>
     </Page>
 </mvc:View>

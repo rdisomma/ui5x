@@ -1,0 +1,96 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m">
+
+    <Popover
+        title="SegmentedInput settings"
+        contentWidth="26rem"
+        placement="Bottom"
+        class="sapUiSizeCompact">
+
+        <IconTabBar
+            expandable="false"
+            applyContentPadding="false"
+            selectedKey="behaviour">
+
+            <items>
+                <IconTabFilter key="behaviour" text="Behaviour">
+                    <List>
+                        <InputListItem label="Enabled">
+                            <Switch state="{settings>/segmentedInput/enabled}" />
+                        </InputListItem>
+
+                        <InputListItem label="Editable">
+                            <Switch state="{settings>/segmentedInput/editable}" />
+                        </InputListItem>
+
+                        <InputListItem label="Required">
+                            <Switch state="{settings>/segmentedInput/required}" />
+                        </InputListItem>
+
+                        <InputListItem label="Show the clear icon">
+                            <Switch state="{settings>/segmentedInput/showClearIcon}" />
+                        </InputListItem>
+
+                        <InputListItem label="Accepts">
+                            <Select selectedKey="{settings>/segmentedInput/inputType}" width="11rem">
+                                <core:Item key="Numeric" text="Digits only" />
+                                <core:Item key="Alphanumeric" text="Letters and digits" />
+                            </Select>
+                        </InputListItem>
+                    </List>
+                </IconTabFilter>
+
+                <IconTabFilter key="appearance" text="Appearance">
+                    <List>
+                        <InputListItem label="Number of boxes">
+                            <StepInput value="{settings>/segmentedInput/digits}" min="1" max="12" width="6rem" />
+                        </InputListItem>
+
+                        <InputListItem label="Box size">
+                            <Select selectedKey="{settings>/segmentedInput/size}" width="9rem">
+                                <core:Item key="Small" text="Small" />
+                                <core:Item key="Medium" text="Medium" />
+                                <core:Item key="Large" text="Large" />
+                            </Select>
+                        </InputListItem>
+
+                        <InputListItem label="Show separators">
+                            <Switch state="{settings>/segmentedInput/showSeparators}" />
+                        </InputListItem>
+
+                        <InputListItem label="A separator every">
+                            <StepInput value="{settings>/segmentedInput/separatorInterval}" min="1" max="6" width="6rem" />
+                        </InputListItem>
+                    </List>
+                </IconTabFilter>
+
+                <IconTabFilter key="validation" text="Validation">
+                    <List>
+                        <InputListItem label="State">
+                            <Select selectedKey="{settings>/segmentedInput/valueState}" width="9rem">
+                                <core:Item key="None" text="Neutral" />
+                                <core:Item key="Success" text="Success" />
+                                <core:Item key="Warning" text="Warning" />
+                                <core:Item key="Error" text="Error" />
+                                <core:Item key="Information" text="Information" />
+                            </Select>
+                        </InputListItem>
+
+                        <InputListItem label="Message">
+                            <Input textAlign="Begin" value="{settings>/segmentedInput/valueStateText}" width="11rem" />
+                        </InputListItem>
+
+                        <InputListItem label="Value">
+                            <Input textAlign="Begin" value="{settings>/segmentedInput/value}" width="11rem" />
+                        </InputListItem>
+                    </List>
+                </IconTabFilter>
+            </items>
+        </IconTabBar>
+
+        <endButton>
+            <Button text="Reset" press=".onResetSettings" />
+        </endButton>
+    </Popover>
+</core:FragmentDefinition>
