@@ -40,13 +40,6 @@
                 width="100%"
                 animated="{settings>/skeleton/animated}"
                 class="sapUiSmallMarginTop" />
-
-            <ui5x:Skeleton
-                type="Line"
-                lines="{settings>/skeleton/lines}"
-                width="100%"
-                animated="{settings>/skeleton/animated}"
-                class="sapUiSmallMarginTop" />
         </VBox>
     </Page>
 </mvc:View>
