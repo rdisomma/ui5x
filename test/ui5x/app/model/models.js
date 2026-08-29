@@ -56,7 +56,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                 loadingResponsiveTable: {
                     loading: true,
                     skeletonRows: 4,
-                    maxSkeletonRows: 10,
+                    maxSkeletonRows: 20,
                     skeletonRowsMode: "Fixed",
                     skeletonRowHeight: "3rem",
                     dynamicSkeletonWidths: true,
@@ -65,7 +65,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                 loadingTable: {
                     loading: true,
                     skeletonRows: 5,
-                    maxSkeletonRows: 10,
+                    maxSkeletonRows: 20,
                     skeletonRowsMode: "Fixed",
                     dynamicSkeletonWidths: true,
                     animated: true
