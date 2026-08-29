@@ -31,6 +31,14 @@
             <InputListItem label="Number of lines">
                 <StepInput value="{settings>/loadingContainer/skeletonLines}" min="1" max="3" width="6rem" />
             </InputListItem>
+
+            <InputListItem label="Shimmer animation">
+                <Switch state="{settings>/loadingContainer/animated}" />
+            </InputListItem>
+
+            <InputListItem label="Width">
+                <Input textAlign="Begin" value="{settings>/loadingContainer/width}" width="9rem" />
+            </InputListItem>
         </List>
 
         <endButton>

@@ -15,6 +15,8 @@
         <ui5x:LoadingContainer
             visible="{= !${settings>/loadingContainer/customPlaceholder} }"
             loading="{settings>/loadingContainer/loading}"
+            width="{settings>/loadingContainer/width}"
+            animated="{settings>/loadingContainer/animated}"
             skeletonType="{settings>/loadingContainer/skeletonType}"
             skeletonLines="{settings>/loadingContainer/skeletonLines}">
 
@@ -29,7 +31,8 @@
 
         <ui5x:LoadingContainer
             visible="{settings>/loadingContainer/customPlaceholder}"
-            loading="{settings>/loadingContainer/loading}">
+            loading="{settings>/loadingContainer/loading}"
+            width="{settings>/loadingContainer/width}">
 
             <ui5x:placeholder>
                 <VBox width="100%">
@@ -37,16 +40,25 @@
                         <ui5x:Skeleton
                             type="Circle"
                             width="3rem"
+                            animated="{settings>/loadingContainer/animated}"
                             class="sapUiSmallMarginEnd" />
 
-                        <ui5x:Skeleton type="Line" lines="{settings>/loadingContainer/skeletonLines}" width="100%">
+                        <ui5x:Skeleton
+                            type="Line"
+                            lines="{settings>/loadingContainer/skeletonLines}"
+                            animated="{settings>/loadingContainer/animated}"
+                            width="100%">
                             <ui5x:layoutData>
                                 <FlexItemData growFactor="1" baseSize="0" />
                             </ui5x:layoutData>
                         </ui5x:Skeleton>
                     </HBox>
 
-                    <ui5x:Skeleton type="Rectangle" width="100%" class="sapUiSmallMarginTop" />
+                    <ui5x:Skeleton
+                            type="Rectangle"
+                            animated="{settings>/loadingContainer/animated}"
+                            width="100%"
+                            class="sapUiSmallMarginTop" />
                 </VBox>
             </ui5x:placeholder>
 

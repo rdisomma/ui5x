@@ -1,4 +1,5 @@
 import SkeletonType from "ui5x/loading/SkeletonType";
+import { CSSSize } from "sap/ui/core/library";
 import Control from "sap/ui/core/Control";
 import { PropertyBindingInfo } from "sap/ui/base/ManagedObject";
 import { $ControlSettings } from "sap/ui/core/Control";
@@ -36,6 +37,23 @@ declare module "./LoadingContainer" {
                      * Valid values are between 1 and 3.
          */
         skeletonLines?: number | PropertyBindingInfo | `{${string}}`;
+
+        /**
+         * Defines the width of the container.
+        
+        Accepts any valid UI5 CSSSize value, such as
+        "100%", "20rem" or "320px".
+         */
+        width?: CSSSize | PropertyBindingInfo | `{${string}}`;
+
+        /**
+         * Defines whether the default skeleton placeholder animates.
+        
+        The animation is automatically disabled when the user's
+        operating system requests reduced motion, and this property has
+        no effect when a custom placeholder is provided.
+         */
+        animated?: boolean | PropertyBindingInfo | `{${string}}`;
 
         /**
          * The actual content displayed when loading is false.
@@ -150,6 +168,68 @@ declare module "./LoadingContainer" {
          * @returns Reference to "this" in order to allow method chaining
          */
         setSkeletonLines(skeletonLines: number): this;
+
+        // property: width
+
+        /**
+         * Gets current value of property "width".
+         *
+         * Defines the width of the container.
+        
+        Accepts any valid UI5 CSSSize value, such as
+        "100%", "20rem" or "320px".
+         *
+         * @returns Value of property "width"
+         */
+        getWidth(): CSSSize;
+
+        /**
+         * Sets a new value for property "width".
+         *
+         * Defines the width of the container.
+        
+        Accepts any valid UI5 CSSSize value, such as
+        "100%", "20rem" or "320px".
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * @param width New value for property "width"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setWidth(width: CSSSize): this;
+
+        // property: animated
+
+        /**
+         * Gets current value of property "animated".
+         *
+         * Defines whether the default skeleton placeholder animates.
+        
+        The animation is automatically disabled when the user's
+        operating system requests reduced motion, and this property has
+        no effect when a custom placeholder is provided.
+         *
+         * Default value is: true
+         * @returns Value of property "animated"
+         */
+        getAnimated(): boolean;
+
+        /**
+         * Sets a new value for property "animated".
+         *
+         * Defines whether the default skeleton placeholder animates.
+        
+        The animation is automatically disabled when the user's
+        operating system requests reduced motion, and this property has
+        no effect when a custom placeholder is provided.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: true
+         * @param [animated=true] New value for property "animated"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setAnimated(animated: boolean): this;
 
         // aggregation: content
 

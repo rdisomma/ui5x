@@ -23,6 +23,12 @@ const LoadingContainerRenderer = {
         rm.openStart("div", control);
         rm.class("ui5xLoadingContainer");
 
+        const width = control.getWidth();
+
+        if (width) {
+            rm.style("width", width);
+        }
+
         rm.attr(
             "aria-busy",
             control.getLoading() ? "true" : "false"

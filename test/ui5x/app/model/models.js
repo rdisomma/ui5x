@@ -52,7 +52,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                     loading: true,
                     customPlaceholder: true,
                     skeletonType: "Line",
-                    skeletonLines: 3
+                    skeletonLines: 3,
+                    animated: true,
+                    width: "100%"
                 },
                 loadingResponsiveTable: {
                     loading: true,

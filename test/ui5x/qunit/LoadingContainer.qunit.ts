@@ -124,3 +124,51 @@ QUnit.test("Creates the default skeleton placeholder", function (assert) {
 
     container.placeAt("default-placeholder-test-area");
 });
+QUnit.test("The default placeholder follows animated and the container follows width", function (assert) {
+    const done = assert.async();
+
+    const target = document.createElement("div");
+    target.id = "animated-width-test-area";
+
+    document
+        .getElementById("qunit-fixture")!
+        .appendChild(target);
+
+    const container = new LoadingContainer({
+        loading: true,
+        width: "20rem",
+        animated: false,
+        content: new HTML({
+            content: "<span>Loaded</span>"
+        })
+    });
+
+    container.addEventDelegate({
+        onAfterRendering: () => {
+            const domRef = container.getDomRef() as HTMLElement;
+
+            assert.strictEqual(
+                domRef.style.width,
+                "20rem",
+                "The container renders its width"
+            );
+
+            assert.ok(
+                domRef.querySelector(".ui5xSkeletonNoAnimation"),
+                "The default placeholder is not animated"
+            );
+
+            container.setAnimated(true);
+
+            assert.ok(
+                (container.getAggregation("_defaultPlaceholder") as unknown as { getAnimated(): boolean }).getAnimated(),
+                "A later change reaches the default placeholder"
+            );
+
+            container.destroy();
+            done();
+        }
+    });
+
+    container.placeAt("animated-width-test-area");
+});

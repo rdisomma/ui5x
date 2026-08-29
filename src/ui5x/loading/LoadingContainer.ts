@@ -65,6 +65,27 @@ export default class LoadingContainer extends Control {
             skeletonLines: {
                 type: "int",
                 defaultValue: 1
+            },
+            /**
+             * Defines the width of the container.
+             *
+             * Accepts any valid UI5 CSSSize value, such as
+             * "100%", "20rem" or "320px".
+             */
+            width: {
+                type: "sap.ui.core.CSSSize",
+                defaultValue: null
+            },
+            /**
+             * Defines whether the default skeleton placeholder animates.
+             *
+             * The animation is automatically disabled when the user's
+             * operating system requests reduced motion, and this property has
+             * no effect when a custom placeholder is provided.
+             */
+            animated: {
+                type: "boolean",
+                defaultValue: true
             }
         },
 
@@ -99,7 +120,8 @@ export default class LoadingContainer extends Control {
     init(): void {
         this.setAggregation("_defaultPlaceholder", new Skeleton({
             type: this.getSkeletonType(),
-            lines: this.getSkeletonLines()
+            lines: this.getSkeletonLines(),
+            animated: this.getAnimated()
         }), true);
     }
 
@@ -119,6 +141,15 @@ export default class LoadingContainer extends Control {
 
         const skeleton = this.getAggregation("_defaultPlaceholder") as Skeleton | null;
         skeleton?.setLines(normalizedLines);
+
+        return this;
+    }
+
+    setAnimated(animated: boolean): this {
+        this.setProperty("animated", animated);
+
+        const skeleton = this.getAggregation("_defaultPlaceholder") as Skeleton | null;
+        skeleton?.setAnimated(animated);
 
         return this;
     }
