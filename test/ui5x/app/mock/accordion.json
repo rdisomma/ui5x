@@ -3,7 +3,11 @@
         {
             "title": "General information",
             "text": "Acme S.p.A. has been a customer since 2019 and is served by the Milan office.",
-            "expanded": true
+            "expanded": true,
+            "status": "Active",
+            "state": "Success",
+            "owner": "Laura Bianchi",
+            "progress": 68
         },
         {
             "title": "Appearance",

@@ -17,6 +17,10 @@
                 <Switch state="{settings>/accordion/itemsEnabled}" />
             </InputListItem>
 
+            <InputListItem label="Sections can be collapsed">
+                <Switch state="{settings>/accordion/itemsToggleable}" />
+            </InputListItem>
+
             <InputListItem label="Width">
                 <Input textAlign="Begin" value="{settings>/accordion/width}" width="9rem" />
             </InputListItem>

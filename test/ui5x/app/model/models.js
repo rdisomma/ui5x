@@ -11,6 +11,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                 accordion: {
                     multipleExpansion: false,
                     itemsEnabled: true,
+                    itemsToggleable: true,
                     width: "35rem"
                 },
                 chatFeed: {

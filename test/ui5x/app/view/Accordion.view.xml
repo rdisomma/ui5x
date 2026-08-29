@@ -15,9 +15,34 @@
                 <ui5x:AccordionItem
                     title="{accordion>title}"
                     expanded="{accordion>expanded}"
+                    toggleable="{settings>/accordion/itemsToggleable}"
                     enabled="{settings>/accordion/itemsEnabled}">
 
-                    <Text text="{accordion>text}" />
+                    <VBox>
+                        <Text text="{accordion>text}" />
+
+                        <!-- only the section whose data carries these fields -->
+                        <VBox visible="{= !!${accordion>owner} }" class="sapUiSmallMarginTop">
+                            <ObjectStatus text="{accordion>status}" state="{accordion>state}" />
+
+                            <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                <Label text="Account owner" class="sapUiTinyMarginEnd" />
+                                <Text text="{accordion>owner}" />
+                            </HBox>
+
+                            <ProgressIndicator
+                                percentValue="{accordion>progress}"
+                                displayValue="{accordion>progress}% of the yearly target"
+                                class="sapUiSmallMarginTop" />
+
+                            <Button
+                                text="Open the customer"
+                                icon="sap-icon://arrow-right"
+                                iconFirst="false"
+                                width="12rem"
+                                class="sapUiSmallMarginTop" />
+                        </VBox>
+                    </VBox>
                 </ui5x:AccordionItem>
             </ui5x:items>
         </ui5x:Accordion>
