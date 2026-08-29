@@ -22,10 +22,11 @@
                         <Text text="{accordion>text}" />
 
                         <!-- only the section whose data carries these fields -->
-                        <VBox visible="{= !!${accordion>progress} }" class="sapUiSmallMarginTop">
-                            <ProgressIndicator
-                                percentValue="{accordion>progress}"
-                                displayValue="{accordion>progress}% of the yearly target" />
+                        <VBox visible="{= !!${accordion>rating} }" class="sapUiSmallMarginTop">
+                            <RatingIndicator
+                                value="{accordion>rating}"
+                                maxValue="5"
+                                tooltip="How well this customer is served" />
 
                             <Button
                                 text="Open the customer"

@@ -2,9 +2,9 @@
   "sections": [
     {
       "title": "Any control fits in a section",
-      "text": "Sections take any UI5 control, not only text. This one holds a progress bar and an action.",
+      "text": "Sections take any UI5 control, not only text. This one holds a rating and an action.",
       "expanded": true,
-      "progress": 68
+      "rating": 4
     },
     {
       "title": "Appearance",
