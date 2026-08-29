@@ -103,26 +103,29 @@ one dependency UI5X could drop by moving `LoadingTable` out of the library.
 
 ## Installation
 
-UI5X is not published to the public npm registry yet.
-
-From a local clone of this repository, install the development dependencies and build the
-distributable package:
-
 ```bash
-npm install
-npm run package:pack
-```
-
-Then install the generated tarball in your UI5 application:
-
-```bash
-npm install ../ui5x/raffaeledisomma-ui5x-0.1.0.tgz
+npm install @raffaeledisomma/ui5x
 ```
 
 UI5X has no npm dependencies of its own, so installing it adds one package and nothing else.
 Whatever `npm audit` reports afterwards comes from the application's own dependency tree, not
 from here. The UI5 libraries it needs at runtime are listed under
 [UI5 library dependencies](#ui5-library-dependencies).
+
+Then add the UI5 libraries UI5X needs to the application's `ui5.yaml`, so the UI5 tooling
+resolves them:
+
+```yaml
+framework:
+  libraries:
+    - name: sap.ui.core
+    - name: sap.m
+    - name: sap.ui.table
+```
+
+An application that already lists `sap.ui.core` and `sap.m` only needs `sap.ui.table`, which
+`LoadingTable` requires and which UI5X declares for every consumer. Without it the application
+starts and then fails on `/resources/sap/ui/table/library.js`, and no UI5X control renders.
 
 Then declare UI5X in the application's `manifest.json`:
 
@@ -145,6 +148,17 @@ Then declare UI5X in the application's `manifest.json`:
 `/thirdparty/ui5x/` rather than from `/resources/`, so this mapping is required rather than
 optional, and it is also what makes the library resolve against the application in SAP Build
 Work Zone, where the UI5 runtime is loaded by the shell.
+
+An application that boots from `index.html` without a component never reads that manifest, so
+the same mapping goes on the bootstrap tag instead:
+
+```html
+<script
+  id="sap-ui-bootstrap"
+  src="resources/sap-ui-core.js"
+  data-sap-ui-resource-roots='{"ui5x": "/thirdparty/ui5x/"}'>
+</script>
+```
 
 ## Consuming UI5X in a SAP Fiori tools project
 
