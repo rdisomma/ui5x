@@ -56,17 +56,17 @@
                             <Switch state="{settings>/chatFeed/highlightOwnMessage}" />
                         </InputListItem>
 
-                        <InputListItem label="Your messages">
+                        <InputListItem label="Your messages appearance">
                             <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}" width="9rem">
                                 <core:Item key="Bubble" text="A bubble" />
-                                <core:Item key="Conversation" text="No bubble" />
+                                <core:Item key="Conversation" text="Plain text" />
                             </Select>
                         </InputListItem>
 
-                        <InputListItem label="Incoming messages">
+                        <InputListItem label="Incoming messages appearance">
                             <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}" width="9rem">
                                 <core:Item key="Bubble" text="A bubble" />
-                                <core:Item key="Conversation" text="No bubble" />
+                                <core:Item key="Conversation" text="Plain text" />
                             </Select>
                         </InputListItem>
 
@@ -108,6 +108,10 @@
 
                 <IconTabFilter key="text" text="Text">
                     <List>
+                        <InputListItem label="Your name">
+                            <Input textAlign="Begin" value="{settings>/chatFeed/ownSenderName}" width="11rem" />
+                        </InputListItem>
+
                         <InputListItem label="Composer placeholder">
                             <Input textAlign="Begin" value="{settings>/chatFeed/placeholder}" width="11rem" />
                         </InputListItem>

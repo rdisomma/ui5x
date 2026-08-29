@@ -35,7 +35,7 @@
                 <ui5x:ChatMessage
                     key="{chatFeed>id}"
                     text="{chatFeed>text}"
-                    sender="{chatFeed>sender}"
+                    sender="{= ${chatFeed>ownMessage} ? ${settings>/chatFeed/ownSenderName} : ${chatFeed>sender} }"
                     ownMessage="{chatFeed>ownMessage}"
                     editable="{settings>/chatFeed/messagesEditable}"
                     deletable="{settings>/chatFeed/messagesDeletable}"

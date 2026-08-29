@@ -33,6 +33,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                     messageAlignment: "Bottom",
                     chatMaxHeight: "100%",
                     width: "100%",
+                    ownSenderName: "You",
                     messagesEditable: true,
                     messagesDeletable: true
                 },
