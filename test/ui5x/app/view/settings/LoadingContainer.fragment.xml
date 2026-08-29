@@ -9,7 +9,7 @@
         class="sapUiSizeCompact">
 
         <List>
-            <InputListItem label="Show the placeholder">
+            <InputListItem label="Loading">
                 <Switch state="{settings>/loadingContainer/loading}" />
             </InputListItem>
 

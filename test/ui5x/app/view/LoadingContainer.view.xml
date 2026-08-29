@@ -32,7 +32,7 @@
             loading="{settings>/loadingContainer/loading}">
 
             <ui5x:placeholder>
-                <VBox width="24rem">
+                <VBox width="100%">
                     <HBox alignItems="Center">
                         <ui5x:Skeleton
                             type="Circle"

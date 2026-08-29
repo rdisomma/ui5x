@@ -14,7 +14,10 @@
             </InputListItem>
 
             <InputListItem label="Shape">
-                <Select selectedKey="{settings>/skeleton/type}" width="9rem">
+                <Select
+                    selectedKey="{settings>/skeleton/type}"
+                    enabled="{= !${settings>/skeleton/composite} }"
+                    width="9rem">
                     <core:Item key="Line" text="A line" />
                     <core:Item key="Rectangle" text="A rectangle" />
                     <core:Item key="Circle" text="A circle" />
