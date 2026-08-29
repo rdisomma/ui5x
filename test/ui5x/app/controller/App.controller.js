@@ -1,19 +1,18 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "./Base.controller",
     "sap/ui/core/Fragment",
-    "sap/ui/core/UIComponent",
     "sap/m/MessageToast",
     "../model/models"
-], function (Controller, Fragment, UIComponent, MessageToast, models) {
+], function (Base, Fragment, MessageToast, models) {
     "use strict";
 
-    return Controller.extend("ui5x.test.app.controller.App", {
+    return Base.extend("ui5x.test.app.controller.App", {
 
         onInit: function () {
             this._mPopovers = {};
 
-            UIComponent.getRouterFor(this).attachRouteMatched(function (oEvent) {
-                this.getView().getModel("app").setProperty(
+            this.getRouter().attachRouteMatched(function (oEvent) {
+                this.getModel("app").setProperty(
                     "/control",
                     oEvent.getParameter("config").target
                 );
@@ -21,13 +20,11 @@ sap.ui.define([
         },
 
         onNavigate: function (oEvent) {
-            UIComponent.getRouterFor(this).navTo(
-                oEvent.getParameter("item").getKey()
-            );
+            this.navTo(oEvent.getParameter("item").getKey());
         },
 
         onOpenSettings: function (oEvent) {
-            const sName = this.getView().getModel("app").getProperty("/control");
+            const sName = this.getModel("app").getProperty("/control");
             const oButton = oEvent.getSource();
 
             if (!this._mPopovers[sName]) {
@@ -53,10 +50,10 @@ sap.ui.define([
         },
 
         onResetSettings: function () {
-            const sName = this.getView().getModel("app").getProperty("/control");
+            const sName = this.getModel("app").getProperty("/control");
             const sSection = sName.charAt(0).toLowerCase() + sName.slice(1);
 
-            this.getOwnerComponent().getModel("settings").setProperty(
+            this.getModel("settings").setProperty(
                 "/" + sSection,
                 models.getDefaultSettings()[sSection]
             );
