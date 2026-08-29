@@ -5,7 +5,8 @@
     <Popover
         title="ChatFeed settings"
         contentWidth="26rem"
-        placement="Bottom">
+        placement="Bottom"
+        class="sapUiSizeCompact">
 
         <IconTabBar
             expandable="false"
@@ -38,10 +39,6 @@
                         <InputListItem label="Send button enabled">
                             <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
                         </InputListItem>
-
-                        <InputListItem label="Group messages by date">
-                            <Switch state="{settings>/chatFeed/groupByDate}" />
-                        </InputListItem>
                     </List>
                 </IconTabFilter>
 
@@ -54,14 +51,14 @@
                         <InputListItem label="Your messages">
                             <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}" width="9rem">
                                 <core:Item key="Bubble" text="A bubble" />
-                                <core:Item key="Conversation" text="A plain thread" />
+                                <core:Item key="Conversation" text="No bubble" />
                             </Select>
                         </InputListItem>
 
                         <InputListItem label="Incoming messages">
                             <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}" width="9rem">
                                 <core:Item key="Bubble" text="A bubble" />
-                                <core:Item key="Conversation" text="A plain thread" />
+                                <core:Item key="Conversation" text="No bubble" />
                             </Select>
                         </InputListItem>
 
@@ -77,6 +74,10 @@
                                 <core:Item key="Top" text="The top" />
                                 <core:Item key="Bottom" text="The bottom" />
                             </Select>
+                        </InputListItem>
+
+                        <InputListItem label="Group messages by date">
+                            <Switch state="{settings>/chatFeed/groupByDate}" />
                         </InputListItem>
 
                         <InputListItem label="Timestamp">
