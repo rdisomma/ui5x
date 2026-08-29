@@ -17,6 +17,10 @@
                 <Input textAlign="Begin" value="{settings>/copyButton/text}" width="11rem" />
             </InputListItem>
 
+            <InputListItem label="Icon">
+                <Input textAlign="Begin" value="{settings>/copyButton/icon}" width="11rem" />
+            </InputListItem>
+
             <InputListItem label="Button style">
                 <Select selectedKey="{settings>/copyButton/type}" width="9rem">
                     <core:Item key="Default" text="Default" />
@@ -27,6 +31,10 @@
 
             <InputListItem label="Text after copying">
                 <Input textAlign="Begin" value="{settings>/copyButton/successText}" width="11rem" />
+            </InputListItem>
+
+            <InputListItem label="Icon after copying">
+                <Input textAlign="Begin" value="{settings>/copyButton/successIcon}" width="11rem" />
             </InputListItem>
 
             <InputListItem label="Style after copying">

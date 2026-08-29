@@ -10,6 +10,8 @@
             <ui5x:CopyButton
                 text="{settings>/copyButton/text}"
                 value="{settings>/copyButton/value}"
+                icon="{settings>/copyButton/icon}"
+                successIcon="{settings>/copyButton/successIcon}"
                 type="{settings>/copyButton/type}"
                 successType="{settings>/copyButton/successType}"
                 successText="{settings>/copyButton/successText}"
@@ -19,6 +21,8 @@
             <ui5x:CopyButton
                 tooltip="Copy value"
                 value="{settings>/copyButton/value}"
+                icon="{settings>/copyButton/icon}"
+                successIcon="{settings>/copyButton/successIcon}"
                 type="{settings>/copyButton/type}"
                 successType="{settings>/copyButton/successType}"
                 successText="{settings>/copyButton/successText}"
