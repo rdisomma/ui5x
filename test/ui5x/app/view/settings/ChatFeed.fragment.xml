@@ -16,74 +16,74 @@
             adjustLabelSpan="false"
             columnsL="1" columnsM="1">
 
-            <Label text="loading" />
+            <Label text="Loading" />
             <Switch state="{settings>/chatFeed/loading}" />
 
-            <Label text="enabled" />
+            <Label text="Enabled" />
             <Switch state="{settings>/chatFeed/enabled}" />
 
-            <Label text="editable" />
+            <Label text="Editable" />
             <Switch state="{settings>/chatFeed/editable}" />
 
-            <Label text="sendOnEnter" />
+            <Label text="Send with the Enter key" />
             <Switch state="{settings>/chatFeed/sendOnEnter}" />
 
-            <Label text="showSendButton" />
+            <Label text="Show the send button" />
             <Switch state="{settings>/chatFeed/showSendButton}" />
 
-            <Label text="sendButtonEnabled" />
+            <Label text="Send button enabled" />
             <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
 
-            <Label text="groupByDate" />
+            <Label text="Group messages by date" />
             <Switch state="{settings>/chatFeed/groupByDate}" />
 
-            <Label text="highlightOwnMessage" />
+            <Label text="Highlight your own messages" />
             <Switch state="{settings>/chatFeed/highlightOwnMessage}" />
 
-            <Label text="placeholder" />
+            <Label text="Composer placeholder" />
             <Input value="{settings>/chatFeed/placeholder}" />
 
-            <Label text="sendButtonText" />
+            <Label text="Send button text" />
             <Input value="{settings>/chatFeed/sendButtonText}" />
 
-            <Label text="sendButtonTooltip" />
+            <Label text="Send button tooltip" />
             <Input value="{settings>/chatFeed/sendButtonTooltip}" />
 
-            <Label text="chatMaxHeight" />
+            <Label text="Maximum chat height" />
             <Input value="{settings>/chatFeed/chatMaxHeight}" />
 
-            <Label text="width" />
+            <Label text="Width" />
             <Input value="{settings>/chatFeed/width}" />
 
-            <Label text="messageTimestampFormat" />
+            <Label text="Timestamp" />
             <Select selectedKey="{settings>/chatFeed/messageTimestampFormat}">
-                <core:Item key="None" text="None" />
-                <core:Item key="Time" text="Time" />
-                <core:Item key="DateTime" text="DateTime" />
+                <core:Item key="None" text="Hidden" />
+                <core:Item key="Time" text="Time only" />
+                <core:Item key="DateTime" text="Date and time" />
             </Select>
 
-            <Label text="ownMessageAppearance" />
+            <Label text="Your messages look like" />
             <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}">
-                <core:Item key="Bubble" text="Bubble" />
-                <core:Item key="Conversation" text="Conversation" />
+                <core:Item key="Bubble" text="A bubble" />
+                <core:Item key="Conversation" text="A plain thread" />
             </Select>
 
-            <Label text="incomingMessageAppearance" />
+            <Label text="Incoming messages look like" />
             <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}">
-                <core:Item key="Bubble" text="Bubble" />
-                <core:Item key="Conversation" text="Conversation" />
+                <core:Item key="Bubble" text="A bubble" />
+                <core:Item key="Conversation" text="A plain thread" />
             </Select>
 
-            <Label text="composerPosition" />
+            <Label text="Composer position" />
             <Select selectedKey="{settings>/chatFeed/composerPosition}">
-                <core:Item key="Top" text="Top" />
-                <core:Item key="Bottom" text="Bottom" />
+                <core:Item key="Top" text="The top" />
+                <core:Item key="Bottom" text="The bottom" />
             </Select>
 
-            <Label text="messageAlignment" />
+            <Label text="Messages start from" />
             <Select selectedKey="{settings>/chatFeed/messageAlignment}">
-                <core:Item key="Top" text="Top" />
-                <core:Item key="Bottom" text="Bottom" />
+                <core:Item key="Top" text="The top" />
+                <core:Item key="Bottom" text="The bottom" />
             </Select>
         </form:SimpleForm>
 

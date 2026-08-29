@@ -11,11 +11,10 @@
             <tnt:ToolHeader>
                 <Title text="UI5X" level="H1" />
                 <ToolbarSpacer />
-                <Text text="Advanced controls for OpenUI5 and SAPUI5" />
                 <Button
+                    text="Edit behaviours"
                     icon="sap-icon://action-settings"
-                    tooltip="Settings"
-                    type="Transparent"
+                    type="Emphasized"
                     press=".onOpenSettings" />
             </tnt:ToolHeader>
         </tnt:header>
