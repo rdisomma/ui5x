@@ -25,8 +25,7 @@
         "sap.m": {},
         "sap.tnt": {},
         "sap.ui.table": {},
-        "ui5x": {},
-        "sap.ui.layout": {}
+        "ui5x": {}
       }
     },
     "rootView": {
