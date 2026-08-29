@@ -6,10 +6,47 @@
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
+
         <ui5x:Skeleton
+            visible="{= !${settings>/skeleton/composite} }"
             type="{settings>/skeleton/type}"
             lines="{settings>/skeleton/lines}"
             width="{settings>/skeleton/width}"
             animated="{settings>/skeleton/animated}" />
+
+        <!-- the three shapes assembled the way a real placeholder uses them -->
+        <VBox visible="{settings>/skeleton/composite}" width="{settings>/skeleton/width}">
+            <HBox alignItems="Center">
+                <ui5x:Skeleton
+                    type="Circle"
+                    width="3rem"
+                    animated="{settings>/skeleton/animated}"
+                    class="sapUiSmallMarginEnd" />
+
+                <ui5x:Skeleton
+                    type="Line"
+                    lines="2"
+                    width="100%"
+                    animated="{settings>/skeleton/animated}">
+
+                    <ui5x:layoutData>
+                        <FlexItemData growFactor="1" baseSize="0" />
+                    </ui5x:layoutData>
+                </ui5x:Skeleton>
+            </HBox>
+
+            <ui5x:Skeleton
+                type="Rectangle"
+                width="100%"
+                animated="{settings>/skeleton/animated}"
+                class="sapUiSmallMarginTop" />
+
+            <ui5x:Skeleton
+                type="Line"
+                lines="3"
+                width="100%"
+                animated="{settings>/skeleton/animated}"
+                class="sapUiSmallMarginTop" />
+        </VBox>
     </Page>
 </mvc:View>

@@ -6,10 +6,49 @@
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
+
+        <!--
+            The placeholder aggregation wins over the default skeleton whenever
+            it holds anything, so the two cases are two containers rather than
+            one container with a hidden placeholder.
+        -->
         <ui5x:LoadingContainer
+            visible="{= !${settings>/loadingContainer/customPlaceholder} }"
             loading="{settings>/loadingContainer/loading}"
             skeletonType="{settings>/loadingContainer/skeletonType}"
             skeletonLines="{settings>/loadingContainer/skeletonLines}">
+
+            <ui5x:content>
+                <VBox>
+                    <Title text="Project overview" level="H3" />
+                    <Text text="Bind loading to the flag your application already has, and the container swaps the placeholder for this content." />
+                    <MessageStrip text="Content loaded successfully." type="Information" class="sapUiSmallMarginTop" />
+                </VBox>
+            </ui5x:content>
+        </ui5x:LoadingContainer>
+
+        <ui5x:LoadingContainer
+            visible="{settings>/loadingContainer/customPlaceholder}"
+            loading="{settings>/loadingContainer/loading}">
+
+            <ui5x:placeholder>
+                <VBox width="24rem">
+                    <HBox alignItems="Center">
+                        <ui5x:Skeleton
+                            type="Circle"
+                            width="3rem"
+                            class="sapUiSmallMarginEnd" />
+
+                        <ui5x:Skeleton type="Line" lines="2" width="100%">
+                            <ui5x:layoutData>
+                                <FlexItemData growFactor="1" baseSize="0" />
+                            </ui5x:layoutData>
+                        </ui5x:Skeleton>
+                    </HBox>
+
+                    <ui5x:Skeleton type="Rectangle" width="100%" class="sapUiSmallMarginTop" />
+                </VBox>
+            </ui5x:placeholder>
 
             <ui5x:content>
                 <VBox>

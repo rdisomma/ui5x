@@ -9,6 +9,10 @@
         class="sapUiSizeCompact">
 
         <List>
+            <InputListItem label="Show the three shapes together">
+                <Switch state="{settings>/skeleton/composite}" />
+            </InputListItem>
+
             <InputListItem label="Shape">
                 <Select selectedKey="{settings>/skeleton/type}" width="9rem">
                     <core:Item key="Line" text="A line" />
