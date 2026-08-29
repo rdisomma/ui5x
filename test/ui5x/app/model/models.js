@@ -1,5 +1,12 @@
-sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
+sap.ui.define([
+    "sap/ui/model/BindingMode",
+    "sap/ui/model/json/JSONModel"
+], function (BindingMode, JSONModel) {
     "use strict";
+
+    const MOCK_NAMESPACE = "ui5x/test/app/mock/";
+    const MOCK_MODEL_NAMES = ["accordion", "chatFeed", "customers"];
+    const SETTINGS_MODEL_NAME = "settings";
 
     return {
         /*
@@ -97,11 +104,25 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
             };
         },
 
-        createSettingsModel() {
-            const oModel = new JSONModel(this.defaults());
-            oModel.setDefaultBindingMode("TwoWay");
+        /*
+         * Every JSON model the application uses is created here rather than in
+         * the manifest, so there is one place to look for what is loaded and
+         * under which name.
+         */
+        setModels(oComponent) {
+            const oSettings = new JSONModel(this.defaults());
 
-            return oModel;
+            oSettings.setDefaultBindingMode(BindingMode.TwoWay);
+            oComponent.setModel(oSettings, SETTINGS_MODEL_NAME);
+
+            MOCK_MODEL_NAMES.forEach(function (sName) {
+                oComponent.setModel(
+                    new JSONModel(
+                        sap.ui.require.toUrl(MOCK_NAMESPACE + sName + ".json")
+                    ),
+                    sName
+                );
+            });
         }
     };
 });

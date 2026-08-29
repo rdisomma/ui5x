@@ -8,27 +8,32 @@ sap.ui.define([
 ], function (Controller, Fragment, UIComponent, JSONModel, MessageToast, models) {
     "use strict";
 
+    const APP_MODEL_NAME = "app";
+    const SETTINGS_MODEL_NAME = "settings";
+    const SETTINGS_FRAGMENT_NAMESPACE = "ui5x.test.app.view.settings.";
+    const CONTROL_PATH = "/control";
+
     return Controller.extend("ui5x.test.app.controller.App", {
 
         onInit: function () {
-            this.getView().setModel(new JSONModel({ control: "" }), "app");
-            this._popovers = {};
+            this.getView().setModel(new JSONModel({ control: "" }), APP_MODEL_NAME);
+            this._mPopovers = {};
 
             /*
              * The navigation follows the route rather than the click, so a
              * bookmarked control is selected in the list as well.
              */
-            UIComponent.getRouterFor(this).attachRouteMatched(function (event) {
-                this.getView().getModel("app").setProperty(
-                    "/control",
-                    event.getParameter("config").target
+            UIComponent.getRouterFor(this).attachRouteMatched(function (oEvent) {
+                this.getView().getModel(APP_MODEL_NAME).setProperty(
+                    CONTROL_PATH,
+                    oEvent.getParameter("config").target
                 );
             }, this);
         },
 
-        onNavigate: function (event) {
+        onNavigate: function (oEvent) {
             UIComponent.getRouterFor(this).navTo(
-                event.getParameter("item").getKey()
+                oEvent.getParameter("item").getKey()
             );
         },
 
@@ -36,29 +41,29 @@ sap.ui.define([
          * Each control keeps its settings in a fragment named after its route,
          * so the shell needs no table mapping one to the other.
          */
-        onOpenSettings: function (event) {
-            var name = this.getView().getModel("app").getProperty("/control");
+        onOpenSettings: function (oEvent) {
+            const sName = this.getView().getModel(APP_MODEL_NAME).getProperty(CONTROL_PATH);
+            const oButton = oEvent.getSource();
 
-            if (!this._popovers[name]) {
-                this._popovers[name] = Fragment.load({
-                    id: this.getView().createId(name),
-                    name: "ui5x.test.app.view.settings." + name,
+            if (!this._mPopovers[sName]) {
+                this._mPopovers[sName] = Fragment.load({
+                    id: this.getView().createId(sName),
+                    name: SETTINGS_FRAGMENT_NAMESPACE + sName,
                     controller: this
-                }).then(function (popover) {
-                    this.getView().addDependent(popover);
-                    return popover;
+                }).then(function (oPopover) {
+                    this.getView().addDependent(oPopover);
+
+                    return oPopover;
                 }.bind(this));
             }
 
-            var button = event.getSource();
-
-            this._popovers[name]
-                .then(function (popover) {
-                    popover.openBy(button);
+            this._mPopovers[sName]
+                .then(function (oPopover) {
+                    oPopover.openBy(oButton);
                 })
                 .catch(function () {
-                    delete this._popovers[name];
-                    MessageToast.show(name + " has no settings yet");
+                    delete this._mPopovers[sName];
+                    MessageToast.show(sName + " has no settings yet");
                 }.bind(this));
         },
 
@@ -67,12 +72,12 @@ sap.ui.define([
          * refresh from one change, so the reset needs no list of properties.
          */
         onResetSettings: function () {
-            var name = this.getView().getModel("app").getProperty("/control");
-            var section = name.charAt(0).toLowerCase() + name.slice(1);
+            const sName = this.getView().getModel(APP_MODEL_NAME).getProperty(CONTROL_PATH);
+            const sSection = sName.charAt(0).toLowerCase() + sName.slice(1);
 
-            this.getOwnerComponent().getModel("settings").setProperty(
-                "/" + section,
-                models.defaults()[section]
+            this.getOwnerComponent().getModel(SETTINGS_MODEL_NAME).setProperty(
+                "/" + sSection,
+                models.defaults()[sSection]
             );
         }
     });
