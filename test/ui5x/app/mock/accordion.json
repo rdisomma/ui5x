@@ -1,23 +1,20 @@
 {
-    "sections": [
-        {
-            "title": "General information",
-            "text": "Acme S.p.A. has been a customer since 2019 and is served by the Milan office.",
-            "expanded": true,
-            "status": "Active",
-            "state": "Success",
-            "owner": "Laura Bianchi",
-            "progress": 68
-        },
-        {
-            "title": "Appearance",
-            "text": "Uses the active UI5 theme and adapts to every supported variant.",
-            "expanded": false
-        },
-        {
-            "title": "Notifications",
-            "text": "Receive notifications when workspace activity requires attention.",
-            "expanded": false
-        }
-    ]
+  "sections": [
+    {
+      "title": "Any control fits in a section",
+      "text": "Sections take any UI5 control, not only text. This one holds a progress bar and an action.",
+      "expanded": true,
+      "progress": 68
+    },
+    {
+      "title": "Appearance",
+      "text": "Uses the active UI5 theme and adapts to every supported variant.",
+      "expanded": false
+    },
+    {
+      "title": "Notifications",
+      "text": "Receive notifications when workspace activity requires attention.",
+      "expanded": false
+    }
+  ]
 }

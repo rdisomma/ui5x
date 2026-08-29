@@ -13,11 +13,11 @@
                 <Switch state="{settings>/accordion/multipleExpansion}" />
             </InputListItem>
 
-            <InputListItem label="Sections can be opened">
+            <InputListItem label="Sections are enabled">
                 <Switch state="{settings>/accordion/itemsEnabled}" />
             </InputListItem>
 
-            <InputListItem label="Sections can be collapsed">
+            <InputListItem label="Sections can be opened and closed">
                 <Switch state="{settings>/accordion/itemsToggleable}" />
             </InputListItem>
 

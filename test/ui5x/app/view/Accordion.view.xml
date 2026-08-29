@@ -22,18 +22,10 @@
                         <Text text="{accordion>text}" />
 
                         <!-- only the section whose data carries these fields -->
-                        <VBox visible="{= !!${accordion>owner} }" class="sapUiSmallMarginTop">
-                            <ObjectStatus text="{accordion>status}" state="{accordion>state}" />
-
-                            <HBox alignItems="Center" class="sapUiTinyMarginTop">
-                                <Label text="Account owner" class="sapUiTinyMarginEnd" />
-                                <Text text="{accordion>owner}" />
-                            </HBox>
-
+                        <VBox visible="{= !!${accordion>progress} }" class="sapUiSmallMarginTop">
                             <ProgressIndicator
                                 percentValue="{accordion>progress}"
-                                displayValue="{accordion>progress}% of the yearly target"
-                                class="sapUiSmallMarginTop" />
+                                displayValue="{accordion>progress}% of the yearly target" />
 
                             <Button
                                 text="Open the customer"
