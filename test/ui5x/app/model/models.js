@@ -39,9 +39,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                 },
                 copyButton: {
                     value: "npm i @raffaeledisomma/ui5x",
-                    text: "Copy",
+                    text: "npm i @raffaeledisomma/ui5x",
                     type: "Default",
-                    successText: "Copied",
+                    successText: "",
                     successType: "Accept",
                     iconFirst: true
                 },
