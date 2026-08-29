@@ -25,7 +25,8 @@
         "sap.m": {},
         "sap.tnt": {},
         "sap.ui.table": {},
-        "ui5x": {}
+        "ui5x": {},
+        "sap.ui.layout": {}
       }
     },
     "rootView": {
@@ -124,6 +125,12 @@
           "id": "ChatFeed",
           "name": "ChatFeed"
         }
+      }
+    },
+    "models": {
+      "chatFeed": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "mock/chatFeed.json"
       }
     }
   }

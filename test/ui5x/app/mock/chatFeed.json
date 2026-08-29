@@ -1,0 +1,31 @@
+{
+  "messages": [
+    {
+      "id": "1",
+      "sender": "Anna",
+      "ownMessage": false,
+      "editable": false,
+      "deletable": false,
+      "text": "Hi! Could you check the latest order status?",
+      "timestamp": "2026-08-26T16:42:00"
+    },
+    {
+      "id": "2",
+      "sender": "You",
+      "ownMessage": true,
+      "editable": true,
+      "deletable": true,
+      "text": "Of course. I'm checking it now.",
+      "timestamp": "2026-08-26T16:45:00"
+    },
+    {
+      "id": "3",
+      "sender": "Anna",
+      "ownMessage": false,
+      "editable": false,
+      "deletable": false,
+      "text": "It was shipped this morning.",
+      "timestamp": "2026-08-27T09:10:00"
+    }
+  ]
+}

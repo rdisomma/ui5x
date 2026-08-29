@@ -1,32 +1,10 @@
-sap.ui.define([
-    "sap/ui/core/mvc/Controller",
-    "sap/ui/model/json/JSONModel"
-], function (Controller, JSONModel) {
+sap.ui.define(["sap/ui/core/mvc/Controller"], function (Controller) {
     "use strict";
 
     /*
-     * Every demo drives its control through two-way binding against a settings
-     * model, so the toolbar in the view needs no wiring in the controller and
-     * the XML shows the control configured the way an application would.
+     * Every demo drives its control through two-way binding against the shared
+     * settings model, so a controller only answers the events of its control
+     * and never reads or writes a property itself.
      */
-    return Controller.extend("ui5x.test.app.controller.Base", {
-
-        settings: {},
-
-        data: null,
-
-        onInit: function () {
-            this.getView().setModel(
-                new JSONModel(Object.assign({}, this.settings)),
-                "settings"
-            );
-
-            if (this.data) {
-                this.getView().setModel(
-                    new JSONModel(JSON.parse(JSON.stringify(this.data))),
-                    "data"
-                );
-            }
-        }
-    });
+    return Controller.extend("ui5x.test.app.controller.Base", {});
 });
