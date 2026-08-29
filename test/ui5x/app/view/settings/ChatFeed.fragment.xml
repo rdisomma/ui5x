@@ -5,86 +5,94 @@
 
     <Popover
         title="ChatFeed settings"
-        contentWidth="26rem"
+        contentWidth="30rem"
         placement="Bottom"
         class="sapUiContentPadding">
 
         <form:SimpleForm
             layout="ResponsiveGridLayout"
             editable="true"
-            labelSpanL="12" labelSpanM="12" labelSpanS="12"
             adjustLabelSpan="false"
-            columnsL="1" columnsM="1">
+            columnsL="1" columnsM="1"
+            labelSpanL="9" labelSpanM="9" labelSpanS="9">
 
             <Label text="Loading" />
-            <Switch state="{settings>/chatFeed/loading}" />
+                        <Switch state="{settings>/chatFeed/loading}" />
 
             <Label text="Enabled" />
-            <Switch state="{settings>/chatFeed/enabled}" />
+                        <Switch state="{settings>/chatFeed/enabled}" />
 
             <Label text="Editable" />
-            <Switch state="{settings>/chatFeed/editable}" />
+                        <Switch state="{settings>/chatFeed/editable}" />
 
             <Label text="Send with the Enter key" />
-            <Switch state="{settings>/chatFeed/sendOnEnter}" />
+                        <Switch state="{settings>/chatFeed/sendOnEnter}" />
 
             <Label text="Show the send button" />
-            <Switch state="{settings>/chatFeed/showSendButton}" />
+                        <Switch state="{settings>/chatFeed/showSendButton}" />
 
             <Label text="Send button enabled" />
-            <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
+                        <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
 
             <Label text="Group messages by date" />
-            <Switch state="{settings>/chatFeed/groupByDate}" />
+                        <Switch state="{settings>/chatFeed/groupByDate}" />
 
             <Label text="Highlight your own messages" />
-            <Switch state="{settings>/chatFeed/highlightOwnMessage}" />
+                        <Switch state="{settings>/chatFeed/highlightOwnMessage}" />
+        </form:SimpleForm>
+
+        <form:SimpleForm
+            layout="ResponsiveGridLayout"
+            editable="true"
+            adjustLabelSpan="false"
+            columnsL="1" columnsM="1"
+            labelSpanL="6" labelSpanM="6" labelSpanS="6">
 
             <Label text="Composer placeholder" />
-            <Input value="{settings>/chatFeed/placeholder}" />
+                        <Input value="{settings>/chatFeed/placeholder}" />
 
             <Label text="Send button text" />
-            <Input value="{settings>/chatFeed/sendButtonText}" />
+                        <Input value="{settings>/chatFeed/sendButtonText}" />
 
             <Label text="Send button tooltip" />
-            <Input value="{settings>/chatFeed/sendButtonTooltip}" />
+                        <Input value="{settings>/chatFeed/sendButtonTooltip}" />
 
             <Label text="Maximum chat height" />
-            <Input value="{settings>/chatFeed/chatMaxHeight}" />
+                        <Input value="{settings>/chatFeed/chatMaxHeight}" />
 
             <Label text="Width" />
-            <Input value="{settings>/chatFeed/width}" />
+                        <Input value="{settings>/chatFeed/width}" />
 
             <Label text="Timestamp" />
-            <Select selectedKey="{settings>/chatFeed/messageTimestampFormat}">
-                <core:Item key="None" text="Hidden" />
-                <core:Item key="Time" text="Time only" />
-                <core:Item key="DateTime" text="Date and time" />
-            </Select>
+                        <Select selectedKey="{settings>/chatFeed/messageTimestampFormat}">
+                            <core:Item key="None" text="Hidden" />
+                            <core:Item key="Time" text="Time only" />
+                            <core:Item key="DateTime" text="Date and time" />
+                        </Select>
 
             <Label text="Your messages look like" />
-            <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}">
-                <core:Item key="Bubble" text="A bubble" />
-                <core:Item key="Conversation" text="A plain thread" />
-            </Select>
+                        <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}">
+                            <core:Item key="Bubble" text="A bubble" />
+                            <core:Item key="Conversation" text="A plain thread" />
+                        </Select>
 
             <Label text="Incoming messages look like" />
-            <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}">
-                <core:Item key="Bubble" text="A bubble" />
-                <core:Item key="Conversation" text="A plain thread" />
-            </Select>
+                        <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}">
+                            <core:Item key="Bubble" text="A bubble" />
+                            <core:Item key="Conversation" text="A plain thread" />
+                        </Select>
 
             <Label text="Composer position" />
-            <Select selectedKey="{settings>/chatFeed/composerPosition}">
-                <core:Item key="Top" text="The top" />
-                <core:Item key="Bottom" text="The bottom" />
-            </Select>
+                        <Select selectedKey="{settings>/chatFeed/composerPosition}">
+                            <core:Item key="Top" text="The top" />
+                            <core:Item key="Bottom" text="The bottom" />
+                        </Select>
 
             <Label text="Messages start from" />
-            <Select selectedKey="{settings>/chatFeed/messageAlignment}">
-                <core:Item key="Top" text="The top" />
-                <core:Item key="Bottom" text="The bottom" />
-            </Select>
+                        <Select selectedKey="{settings>/chatFeed/messageAlignment}">
+                            <core:Item key="Top" text="The top" />
+                            <core:Item key="Bottom" text="The bottom" />
+                        </Select>
         </form:SimpleForm>
 
     </Popover>
