@@ -4,10 +4,6 @@ sap.ui.define([
 ], function (BindingMode, JSONModel) {
     "use strict";
 
-    const MOCK_NAMESPACE = "ui5x/test/app/mock/";
-    const MOCK_MODEL_NAMES = ["accordion", "chatFeed", "customers"];
-    const SETTINGS_MODEL_NAME = "settings";
-
     return {
         /*
          * Kept apart from the model so the settings popover can put a section
@@ -113,12 +109,15 @@ sap.ui.define([
             const oSettings = new JSONModel(this.defaults());
 
             oSettings.setDefaultBindingMode(BindingMode.TwoWay);
-            oComponent.setModel(oSettings, SETTINGS_MODEL_NAME);
+            oComponent.setModel(oSettings, "settings");
 
-            MOCK_MODEL_NAMES.forEach(function (sName) {
+            // the route the shell is showing, so the navigation follows it
+            oComponent.setModel(new JSONModel({ control: "" }), "app");
+
+            ["accordion", "chatFeed", "customers"].forEach(function (sName) {
                 oComponent.setModel(
                     new JSONModel(
-                        sap.ui.require.toUrl(MOCK_NAMESPACE + sName + ".json")
+                        sap.ui.require.toUrl("ui5x/test/app/mock/" + sName + ".json")
                     ),
                     sName
                 );

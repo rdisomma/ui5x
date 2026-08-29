@@ -1,15 +1,11 @@
 sap.ui.define(["./Base.controller"], function (Base) {
     "use strict";
 
-    const CHAT_MODEL_NAME = "chatFeed";
-    const MESSAGES_PATH = "/messages";
-    const TEXT_PATH = "/text";
-
     return Base.extend("ui5x.test.app.controller.ChatFeed", {
 
         onSend: function (oEvent) {
-            const oModel = this.getView().getModel(CHAT_MODEL_NAME);
-            const aMessages = oModel.getProperty(MESSAGES_PATH);
+            const oModel = this.getView().getModel("chatFeed");
+            const aMessages = oModel.getProperty("/messages");
 
             /*
              * The sender and the two action flags are settings rather than
@@ -27,18 +23,18 @@ sap.ui.define(["./Base.controller"], function (Base) {
         },
 
         onMessageEdit: function (oEvent) {
-            const oContext = oEvent.getParameter("message").getBindingContext(CHAT_MODEL_NAME);
+            const oContext = oEvent.getParameter("message").getBindingContext("chatFeed");
 
-            this.getView().getModel(CHAT_MODEL_NAME).setProperty(
-                oContext.getPath() + TEXT_PATH,
+            this.getView().getModel("chatFeed").setProperty(
+                oContext.getPath() + "/text",
                 oEvent.getParameter("value")
             );
         },
 
         onMessageDelete: function (oEvent) {
-            const oContext = oEvent.getParameter("message").getBindingContext(CHAT_MODEL_NAME);
-            const oModel = this.getView().getModel(CHAT_MODEL_NAME);
-            const aMessages = oModel.getProperty(MESSAGES_PATH);
+            const oContext = oEvent.getParameter("message").getBindingContext("chatFeed");
+            const oModel = this.getView().getModel("chatFeed");
+            const aMessages = oModel.getProperty("/messages");
             const iIndex = Number(oContext.getPath().split("/").pop());
 
             aMessages.splice(iIndex, 1);
