@@ -12,8 +12,8 @@
       "expanded": false
     },
     {
-      "title": "Notifications",
-      "text": "Receive notifications when workspace activity requires attention.",
+      "title": "Accessibility",
+      "text": "Each header is a button that reports whether its section is expanded, and the section is a region named by that header.",
       "expanded": false
     }
   ]
