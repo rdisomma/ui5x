@@ -1,76 +1,146 @@
 <mvc:View
     controllerName="ui5x.test.app.controller.ChatFeed"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
     xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
     xmlns:ui5x="ui5x.chat"
     height="100%">
 
     <Page showHeader="false" class="sapUiContentPadding">
+        <HBox width="100%" wrap="Wrap" alignItems="Start">
 
-        <content>
-            <ui5x:ChatFeed
-                value="{settings>/value}"
-                placeholder="Write a message"
-                chatMaxHeight="26rem"
-                loading="{settings>/loading}"
-                composerPosition="{settings>/composerPosition}"
-                messageAlignment="{settings>/messageAlignment}"
-                ownMessageAppearance="{settings>/ownMessageAppearance}"
-                incomingMessageAppearance="{settings>/incomingMessageAppearance}"
-                messageTimestampFormat="{settings>/messageTimestampFormat}"
-                groupByDate="{settings>/groupByDate}"
-                highlightOwnMessage="{settings>/highlightOwnMessage}"
-                send=".onSend"
-                messageEdit=".onMessageEdit"
-                messageDelete=".onMessageDelete"
-                messages="{data>/messages}">
+            <VBox class="sapUiSmallMarginEnd">
+                <layoutData>
+                    <FlexItemData growFactor="1" baseSize="0" minWidth="22rem" />
+                </layoutData>
 
-                <ui5x:messages>
-                    <ui5x:ChatMessage
-                        key="{data>id}"
-                        text="{data>text}"
-                        sender="{data>sender}"
-                        ownMessage="{data>ownMessage}"
-                        editable="{data>editable}"
-                        deletable="{data>deletable}"
-                        timestamp="{data>timestamp}" />
-                </ui5x:messages>
-            </ui5x:ChatFeed>
-        </content>
+                <ui5x:ChatFeed
+                    value="{settings>/chatFeed/value}"
+                    placeholder="{settings>/chatFeed/placeholder}"
+                    enabled="{settings>/chatFeed/enabled}"
+                    editable="{settings>/chatFeed/editable}"
+                    loading="{settings>/chatFeed/loading}"
+                    sendOnEnter="{settings>/chatFeed/sendOnEnter}"
+                    sendButtonText="{settings>/chatFeed/sendButtonText}"
+                    sendButtonTooltip="{settings>/chatFeed/sendButtonTooltip}"
+                    showSendButton="{settings>/chatFeed/showSendButton}"
+                    sendButtonEnabled="{settings>/chatFeed/sendButtonEnabled}"
+                    messageTimestampFormat="{settings>/chatFeed/messageTimestampFormat}"
+                    groupByDate="{settings>/chatFeed/groupByDate}"
+                    highlightOwnMessage="{settings>/chatFeed/highlightOwnMessage}"
+                    ownMessageAppearance="{settings>/chatFeed/ownMessageAppearance}"
+                    incomingMessageAppearance="{settings>/chatFeed/incomingMessageAppearance}"
+                    composerPosition="{settings>/chatFeed/composerPosition}"
+                    messageAlignment="{settings>/chatFeed/messageAlignment}"
+                    chatMaxHeight="{settings>/chatFeed/chatMaxHeight}"
+                    width="{settings>/chatFeed/width}"
+                    send=".onSend"
+                    messageEdit=".onMessageEdit"
+                    messageDelete=".onMessageDelete"
+                    messages="{chatFeed>/messages}">
 
-        <footer>
-            <OverflowToolbar>
-                <ToggleButton text="Loading" pressed="{settings>/loading}" />
-                <ToggleButton text="Group by date" pressed="{settings>/groupByDate}" />
-                <ToggleButton text="Highlight own" pressed="{settings>/highlightOwnMessage}" />
+                    <ui5x:messages>
+                        <ui5x:ChatMessage
+                            key="{chatFeed>id}"
+                            text="{chatFeed>text}"
+                            sender="{chatFeed>sender}"
+                            ownMessage="{chatFeed>ownMessage}"
+                            editable="{chatFeed>editable}"
+                            deletable="{chatFeed>deletable}"
+                            timestamp="{chatFeed>timestamp}" />
+                    </ui5x:messages>
+                </ui5x:ChatFeed>
+            </VBox>
 
-                <ToolbarSeparator />
+            <Panel
+                headerText="Settings"
+                expandable="true"
+                expanded="true"
+                width="22rem">
 
-                <Label text="Composer" />
-                <SegmentedButton selectedKey="{settings>/composerPosition}">
-                    <items>
-                        <SegmentedButtonItem key="Top" text="Top" />
-                        <SegmentedButtonItem key="Bottom" text="Bottom" />
-                    </items>
-                </SegmentedButton>
+                <layoutData>
+                    <FlexItemData growFactor="0" baseSize="22rem" />
+                </layoutData>
 
-                <Label text="Own messages" />
-                <SegmentedButton selectedKey="{settings>/ownMessageAppearance}">
-                    <items>
-                        <SegmentedButtonItem key="Bubble" text="Bubble" />
-                        <SegmentedButtonItem key="Conversation" text="Conversation" />
-                    </items>
-                </SegmentedButton>
+                <form:SimpleForm
+                    layout="ResponsiveGridLayout"
+                    editable="true"
+                    labelSpanL="12" labelSpanM="12" labelSpanS="12"
+                    adjustLabelSpan="false"
+                    columnsL="1" columnsM="1">
 
-                <Label text="Timestamp" />
-                <SegmentedButton selectedKey="{settings>/messageTimestampFormat}">
-                    <items>
-                        <SegmentedButtonItem key="None" text="None" />
-                        <SegmentedButtonItem key="Time" text="Time" />
-                        <SegmentedButtonItem key="DateTime" text="DateTime" />
-                    </items>
-                </SegmentedButton>
-            </OverflowToolbar>
-        </footer>
+                    <Label text="loading" />
+                    <Switch state="{settings>/chatFeed/loading}" />
+
+                    <Label text="enabled" />
+                    <Switch state="{settings>/chatFeed/enabled}" />
+
+                    <Label text="editable" />
+                    <Switch state="{settings>/chatFeed/editable}" />
+
+                    <Label text="sendOnEnter" />
+                    <Switch state="{settings>/chatFeed/sendOnEnter}" />
+
+                    <Label text="showSendButton" />
+                    <Switch state="{settings>/chatFeed/showSendButton}" />
+
+                    <Label text="sendButtonEnabled" />
+                    <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
+
+                    <Label text="groupByDate" />
+                    <Switch state="{settings>/chatFeed/groupByDate}" />
+
+                    <Label text="highlightOwnMessage" />
+                    <Switch state="{settings>/chatFeed/highlightOwnMessage}" />
+
+                    <Label text="placeholder" />
+                    <Input value="{settings>/chatFeed/placeholder}" />
+
+                    <Label text="sendButtonText" />
+                    <Input value="{settings>/chatFeed/sendButtonText}" />
+
+                    <Label text="sendButtonTooltip" />
+                    <Input value="{settings>/chatFeed/sendButtonTooltip}" />
+
+                    <Label text="chatMaxHeight" />
+                    <Input value="{settings>/chatFeed/chatMaxHeight}" />
+
+                    <Label text="width" />
+                    <Input value="{settings>/chatFeed/width}" />
+
+                    <Label text="messageTimestampFormat" />
+                    <Select selectedKey="{settings>/chatFeed/messageTimestampFormat}">
+                        <core:Item key="None" text="None" />
+                        <core:Item key="Time" text="Time" />
+                        <core:Item key="DateTime" text="DateTime" />
+                    </Select>
+
+                    <Label text="ownMessageAppearance" />
+                    <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}">
+                        <core:Item key="Bubble" text="Bubble" />
+                        <core:Item key="Conversation" text="Conversation" />
+                    </Select>
+
+                    <Label text="incomingMessageAppearance" />
+                    <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}">
+                        <core:Item key="Bubble" text="Bubble" />
+                        <core:Item key="Conversation" text="Conversation" />
+                    </Select>
+
+                    <Label text="composerPosition" />
+                    <Select selectedKey="{settings>/chatFeed/composerPosition}">
+                        <core:Item key="Top" text="Top" />
+                        <core:Item key="Bottom" text="Bottom" />
+                    </Select>
+
+                    <Label text="messageAlignment" />
+                    <Select selectedKey="{settings>/chatFeed/messageAlignment}">
+                        <core:Item key="Top" text="Top" />
+                        <core:Item key="Bottom" text="Bottom" />
+                    </Select>
+                </form:SimpleForm>
+            </Panel>
+        </HBox>
     </Page>
 </mvc:View>
