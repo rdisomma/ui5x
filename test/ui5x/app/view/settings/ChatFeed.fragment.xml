@@ -39,6 +39,14 @@
                         <InputListItem label="Send button enabled">
                             <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
                         </InputListItem>
+
+                        <InputListItem label="Edit button on messages">
+                            <Switch state="{settings>/chatFeed/messagesEditable}" />
+                        </InputListItem>
+
+                        <InputListItem label="Delete button on messages">
+                            <Switch state="{settings>/chatFeed/messagesDeletable}" />
+                        </InputListItem>
                     </List>
                 </IconTabFilter>
 

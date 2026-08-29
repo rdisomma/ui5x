@@ -9,7 +9,6 @@
         <HBox alignItems="Center">
             <ui5x:CopyButton
                 text="{settings>/copyButton/text}"
-                width="9rem"
                 value="{settings>/copyButton/value}"
                 type="{settings>/copyButton/type}"
                 successType="{settings>/copyButton/successType}"

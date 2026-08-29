@@ -37,8 +37,8 @@
                     text="{chatFeed>text}"
                     sender="{chatFeed>sender}"
                     ownMessage="{chatFeed>ownMessage}"
-                    editable="{chatFeed>editable}"
-                    deletable="{chatFeed>deletable}"
+                    editable="{settings>/chatFeed/messagesEditable}"
+                    deletable="{settings>/chatFeed/messagesDeletable}"
                     timestamp="{chatFeed>timestamp}" />
             </ui5x:messages>
         </ui5x:ChatFeed>

@@ -32,7 +32,9 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                     composerPosition: "Bottom",
                     messageAlignment: "Bottom",
                     chatMaxHeight: "100%",
-                    width: "100%"
+                    width: "100%",
+                    messagesEditable: true,
+                    messagesDeletable: true
                 },
                 copyButton: {
                     value: "npm i @raffaeledisomma/ui5x",
