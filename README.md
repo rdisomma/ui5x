@@ -112,8 +112,8 @@ Whatever `npm audit` reports afterwards comes from the application's own depende
 from here. The UI5 libraries it needs at runtime are listed under
 [UI5 library dependencies](#ui5-library-dependencies).
 
-Then add the UI5 libraries UI5X needs to the application's `ui5.yaml`, so the UI5 tooling
-resolves them:
+For local development, add the UI5 libraries UI5X needs to the application's `ui5.yaml`. The
+UI5 tooling serves `/resources/` itself and provisions only what this section lists:
 
 ```yaml
 framework:
@@ -124,8 +124,13 @@ framework:
 ```
 
 An application that already lists `sap.ui.core` and `sap.m` only needs `sap.ui.table`, which
-`LoadingTable` requires and which UI5X declares for every consumer. Without it the application
-starts and then fails on `/resources/sap/ui/table/library.js`, and no UI5X control renders.
+`LoadingTable` requires and which UI5X declares for every consumer. Without it `ui5 serve` starts
+and then fails on `/resources/sap/ui/table/library.js`, and no UI5X control renders.
+
+This is a development-time step. Once deployed, `/resources/` is served by the SAPUI5 runtime on
+a CDN or by the SAP Build Work Zone shell, which carry every standard library, and the
+declaration is not needed. It is needed again for a self-contained build, which bundles only the
+libraries the application declares.
 
 Then declare UI5X in the application's `manifest.json`:
 
