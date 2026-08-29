@@ -4,8 +4,8 @@
 
 Advanced controls for OpenUI5 and SAPUI5.
 
-**[Open the live demo](https://rdisomma.github.io/ui5x/)** — every control on its own page, with
-every property it exposes reachable while you watch it change.
+**[Open the live demo](https://rdisomma.github.io/ui5x/)** to see every control and have fun
+customising how each one behaves.
 
 UI5X adds higher-level controls to OpenUI5 and SAPUI5. The standard libraries stop at the
 building blocks, so anything composed from them gets rebuilt in every project. UI5X ships those
