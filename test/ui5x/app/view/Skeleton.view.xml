@@ -25,7 +25,7 @@
 
                 <ui5x:Skeleton
                     type="Line"
-                    lines="2"
+                    lines="{settings>/skeleton/lines}"
                     width="100%"
                     animated="{settings>/skeleton/animated}">
 
@@ -43,7 +43,7 @@
 
             <ui5x:Skeleton
                 type="Line"
-                lines="3"
+                lines="{settings>/skeleton/lines}"
                 width="100%"
                 animated="{settings>/skeleton/animated}"
                 class="sapUiSmallMarginTop" />

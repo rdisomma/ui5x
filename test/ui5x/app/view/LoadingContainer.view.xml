@@ -39,7 +39,7 @@
                             width="3rem"
                             class="sapUiSmallMarginEnd" />
 
-                        <ui5x:Skeleton type="Line" lines="2" width="100%">
+                        <ui5x:Skeleton type="Line" lines="{settings>/loadingContainer/skeletonLines}" width="100%">
                             <ui5x:layoutData>
                                 <FlexItemData growFactor="1" baseSize="0" />
                             </ui5x:layoutData>
