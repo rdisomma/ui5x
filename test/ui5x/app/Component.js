@@ -13,11 +13,6 @@ sap.ui.define([
         init: function () {
             UIComponent.prototype.init.apply(this, arguments);
 
-            /*
-             * The settings popover lives in the shell while the controls live
-             * in the routed views, so the models have to be owned by the
-             * component for both sides to read the same instance.
-             */
             const mModels = models.createModels();
 
             Object.keys(mModels).forEach(function (sName) {

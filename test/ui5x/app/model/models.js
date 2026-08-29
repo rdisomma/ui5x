@@ -5,11 +5,7 @@ sap.ui.define([
     "use strict";
 
     return {
-        /*
-         * Kept apart from the model so the settings popover can put a section
-         * back the way it started without rebuilding the whole model.
-         */
-        defaults() {
+        getDefaultSettings() {
             return {
                 accordion: {
                     multipleExpansion: false,
@@ -100,20 +96,14 @@ sap.ui.define([
             };
         },
 
-        /*
-         * Every JSON model the application uses is built here, so there is one
-         * place to look for what is loaded and under which name. Registering
-         * them is the component's job.
-         */
         createModels() {
-            const oSettings = new JSONModel(this.defaults());
+            const oSettings = new JSONModel(this.getDefaultSettings());
 
             oSettings.setDefaultBindingMode(BindingMode.TwoWay);
 
             const mModels = {
                 settings: oSettings,
 
-                // the route the shell is showing, so the navigation follows it
                 app: new JSONModel({ control: "" })
             };
 

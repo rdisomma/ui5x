@@ -12,10 +12,6 @@ sap.ui.define([
         onInit: function () {
             this._mPopovers = {};
 
-            /*
-             * The navigation follows the route rather than the click, so a
-             * bookmarked control is selected in the list as well.
-             */
             UIComponent.getRouterFor(this).attachRouteMatched(function (oEvent) {
                 this.getView().getModel("app").setProperty(
                     "/control",
@@ -30,10 +26,6 @@ sap.ui.define([
             );
         },
 
-        /*
-         * Each control keeps its settings in a fragment named after its route,
-         * so the shell needs no table mapping one to the other.
-         */
         onOpenSettings: function (oEvent) {
             const sName = this.getView().getModel("app").getProperty("/control");
             const oButton = oEvent.getSource();
@@ -60,17 +52,13 @@ sap.ui.define([
                 }.bind(this));
         },
 
-        /*
-         * Writing the whole section back at once lets every bound control
-         * refresh from one change, so the reset needs no list of properties.
-         */
         onResetSettings: function () {
             const sName = this.getView().getModel("app").getProperty("/control");
             const sSection = sName.charAt(0).toLowerCase() + sName.slice(1);
 
             this.getOwnerComponent().getModel("settings").setProperty(
                 "/" + sSection,
-                models.defaults()[sSection]
+                models.getDefaultSettings()[sSection]
             );
         }
     });

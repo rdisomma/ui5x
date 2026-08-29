@@ -7,11 +7,6 @@ sap.ui.define(["./Base.controller"], function (Base) {
             const oModel = this.getView().getModel("chatFeed");
             const aMessages = oModel.getProperty("/messages");
 
-            /*
-             * The sender and the two action flags are settings rather than
-             * data, so the view reads them from there and a message carries
-             * only what is its own.
-             */
             aMessages.push({
                 id: String(aMessages.length + 1),
                 ownMessage: true,
