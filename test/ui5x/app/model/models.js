@@ -50,7 +50,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                 },
                 loadingContainer: {
                     loading: true,
-                    customPlaceholder: false,
+                    customPlaceholder: true,
                     skeletonType: "Line",
                     skeletonLines: 3
                 },
@@ -86,7 +86,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                     required: false
                 },
                 skeleton: {
-                    composite: false,
+                    composite: true,
                     type: "Line",
                     lines: 3,
                     width: "24rem",

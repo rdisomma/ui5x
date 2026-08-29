@@ -13,12 +13,15 @@
                 <Switch state="{settings>/loadingContainer/loading}" />
             </InputListItem>
 
-            <InputListItem label="Use a placeholder of your own">
+            <InputListItem label="Custom placeholder">
                 <Switch state="{settings>/loadingContainer/customPlaceholder}" />
             </InputListItem>
 
             <InputListItem label="Placeholder shape">
-                <Select selectedKey="{settings>/loadingContainer/skeletonType}" width="9rem">
+                <Select
+                    selectedKey="{settings>/loadingContainer/skeletonType}"
+                    enabled="{= !${settings>/loadingContainer/customPlaceholder} }"
+                    width="9rem">
                     <core:Item key="Line" text="A line" />
                     <core:Item key="Rectangle" text="A rectangle" />
                     <core:Item key="Circle" text="A circle" />
