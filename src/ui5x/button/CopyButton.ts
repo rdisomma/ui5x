@@ -78,11 +78,7 @@ export default class CopyButton extends Button {
 
     static renderer = "sap.m.ButtonRenderer";
 
-    private originalIcon!: string;
-    private originalText!: string;
-    private originalType!: ButtonType;
-    private iconFeedbackActive!: boolean;
-
+    private feedbackActive!: boolean;
     private feedbackTimer!: number | null;
     private iconAnimationFrame!: number | null;
     private iconAnimationTimer!: number | null;
@@ -93,10 +89,7 @@ export default class CopyButton extends Button {
         this.feedbackTimer = null;
         this.iconAnimationFrame = null;
         this.iconAnimationTimer = null;
-        this.originalIcon = "";
-        this.originalText = "";
-        this.originalType = this.getType();
-        this.iconFeedbackActive = false;
+        this.feedbackActive = false;
 
         this.setIcon("sap-icon://copy");
 
@@ -121,7 +114,7 @@ export default class CopyButton extends Button {
         this.feedbackTimer = null;
         this.iconAnimationFrame = null;
         this.iconAnimationTimer = null;
-        this.iconFeedbackActive = false;
+        this.feedbackActive = false;
 
         super.exit();
     }
@@ -165,31 +158,49 @@ export default class CopyButton extends Button {
         }
     }
 
-    private showSuccessFeedback(): void {
-        const buttonText = this.getText();
+    /*
+     * The feedback is read through the getters rather than written to the
+     * properties: text, type and icon can all be bound, and a two-way binding
+     * would push two seconds of decoration into the application's data.
+     */
+    getText(): string {
+        const text = this.getProperty("text") as string;
         const successText = this.getSuccessText();
-        const successIcon = this.getSuccessIcon();
-        const successType = this.getSuccessType();
 
-        if (this.feedbackTimer === null) {
-            this.originalIcon = this.getIcon();
-            this.originalText = buttonText;
-            this.originalType = this.getType();
-            this.iconFeedbackActive = false;
-        } else {
+        return this.feedbackActive && text && successText
+            ? successText
+            : text;
+    }
+
+    getIcon(): string {
+        const successIcon = this.getSuccessIcon();
+
+        return this.feedbackActive && successIcon
+            ? successIcon
+            : this.getProperty("icon") as string;
+    }
+
+    getType(): ButtonType {
+        /*
+         * getSuccessType() falls back to getType() when successType was never
+         * set, so the fallback has to be resolved here rather than delegated.
+         */
+        return this.feedbackActive && !this.isPropertyInitial("successType")
+            ? this.getProperty("successType") as ButtonType
+            : this.getProperty("type") as ButtonType;
+    }
+
+    private showSuccessFeedback(): void {
+        if (this.feedbackTimer !== null) {
             window.clearTimeout(this.feedbackTimer);
         }
 
-        if (successIcon) {
-            this.iconFeedbackActive = true;
-            this.setIconWithAnimation(successIcon);
-        }
+        this.feedbackActive = true;
+        this.invalidate();
 
-        if (buttonText && successText) {
-            this.setText(successText);
+        if (this.getSuccessIcon()) {
+            this.playIconAnimation();
         }
-
-        this.setType(successType);
 
         this.feedbackTimer = window.setTimeout(() => {
             this.restoreFeedback();
@@ -197,18 +208,16 @@ export default class CopyButton extends Button {
     }
 
     private restoreFeedback(): void {
-        if (this.iconFeedbackActive) {
-            this.setIconWithAnimation(this.originalIcon);
-            this.iconFeedbackActive = false;
-        }
-
-        this.setText(this.originalText);
-        this.setType(this.originalType);
-
+        this.feedbackActive = false;
         this.feedbackTimer = null;
+        this.invalidate();
+
+        if (this.getSuccessIcon()) {
+            this.playIconAnimation();
+        }
     }
 
-    private setIconWithAnimation(icon: string): void {
+    private playIconAnimation(): void {
         if (this.iconAnimationFrame !== null) {
             window.cancelAnimationFrame(this.iconAnimationFrame);
         }
@@ -218,7 +227,6 @@ export default class CopyButton extends Button {
         }
 
         this.removeStyleClass("ui5xCopyButtonIconChange");
-        this.setIcon(icon);
 
         this.iconAnimationFrame = window.requestAnimationFrame(() => {
             this.addStyleClass("ui5xCopyButtonIconChange");
