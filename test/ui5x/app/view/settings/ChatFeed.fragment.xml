@@ -3,11 +3,11 @@
     xmlns="sap.m"
     xmlns:form="sap.ui.layout.form">
 
-    <Dialog
+    <Popover
         title="ChatFeed settings"
         contentWidth="26rem"
-        draggable="true"
-        resizable="true">
+        placement="Bottom"
+        class="sapUiContentPadding">
 
         <form:SimpleForm
             layout="ResponsiveGridLayout"
@@ -87,8 +87,5 @@
             </Select>
         </form:SimpleForm>
 
-        <endButton>
-            <Button text="Close" press=".onCloseSettings" />
-        </endButton>
-    </Dialog>
+    </Popover>
 </core:FragmentDefinition>

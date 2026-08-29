@@ -11,7 +11,7 @@ sap.ui.define([
 
         onInit: function () {
             this.getView().setModel(new JSONModel({ control: "" }), "app");
-            this._dialogs = {};
+            this._popovers = {};
 
             /*
              * The navigation follows the route rather than the click, so a
@@ -35,32 +35,30 @@ sap.ui.define([
          * Each control keeps its settings in a fragment named after its route,
          * so the shell needs no table mapping one to the other.
          */
-        onOpenSettings: function () {
+        onOpenSettings: function (event) {
             var name = this.getView().getModel("app").getProperty("/control");
 
-            if (!this._dialogs[name]) {
-                this._dialogs[name] = Fragment.load({
+            if (!this._popovers[name]) {
+                this._popovers[name] = Fragment.load({
                     id: this.getView().createId(name),
                     name: "ui5x.test.app.view.settings." + name,
                     controller: this
-                }).then(function (dialog) {
-                    this.getView().addDependent(dialog);
-                    return dialog;
+                }).then(function (popover) {
+                    this.getView().addDependent(popover);
+                    return popover;
                 }.bind(this));
             }
 
-            this._dialogs[name]
-                .then(function (dialog) {
-                    dialog.open();
+            var button = event.getSource();
+
+            this._popovers[name]
+                .then(function (popover) {
+                    popover.openBy(button);
                 })
                 .catch(function () {
-                    delete this._dialogs[name];
+                    delete this._popovers[name];
                     MessageToast.show(name + " has no settings yet");
                 }.bind(this));
-        },
-
-        onCloseSettings: function (event) {
-            event.getSource().getParent().close();
         }
     });
 });
