@@ -101,27 +101,29 @@ sap.ui.define([
         },
 
         /*
-         * Every JSON model the application uses is created here rather than in
-         * the manifest, so there is one place to look for what is loaded and
-         * under which name.
+         * Every JSON model the application uses is built here, so there is one
+         * place to look for what is loaded and under which name. Registering
+         * them is the component's job.
          */
-        setModels(oComponent) {
+        createModels() {
             const oSettings = new JSONModel(this.defaults());
 
             oSettings.setDefaultBindingMode(BindingMode.TwoWay);
-            oComponent.setModel(oSettings, "settings");
 
-            // the route the shell is showing, so the navigation follows it
-            oComponent.setModel(new JSONModel({ control: "" }), "app");
+            const mModels = {
+                settings: oSettings,
+
+                // the route the shell is showing, so the navigation follows it
+                app: new JSONModel({ control: "" })
+            };
 
             ["accordion", "chatFeed", "customers"].forEach(function (sName) {
-                oComponent.setModel(
-                    new JSONModel(
-                        sap.ui.require.toUrl("ui5x/test/app/mock/" + sName + ".json")
-                    ),
-                    sName
+                mModels[sName] = new JSONModel(
+                    sap.ui.require.toUrl("ui5x/test/app/mock/" + sName + ".json")
                 );
             });
+
+            return mModels;
         }
     };
 });

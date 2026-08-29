@@ -18,7 +18,11 @@ sap.ui.define([
              * in the routed views, so the models have to be owned by the
              * component for both sides to read the same instance.
              */
-            models.setModels(this);
+            const mModels = models.createModels();
+
+            Object.keys(mModels).forEach(function (sName) {
+                this.setModel(mModels[sName], sName);
+            }, this);
 
             this.getRouter().initialize();
         }
