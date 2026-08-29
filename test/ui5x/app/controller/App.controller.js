@@ -3,8 +3,9 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
-    "sap/m/MessageToast"
-], function (Controller, Fragment, UIComponent, JSONModel, MessageToast) {
+    "sap/m/MessageToast",
+    "../model/models"
+], function (Controller, Fragment, UIComponent, JSONModel, MessageToast, models) {
     "use strict";
 
     return Controller.extend("ui5x.test.app.controller.App", {
@@ -59,6 +60,20 @@ sap.ui.define([
                     delete this._popovers[name];
                     MessageToast.show(name + " has no settings yet");
                 }.bind(this));
+        },
+
+        /*
+         * Writing the whole section back at once lets every bound control
+         * refresh from one change, so the reset needs no list of properties.
+         */
+        onResetSettings: function () {
+            var name = this.getView().getModel("app").getProperty("/control");
+            var section = name.charAt(0).toLowerCase() + name.slice(1);
+
+            this.getOwnerComponent().getModel("settings").setProperty(
+                "/" + section,
+                models.defaults()[section]
+            );
         }
     });
 });

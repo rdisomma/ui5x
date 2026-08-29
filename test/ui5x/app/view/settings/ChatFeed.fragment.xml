@@ -1,99 +1,122 @@
 <core:FragmentDefinition
     xmlns:core="sap.ui.core"
-    xmlns="sap.m"
-    xmlns:form="sap.ui.layout.form">
+    xmlns="sap.m">
 
     <Popover
         title="ChatFeed settings"
-        contentWidth="30rem"
-        placement="Bottom"
-        class="sapUiContentPadding">
+        contentWidth="26rem"
+        placement="Bottom">
 
-        <form:SimpleForm
-            layout="ResponsiveGridLayout"
-            editable="true"
-            adjustLabelSpan="false"
-            columnsL="1" columnsM="1"
-            labelSpanL="9" labelSpanM="9" labelSpanS="9">
+        <IconTabBar
+            expandable="false"
+            applyContentPadding="false"
+            selectedKey="behaviour">
 
-            <Label text="Loading" />
-                        <Switch state="{settings>/chatFeed/loading}" />
+            <items>
+                <IconTabFilter key="behaviour" text="Behaviour">
+                    <List>
+                        <InputListItem label="Loading">
+                            <Switch state="{settings>/chatFeed/loading}" />
+                        </InputListItem>
 
-            <Label text="Enabled" />
-                        <Switch state="{settings>/chatFeed/enabled}" />
+                        <InputListItem label="Enabled">
+                            <Switch state="{settings>/chatFeed/enabled}" />
+                        </InputListItem>
 
-            <Label text="Editable" />
-                        <Switch state="{settings>/chatFeed/editable}" />
+                        <InputListItem label="Editable">
+                            <Switch state="{settings>/chatFeed/editable}" />
+                        </InputListItem>
 
-            <Label text="Send with the Enter key" />
-                        <Switch state="{settings>/chatFeed/sendOnEnter}" />
+                        <InputListItem label="Send with the Enter key">
+                            <Switch state="{settings>/chatFeed/sendOnEnter}" />
+                        </InputListItem>
 
-            <Label text="Show the send button" />
-                        <Switch state="{settings>/chatFeed/showSendButton}" />
+                        <InputListItem label="Show the send button">
+                            <Switch state="{settings>/chatFeed/showSendButton}" />
+                        </InputListItem>
 
-            <Label text="Send button enabled" />
-                        <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
+                        <InputListItem label="Send button enabled">
+                            <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
+                        </InputListItem>
 
-            <Label text="Group messages by date" />
-                        <Switch state="{settings>/chatFeed/groupByDate}" />
+                        <InputListItem label="Group messages by date">
+                            <Switch state="{settings>/chatFeed/groupByDate}" />
+                        </InputListItem>
+                    </List>
+                </IconTabFilter>
 
-            <Label text="Highlight your own messages" />
-                        <Switch state="{settings>/chatFeed/highlightOwnMessage}" />
-        </form:SimpleForm>
+                <IconTabFilter key="appearance" text="Appearance">
+                    <List>
+                        <InputListItem label="Highlight your own messages">
+                            <Switch state="{settings>/chatFeed/highlightOwnMessage}" />
+                        </InputListItem>
 
-        <form:SimpleForm
-            layout="ResponsiveGridLayout"
-            editable="true"
-            adjustLabelSpan="false"
-            columnsL="1" columnsM="1"
-            labelSpanL="6" labelSpanM="6" labelSpanS="6">
+                        <InputListItem label="Your messages">
+                            <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}" width="9rem">
+                                <core:Item key="Bubble" text="A bubble" />
+                                <core:Item key="Conversation" text="A plain thread" />
+                            </Select>
+                        </InputListItem>
 
-            <Label text="Composer placeholder" />
-                        <Input value="{settings>/chatFeed/placeholder}" />
+                        <InputListItem label="Incoming messages">
+                            <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}" width="9rem">
+                                <core:Item key="Bubble" text="A bubble" />
+                                <core:Item key="Conversation" text="A plain thread" />
+                            </Select>
+                        </InputListItem>
 
-            <Label text="Send button text" />
-                        <Input value="{settings>/chatFeed/sendButtonText}" />
+                        <InputListItem label="Messages start from">
+                            <Select selectedKey="{settings>/chatFeed/messageAlignment}" width="9rem">
+                                <core:Item key="Top" text="The top" />
+                                <core:Item key="Bottom" text="The bottom" />
+                            </Select>
+                        </InputListItem>
 
-            <Label text="Send button tooltip" />
-                        <Input value="{settings>/chatFeed/sendButtonTooltip}" />
+                        <InputListItem label="Composer sits at">
+                            <Select selectedKey="{settings>/chatFeed/composerPosition}" width="9rem">
+                                <core:Item key="Top" text="The top" />
+                                <core:Item key="Bottom" text="The bottom" />
+                            </Select>
+                        </InputListItem>
 
-            <Label text="Maximum chat height" />
-                        <Input value="{settings>/chatFeed/chatMaxHeight}" />
+                        <InputListItem label="Timestamp">
+                            <Select selectedKey="{settings>/chatFeed/messageTimestampFormat}" width="9rem">
+                                <core:Item key="None" text="Hidden" />
+                                <core:Item key="Time" text="Time only" />
+                                <core:Item key="DateTime" text="Date and time" />
+                            </Select>
+                        </InputListItem>
 
-            <Label text="Width" />
-                        <Input value="{settings>/chatFeed/width}" />
+                        <InputListItem label="Maximum height">
+                            <Input textAlign="Begin" value="{settings>/chatFeed/chatMaxHeight}" width="9rem" />
+                        </InputListItem>
 
-            <Label text="Timestamp" />
-                        <Select selectedKey="{settings>/chatFeed/messageTimestampFormat}">
-                            <core:Item key="None" text="Hidden" />
-                            <core:Item key="Time" text="Time only" />
-                            <core:Item key="DateTime" text="Date and time" />
-                        </Select>
+                        <InputListItem label="Width">
+                            <Input textAlign="Begin" value="{settings>/chatFeed/width}" width="9rem" />
+                        </InputListItem>
+                    </List>
+                </IconTabFilter>
 
-            <Label text="Your messages look like" />
-                        <Select selectedKey="{settings>/chatFeed/ownMessageAppearance}">
-                            <core:Item key="Bubble" text="A bubble" />
-                            <core:Item key="Conversation" text="A plain thread" />
-                        </Select>
+                <IconTabFilter key="text" text="Text">
+                    <List>
+                        <InputListItem label="Composer placeholder">
+                            <Input textAlign="Begin" value="{settings>/chatFeed/placeholder}" width="11rem" />
+                        </InputListItem>
 
-            <Label text="Incoming messages look like" />
-                        <Select selectedKey="{settings>/chatFeed/incomingMessageAppearance}">
-                            <core:Item key="Bubble" text="A bubble" />
-                            <core:Item key="Conversation" text="A plain thread" />
-                        </Select>
+                        <InputListItem label="Send button text">
+                            <Input textAlign="Begin" value="{settings>/chatFeed/sendButtonText}" width="11rem" />
+                        </InputListItem>
 
-            <Label text="Composer position" />
-                        <Select selectedKey="{settings>/chatFeed/composerPosition}">
-                            <core:Item key="Top" text="The top" />
-                            <core:Item key="Bottom" text="The bottom" />
-                        </Select>
+                        <InputListItem label="Send button tooltip">
+                            <Input textAlign="Begin" value="{settings>/chatFeed/sendButtonTooltip}" width="11rem" />
+                        </InputListItem>
+                    </List>
+                </IconTabFilter>
+            </items>
+        </IconTabBar>
 
-            <Label text="Messages start from" />
-                        <Select selectedKey="{settings>/chatFeed/messageAlignment}">
-                            <core:Item key="Top" text="The top" />
-                            <core:Item key="Bottom" text="The bottom" />
-                        </Select>
-        </form:SimpleForm>
-
+        <endButton>
+            <Button text="Reset" press=".onResetSettings" />
+        </endButton>
     </Popover>
 </core:FragmentDefinition>

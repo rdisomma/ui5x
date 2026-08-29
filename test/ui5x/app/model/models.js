@@ -2,8 +2,12 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
     "use strict";
 
     return {
-        createSettingsModel() {
-            const oModel = new JSONModel({
+        /*
+         * Kept apart from the model so the settings popover can put a section
+         * back the way it started without rebuilding the whole model.
+         */
+        defaults() {
+            return {
                 accordion: {
                     multipleExpansion: false,
                     width: "100%"
@@ -35,10 +39,14 @@ sap.ui.define(["sap/ui/model/json/JSONModel"], function(JSONModel) {
                 loadingTable: {},
                 segmentedInput: {},
                 skeleton: {}
-            });
+            };
+        },
+
+        createSettingsModel() {
+            const oModel = new JSONModel(this.defaults());
             oModel.setDefaultBindingMode("TwoWay");
 
             return oModel;
-        },
-    }
+        }
+    };
 });
