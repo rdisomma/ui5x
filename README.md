@@ -83,15 +83,18 @@ way to look at the dark and high-contrast palettes.
 
 UI5X declares three OpenUI5 libraries, which are loaded together with it:
 
-| Library        | Required by |
-| -------------- | ----------- |
-| `sap.ui.core`  | Every control |
-| `sap.m`        | `CopyButton` (which extends `sap.m.Button`), `ChatFeed`, `ChatMessage`, `SegmentedInput`, `LoadingResponsiveTable` |
-| `sap.ui.table` | `LoadingTable` only |
+| Library        | Declared | Required by |
+| -------------- | -------- | ----------- |
+| `sap.ui.core`  | yes | Every control |
+| `sap.m`        | yes | `CopyButton` (which extends `sap.m.Button`), `ChatFeed`, `ChatMessage`, `SegmentedInput`, `LoadingResponsiveTable` |
+| `sap.ui.table` | no  | `LoadingTable` only |
 
-`sap.m` in turn brings `sap.ui.layout` and `sap.ui.unified`, the latter shared with
-`sap.ui.table`. An application that uses no grid table still loads `sap.ui.table`, which is the
-one dependency UI5X could drop by moving `LoadingTable` out of the library.
+`sap.m` in turn brings `sap.ui.layout` and `sap.ui.unified`.
+
+`sap.ui.table` is not declared by the library, so an application that uses no grid table never
+loads it. `LoadingTable` requires it on its own when the control is used, and an application
+using that control holds a `sap.ui.table.Table` of its own anyway, so it already has the
+library.
 
 ## Development requirements
 
@@ -112,25 +115,12 @@ Whatever `npm audit` reports afterwards comes from the application's own depende
 from here. The UI5 libraries it needs at runtime are listed under
 [UI5 library dependencies](#ui5-library-dependencies).
 
-For local development, add the UI5 libraries UI5X needs to the application's `ui5.yaml`. The
-UI5 tooling serves `/resources/` itself and provisions only what this section lists:
+UI5X declares `sap.ui.core` and `sap.m`, which every UI5 application already has, so nothing
+has to be added for the controls to load.
 
-```yaml
-framework:
-  libraries:
-    - name: sap.ui.core
-    - name: sap.m
-    - name: sap.ui.table
-```
-
-An application that already lists `sap.ui.core` and `sap.m` only needs `sap.ui.table`, which
-`LoadingTable` requires and which UI5X declares for every consumer. Without it `ui5 serve` starts
-and then fails on `/resources/sap/ui/table/library.js`, and no UI5X control renders.
-
-This is a development-time step. Once deployed, `/resources/` is served by the SAPUI5 runtime on
-a CDN or by the SAP Build Work Zone shell, which carry every standard library, and the
-declaration is not needed. It is needed again for a self-contained build, which bundles only the
-libraries the application declares.
+`LoadingTable` is the exception: it builds its placeholder out of `sap.ui.table` classes. An
+application that uses it lists that library in its own `ui5.yaml` for local development, which
+it needs regardless, since the table it passes in is a `sap.ui.table.Table`.
 
 Then declare UI5X in the application's `manifest.json`:
 
