@@ -118,9 +118,12 @@ from here. The UI5 libraries it needs at runtime are listed under
 UI5X declares `sap.ui.core` and `sap.m`, which every UI5 application already has, so nothing
 has to be added for the controls to load.
 
-`LoadingTable` is the exception: it builds its placeholder out of `sap.ui.table` classes. An
-application that uses it lists that library in its own `ui5.yaml` for local development, which
-it needs regardless, since the table it passes in is a `sap.ui.table.Table`.
+Where the UI5 runtime comes from decides whether anything else is needed. A SAP Fiori tools
+project proxies `/resources` to `https://ui5.sap.com` and has the whole runtime available, so
+every library resolves whether or not it is named anywhere. A project that lets the UI5 tooling
+serve `/resources` gets only what its own `framework` section lists, plus what those libraries
+depend on, and `sap.ui.table` is the one `LoadingTable` needs there. An application using that
+control declares it regardless, since the table it passes in is a `sap.ui.table.Table`.
 
 Then declare UI5X in the application's `manifest.json`:
 
