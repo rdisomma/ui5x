@@ -2,7 +2,9 @@ import {
     copyFile,
     readFile,
     writeFile,
-    access
+    access,
+    readdir,
+    rm
 } from "node:fs/promises";
 
 const rootPackage = JSON.parse(
@@ -60,5 +62,33 @@ for (const file of ["README.md", "LICENSE"]) {
         await copyFile(source, destination);
     } catch {}
 }
+
+/*
+ * The declaration maps point at the TypeScript sources, which the build no
+ * longer includes, so they resolve to nothing. Their reference is stripped
+ * from the declarations as well, or an editor follows it and finds a 404.
+ */
+const resources = new URL("../dist/resources/", import.meta.url);
+
+async function removeDeclarationMaps(directory) {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+        const target = new URL(`${entry.name}${entry.isDirectory() ? "/" : ""}`, directory);
+
+        if (entry.isDirectory()) {
+            await removeDeclarationMaps(target);
+        } else if (entry.name.endsWith(".d.ts.map")) {
+            await rm(target);
+        } else if (entry.name.endsWith(".d.ts")) {
+            const declaration = await readFile(target, "utf8");
+
+            await writeFile(
+                target,
+                declaration.replace(/\n?\/\/# sourceMappingURL=.*\.d\.ts\.map\n?/g, "\n")
+            );
+        }
+    }
+}
+
+await removeDeclarationMaps(resources);
 
 console.log("Distribution package prepared in dist/");

@@ -114,6 +114,8 @@ npm install @raffaeledisomma/ui5x
 ```
 
 UI5X has no npm dependencies of its own, so installing it adds one package and nothing else.
+The package carries the built library, its type definitions and the `-dbg.js` variants UI5 loads
+with `sap-ui-debug=true`; the TypeScript sources are not shipped.
 Whatever `npm audit` reports afterwards comes from the application's own dependency tree, not
 from here. The UI5 libraries it needs at runtime are listed under
 [UI5 library dependencies](#ui5-library-dependencies).
