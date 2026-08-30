@@ -1,6 +1,6 @@
 {
   "name": "@raffaeledisomma/ui5x",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Advanced controls for OpenUI5 and SAPUI5",
   "types": "dist/index.d.ts",
   "main": "index.js",
