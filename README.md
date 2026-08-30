@@ -86,15 +86,18 @@ UI5X declares three OpenUI5 libraries, which are loaded together with it:
 | Library        | Declared | Required by |
 | -------------- | -------- | ----------- |
 | `sap.ui.core`  | yes | Every control |
-| `sap.m`        | yes | `CopyButton` (which extends `sap.m.Button`), `ChatFeed`, `ChatMessage`, `SegmentedInput`, `LoadingResponsiveTable` |
+| `sap.m`        | no  | `CopyButton` (which extends `sap.m.Button`), `ChatFeed`, `ChatMessage`, `SegmentedInput`, `LoadingResponsiveTable` |
 | `sap.ui.table` | no  | `LoadingTable` only |
 
-`sap.m` in turn brings `sap.ui.layout` and `sap.ui.unified`.
+`sap.ui.core` is the only library UI5X declares, because it is the only one every control needs.
+The other two are imported by the controls that use them, so they are requested when one of those
+controls is loaded and not before: an application built only from `Skeleton`, `LoadingContainer`,
+`Accordion` or `LoadingTable` never loads `sap.m`, and one that uses no grid table never loads
+`sap.ui.table`.
 
-`sap.ui.table` is not declared by the library, so an application that uses no grid table never
-loads it. `LoadingTable` requires it on its own when the control is used, and an application
-using that control holds a `sap.ui.table.Table` of its own anyway, so it already has the
-library.
+An application that does use those controls already carries the library in question, since the
+table passed to `LoadingTable` is a `sap.ui.table.Table` and the controls that build on `sap.m`
+are used from a view that has it.
 
 ## Development requirements
 
@@ -115,8 +118,7 @@ Whatever `npm audit` reports afterwards comes from the application's own depende
 from here. The UI5 libraries it needs at runtime are listed under
 [UI5 library dependencies](#ui5-library-dependencies).
 
-UI5X declares `sap.ui.core` and `sap.m`, which every UI5 application already has, so nothing
-has to be added for the controls to load.
+UI5X declares `sap.ui.core` alone, so nothing has to be added for the controls to load.
 
 Where the UI5 runtime comes from decides whether anything else is needed. A SAP Fiori tools
 project proxies `/resources` to `https://ui5.sap.com` and has the whole runtime available, so

@@ -17,8 +17,7 @@ const UI5X = Lib.init({
     name: "ui5x",
     version: "${version}",
     dependencies: [
-        "sap.ui.core",
-        "sap.m"
+        "sap.ui.core"
     ],
     types: [
         "ui5x.loading.SkeletonType",
