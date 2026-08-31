@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/rdisomma/ui5x/actions/workflows/ci.yml/badge.svg)](https://github.com/rdisomma/ui5x/actions/workflows/ci.yml)
 
-Advanced controls for OpenUI5 and SAPUI5.
+An OpenUI5 and SAPUI5 library of composite controls, with theming, accessibility and state handling built in.
 
 **[Open the live demo](https://rdisomma.github.io/ui5x/)** to see every control and have fun
 customising how each one behaves.

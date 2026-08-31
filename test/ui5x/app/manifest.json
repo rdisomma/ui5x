@@ -4,7 +4,7 @@
     "id": "ui5x.test.app",
     "type": "application",
     "title": "UI5X",
-    "description": "Advanced controls for OpenUI5 and SAPUI5",
+    "description": "An OpenUI5 and SAPUI5 library of composite controls, with theming, accessibility and state handling built in",
     "applicationVersion": {
       "version": "1.0.0"
     }

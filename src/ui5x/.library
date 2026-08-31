@@ -6,7 +6,7 @@
     <version>${version}</version>
     <copyright>Copyright (c) 2026 Raffaele Di Somma</copyright>
     <title>UI5X</title>
-    <documentation>Advanced controls for OpenUI5 and SAPUI5.</documentation>
+    <documentation>An OpenUI5 and SAPUI5 library of composite controls, with theming, accessibility and state handling built in.</documentation>
 
     <dependencies>
         <dependency>
