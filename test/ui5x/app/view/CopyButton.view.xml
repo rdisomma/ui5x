@@ -14,6 +14,9 @@
                 successIcon="{settings>/copyButton/successIcon}"
                 type="{settings>/copyButton/type}"
                 successType="{settings>/copyButton/successType}"
+                errorIcon="{settings>/copyButton/errorIcon}"
+                errorText="{settings>/copyButton/errorText}"
+                errorType="{settings>/copyButton/errorType}"
                 successText="{settings>/copyButton/successText}"
                 iconFirst="{settings>/copyButton/iconFirst}"
                 class="sapUiTinyMarginEnd" />
@@ -25,6 +28,9 @@
                 successIcon="{settings>/copyButton/successIcon}"
                 type="{settings>/copyButton/type}"
                 successType="{settings>/copyButton/successType}"
+                errorIcon="{settings>/copyButton/errorIcon}"
+                errorText="{settings>/copyButton/errorText}"
+                errorType="{settings>/copyButton/errorType}"
                 successText="{settings>/copyButton/successText}"
                 iconFirst="{settings>/copyButton/iconFirst}" />
         </HBox>

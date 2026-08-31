@@ -47,10 +47,10 @@ QUnit.test("An empty success icon preserves the original icon", function (assert
     });
 
     const feedbackButton = button as unknown as {
-        showSuccessFeedback(): void;
+        showFeedback(outcome: "success" | "error"): void;
     };
 
-    feedbackButton.showSuccessFeedback();
+    feedbackButton.showFeedback("success");
 
     assert.strictEqual(
         button.getIcon(),
@@ -94,10 +94,10 @@ QUnit.test("The feedback never reaches a bound model", function (assert) {
     button.setModel(model);
 
     const feedbackButton = button as unknown as {
-        showSuccessFeedback(): void;
+        showFeedback(outcome: "success" | "error"): void;
     };
 
-    feedbackButton.showSuccessFeedback();
+    feedbackButton.showFeedback("success");
 
     assert.strictEqual(
         button.getText(),
@@ -169,6 +169,43 @@ QUnit.test("A clipboard failure reaches the application", function (assert) {
             configurable: true,
             value: clipboard
         });
+
+        button.destroy();
+        done();
+    });
+
+    button.firePress();
+});
+
+QUnit.test("A failed copy is visible on the button", function (assert) {
+    const done = assert.async();
+
+    const button = new CopyButton({
+        value: "npm i ui5x",
+        text: "Copy",
+        icon: "sap-icon://copy",
+        errorText: "Not copied"
+    });
+
+    const clipboard = navigator.clipboard;
+
+    Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: { writeText: () => Promise.reject(new Error("Denied")) }
+    });
+
+    button.attachCopyError(() => {
+        assert.strictEqual(button.getIcon(), "sap-icon://error", "The error icon is shown by default");
+        assert.strictEqual(button.getText(), "Not copied", "The error text replaces the label");
+        assert.strictEqual(button.getType(), ButtonType.Default, "The type is untouched when errorType is not set");
+
+        assert.strictEqual(
+            button.getProperty("icon"),
+            "sap-icon://copy",
+            "The property behind it is left alone, as with the success feedback"
+        );
+
+        Object.defineProperty(navigator, "clipboard", { configurable: true, value: clipboard });
 
         button.destroy();
         done();

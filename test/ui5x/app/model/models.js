@@ -46,6 +46,9 @@ sap.ui.define([
                     successText: "",
                     successIcon: "sap-icon://accept",
                     successType: "Accept",
+                    errorIcon: "sap-icon://error",
+                    errorText: "Not copied",
+                    errorType: "Reject",
                     iconFirst: true
                 },
                 loadingContainer: {

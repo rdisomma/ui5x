@@ -46,6 +46,38 @@ declare module "./CopyButton" {
         successType?: ButtonType | PropertyBindingInfo | `{${string}}`;
 
         /**
+         * Defines the icon temporarily displayed when the value could not
+        be written to the system clipboard.
+        
+        Unlike the other feedback properties this one is set by default:
+        a failed copy is otherwise indistinguishable from a successful
+        one, since nothing on screen changes and the value the user
+        expects is simply not there.
+        
+        When empty, the button icon is not changed.
+         */
+        errorIcon?: URI | PropertyBindingInfo | `{${string}}`;
+
+        /**
+         * Defines the temporary text displayed when the value could not be
+        written to the system clipboard.
+        
+        As with successText, it is shown only when the button already
+        has a non-empty text value, and ignored for icon-only buttons.
+        
+        When empty, the button text is not changed.
+         */
+        errorText?: string | PropertyBindingInfo;
+
+        /**
+         * Defines the button type temporarily applied when the value could
+        not be written to the system clipboard.
+        
+        When not explicitly set, the current button type is preserved.
+         */
+        errorType?: ButtonType | PropertyBindingInfo | `{${string}}`;
+
+        /**
          * Fired after the value has reached the system clipboard.
         
         The press event only says the button was pressed. The write that
@@ -191,6 +223,115 @@ declare module "./CopyButton" {
          * @returns Reference to "this" in order to allow method chaining
          */
         setSuccessType(successType: ButtonType): this;
+
+        // property: errorIcon
+
+        /**
+         * Gets current value of property "errorIcon".
+         *
+         * Defines the icon temporarily displayed when the value could not
+        be written to the system clipboard.
+        
+        Unlike the other feedback properties this one is set by default:
+        a failed copy is otherwise indistinguishable from a successful
+        one, since nothing on screen changes and the value the user
+        expects is simply not there.
+        
+        When empty, the button icon is not changed.
+         *
+         * Default value is: "sap-icon://error"
+         * @returns Value of property "errorIcon"
+         */
+        getErrorIcon(): URI;
+
+        /**
+         * Sets a new value for property "errorIcon".
+         *
+         * Defines the icon temporarily displayed when the value could not
+        be written to the system clipboard.
+        
+        Unlike the other feedback properties this one is set by default:
+        a failed copy is otherwise indistinguishable from a successful
+        one, since nothing on screen changes and the value the user
+        expects is simply not there.
+        
+        When empty, the button icon is not changed.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: "sap-icon://error"
+         * @param [errorIcon="sap-icon://error"] New value for property "errorIcon"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setErrorIcon(errorIcon: URI): this;
+
+        // property: errorText
+
+        /**
+         * Gets current value of property "errorText".
+         *
+         * Defines the temporary text displayed when the value could not be
+        written to the system clipboard.
+        
+        As with successText, it is shown only when the button already
+        has a non-empty text value, and ignored for icon-only buttons.
+        
+        When empty, the button text is not changed.
+         *
+         * Default value is: ""
+         * @returns Value of property "errorText"
+         */
+        getErrorText(): string;
+
+        /**
+         * Sets a new value for property "errorText".
+         *
+         * Defines the temporary text displayed when the value could not be
+        written to the system clipboard.
+        
+        As with successText, it is shown only when the button already
+        has a non-empty text value, and ignored for icon-only buttons.
+        
+        When empty, the button text is not changed.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: ""
+         * @param [errorText=""] New value for property "errorText"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setErrorText(errorText: string): this;
+
+        // property: errorType
+
+        /**
+         * Gets current value of property "errorType".
+         *
+         * Defines the button type temporarily applied when the value could
+        not be written to the system clipboard.
+        
+        When not explicitly set, the current button type is preserved.
+         *
+         * Default value is: "ButtonType.Default"
+         * @returns Value of property "errorType"
+         */
+        getErrorType(): ButtonType;
+
+        /**
+         * Sets a new value for property "errorType".
+         *
+         * Defines the button type temporarily applied when the value could
+        not be written to the system clipboard.
+        
+        When not explicitly set, the current button type is preserved.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: "ButtonType.Default"
+         * @param [errorType="ButtonType.Default"] New value for property "errorType"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setErrorType(errorType: ButtonType): this;
 
         // event: copySuccess
 

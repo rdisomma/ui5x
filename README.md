@@ -581,9 +581,13 @@ In XML views:
 </mvc:View>
 ```
 
-When `successType` is omitted, the button keeps its current `type`. Set `successIcon` to an empty
-string to keep the original icon during feedback. Clipboard access requires a secure context and
-a press initiated by the user.
+When `successType` or `errorType` is omitted, the button keeps its current `type`. Set
+`successIcon` or `errorIcon` to an empty string to keep the original icon during feedback.
+
+Clipboard access requires a secure context and a press initiated by the user, and the write is
+asynchronous, so it can fail after the press succeeded. The failure shows on the button and
+reaches the application through `copyError`; without either, a copy that never happened looks
+exactly like one that did.
 
 | Property      | Type                  | Default                | Description                                                    |
 | ------------- | --------------------- | ---------------------- | -------------------------------------------------------------- |
@@ -591,6 +595,9 @@ a press initiated by the user.
 | `successIcon` | `sap.ui.core.URI`     | `sap-icon://accept`    | Temporary success icon. An empty value preserves the icon.     |
 | `successText` | `string`              | `""`                   | Temporary text, applied only when the button already has text. |
 | `successType` | `sap.m.ButtonType`    | Current button `type`  | Temporary type. An explicitly configured value takes priority. |
+| `errorIcon`   | `sap.ui.core.URI`     | `sap-icon://error`     | Temporary icon when the write fails. Set by default, because nothing else on screen would say so. |
+| `errorText`   | `string`              | `""`                   | Temporary text on failure, applied only when the button already has text. |
+| `errorType`   | `sap.m.ButtonType`    | Current button `type`  | Temporary type on failure. An explicitly configured value takes priority. |
 
 | Event         | Parameters                        | Description                                             |
 | ------------- | --------------------------------- | -------------------------------------------------------- |

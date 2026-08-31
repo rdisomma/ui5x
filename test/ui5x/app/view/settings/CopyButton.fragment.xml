@@ -45,6 +45,22 @@
                 </Select>
             </InputListItem>
 
+            <InputListItem label="Text if it fails">
+                <Input textAlign="Begin" value="{settings>/copyButton/errorText}" width="11rem" />
+            </InputListItem>
+
+            <InputListItem label="Icon if it fails">
+                <Input textAlign="Begin" value="{settings>/copyButton/errorIcon}" width="11rem" />
+            </InputListItem>
+
+            <InputListItem label="Style if it fails">
+                <Select selectedKey="{settings>/copyButton/errorType}" width="9rem">
+                    <core:Item key="Default" text="Default" />
+                    <core:Item key="Reject" text="Reject" />
+                    <core:Item key="Transparent" text="Transparent" />
+                </Select>
+            </InputListItem>
+
             <InputListItem label="Icon before the text">
                 <Switch state="{settings>/copyButton/iconFirst}" />
             </InputListItem>

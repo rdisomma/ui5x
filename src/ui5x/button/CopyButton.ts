@@ -72,6 +72,44 @@ export default class CopyButton extends Button {
             successType: {
                 type: "sap.m.ButtonType",
                 defaultValue: ButtonType.Default
+            },
+            /**
+             * Defines the icon temporarily displayed when the value could not
+             * be written to the system clipboard.
+             *
+             * Unlike the other feedback properties this one is set by default:
+             * a failed copy is otherwise indistinguishable from a successful
+             * one, since nothing on screen changes and the value the user
+             * expects is simply not there.
+             *
+             * When empty, the button icon is not changed.
+             */
+            errorIcon: {
+                type: "sap.ui.core.URI",
+                defaultValue: "sap-icon://error"
+            },
+            /**
+             * Defines the temporary text displayed when the value could not be
+             * written to the system clipboard.
+             *
+             * As with successText, it is shown only when the button already
+             * has a non-empty text value, and ignored for icon-only buttons.
+             *
+             * When empty, the button text is not changed.
+             */
+            errorText: {
+                type: "string",
+                defaultValue: ""
+            },
+            /**
+             * Defines the button type temporarily applied when the value could
+             * not be written to the system clipboard.
+             *
+             * When not explicitly set, the current button type is preserved.
+             */
+            errorType: {
+                type: "sap.m.ButtonType",
+                defaultValue: ButtonType.Default
             }
         },
 
@@ -115,7 +153,7 @@ export default class CopyButton extends Button {
 
     static renderer = "sap.m.ButtonRenderer";
 
-    private feedbackActive!: boolean;
+    private feedback!: "" | "success" | "error";
     private feedbackTimer!: number | null;
     private iconAnimationFrame!: number | null;
     private iconAnimationTimer!: number | null;
@@ -126,7 +164,7 @@ export default class CopyButton extends Button {
         this.feedbackTimer = null;
         this.iconAnimationFrame = null;
         this.iconAnimationTimer = null;
-        this.feedbackActive = false;
+        this.feedback = "";
 
         this.setIcon("sap-icon://copy");
 
@@ -151,7 +189,7 @@ export default class CopyButton extends Button {
         this.feedbackTimer = null;
         this.iconAnimationFrame = null;
         this.iconAnimationTimer = null;
-        this.feedbackActive = false;
+        this.feedback = "";
 
         super.exit();
     }
@@ -167,6 +205,7 @@ export default class CopyButton extends Button {
             const reason = "Clipboard API is not available.";
 
             Log.error(reason, undefined, "ui5x.button.CopyButton");
+            this.showFeedback("error");
             this.fireEvent("copyError", { value, reason });
 
             return;
@@ -184,7 +223,7 @@ export default class CopyButton extends Button {
                 return;
             }
 
-            this.showSuccessFeedback();
+            this.showFeedback("success");
             this.fireEvent("copySuccess", { value });
         } catch (e) {
             const reason = e instanceof Error ? e.message : String(e);
@@ -196,6 +235,7 @@ export default class CopyButton extends Button {
             );
 
             if (!this.isDestroyed()) {
+                this.showFeedback("error");
                 this.fireEvent("copyError", { value, reason });
             }
         }
@@ -208,40 +248,56 @@ export default class CopyButton extends Button {
      */
     getText(): string {
         const text = this.getProperty("text") as string;
-        const successText = this.getSuccessText();
 
-        return this.feedbackActive && text && successText
-            ? successText
-            : text;
+        if (!this.feedback || !text) {
+            return text;
+        }
+
+        const feedbackText = this.feedback === "success"
+            ? this.getSuccessText()
+            : this.getErrorText();
+
+        return feedbackText || text;
     }
 
     getIcon(): string {
-        const successIcon = this.getSuccessIcon();
+        const icon = this.getProperty("icon") as string;
 
-        return this.feedbackActive && successIcon
-            ? successIcon
-            : this.getProperty("icon") as string;
+        if (!this.feedback) {
+            return icon;
+        }
+
+        const feedbackIcon = this.feedback === "success"
+            ? this.getSuccessIcon()
+            : this.getErrorIcon();
+
+        return feedbackIcon || icon;
     }
 
     getType(): ButtonType {
+        const type = this.getProperty("type") as ButtonType;
+
         /*
          * getSuccessType() falls back to getType() when successType was never
          * set, so the fallback has to be resolved here rather than delegated.
+         * errorType behaves the same way.
          */
-        return this.feedbackActive && !this.isPropertyInitial("successType")
-            ? this.getProperty("successType") as ButtonType
-            : this.getProperty("type") as ButtonType;
+        const property = this.feedback === "success" ? "successType" : "errorType";
+
+        return this.feedback && !this.isPropertyInitial(property)
+            ? this.getProperty(property) as ButtonType
+            : type;
     }
 
-    private showSuccessFeedback(): void {
+    private showFeedback(outcome: "success" | "error"): void {
         if (this.feedbackTimer !== null) {
             window.clearTimeout(this.feedbackTimer);
         }
 
-        this.feedbackActive = true;
+        this.feedback = outcome;
         this.invalidate();
 
-        if (this.getSuccessIcon()) {
+        if (this.feedbackIcon()) {
             this.playIconAnimation();
         }
 
@@ -251,13 +307,21 @@ export default class CopyButton extends Button {
     }
 
     private restoreFeedback(): void {
-        this.feedbackActive = false;
+        const changesIcon = Boolean(this.feedbackIcon());
+
+        this.feedback = "";
         this.feedbackTimer = null;
         this.invalidate();
 
-        if (this.getSuccessIcon()) {
+        if (changesIcon) {
             this.playIconAnimation();
         }
+    }
+
+    private feedbackIcon(): string {
+        return this.feedback === "error"
+            ? this.getErrorIcon()
+            : this.getSuccessIcon();
     }
 
     private playIconAnimation(): void {
