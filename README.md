@@ -162,6 +162,22 @@ the same mapping goes on the bootstrap tag instead:
 </script>
 ```
 
+### Using the types from TypeScript
+
+The control interfaces are declared as module augmentations, which TypeScript loads only when the
+package is named in the compiler's `types`:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["@openui5/types", "@raffaeledisomma/ui5x"]
+  }
+}
+```
+
+Without that entry the imports still resolve and nothing appears to be missing, but the controls
+come out bare: a settings object is rejected and every generated getter is reported as absent.
+
 ## Consuming UI5X in a SAP Fiori tools project
 
 A SAP Fiori tools project reserves `/resources/` for the SAPUI5 runtime: a proxy claims it during
