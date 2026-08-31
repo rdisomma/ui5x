@@ -124,7 +124,8 @@ as siblings of each other:
 }
 ```
 
-That is everything a locally previewed application needs. Deploying one adds two settings, in
+That is everything a locally previewed application needs. Before deploying it you have to add two
+build settings as well, described in
 [Deploying an application that uses UI5X](#deploying-an-application-that-uses-ui5x).
 
 <details>
