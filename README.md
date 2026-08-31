@@ -340,7 +340,7 @@ table and the bottom of the viewport, using `skeletonRows` as the initial fallba
 | ----------------------- | ------------------------------ | ------- | ----------------------------------------------------- |
 | `loading`               | `boolean`                      | `false` | Show skeleton rows instead of the original table.     |
 | `skeletonRows`          | `int`                          | `5`     | Rows rendered in `Fixed` mode and fallback for `Fill`. |
-| `maxSkeletonRows`       | `int`                          | `10`    | Maximum rows calculated in `Fill` mode.               |
+| `maxSkeletonRows`       | `int`                          | `20`    | Maximum rows calculated in `Fill` mode.               |
 | `skeletonRowsMode`      | `ui5x.loading.SkeletonRowMode` | `Fixed` | Row-count strategy: `Fixed` or `Fill`.                |
 | `skeletonRowHeight`     | `sap.ui.core.CSSSize` | `""`      | Height of every skeleton row. `sap.m.Table` sizes rows on their content, so skeleton rows are shorter than rows carrying data and the table grows when it arrives; set this to the height the application rows end up with. |
 | `dynamicSkeletonWidths` | `boolean`                      | `false` | Vary skeleton widths across cells.                    |
@@ -362,7 +362,7 @@ table and the bottom of the viewport, using `skeletonRows` as the initial fallba
     loading="{ui>/busy}"
     skeletonRowsMode="Fill"
     skeletonRows="5"
-    maxSkeletonRows="10"
+    maxSkeletonRows="20"
     dynamicSkeletonWidths="true">
 
     <m:Table items="{/rows}">
@@ -406,7 +406,7 @@ table and the bottom of the viewport, using `skeletonRows` as the initial fallba
 | ----------------------- | ------------------------------ | ------- | ------------------------------------------------------ |
 | `loading`               | `boolean`                      | `false` | Show skeleton rows instead of the original table.      |
 | `skeletonRows`          | `int`                          | `5`     | Rows rendered in `Fixed` mode and fallback for `Fill`. |
-| `maxSkeletonRows`       | `int`                          | `10`    | Maximum rows calculated in `Fill` mode.                |
+| `maxSkeletonRows`       | `int`                          | `20`    | Maximum rows calculated in `Fill` mode.                |
 | `skeletonRowsMode`      | `ui5x.loading.SkeletonRowMode` | `Fixed` | Row-count strategy: `Fixed` or `Fill`.                 |
 | `dynamicSkeletonWidths` | `boolean`                      | `false` | Vary skeleton widths across cells.                     |
 | `animated`              | `boolean`                      | `true`  | Enable the skeleton shimmer animation.                 |
@@ -428,7 +428,7 @@ table and the bottom of the viewport, using `skeletonRows` as the initial fallba
     loading="{ui>/busy}"
     skeletonRowsMode="Fixed"
     skeletonRows="5"
-    maxSkeletonRows="10"
+    maxSkeletonRows="20"
     dynamicSkeletonWidths="true">
 
     <t:Table

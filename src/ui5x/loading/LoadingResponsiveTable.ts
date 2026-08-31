@@ -64,7 +64,7 @@ export default class LoadingResponsiveTable extends Control {
              */
             maxSkeletonRows: {
                 type: "int",
-                defaultValue: 10
+                defaultValue: 20
             },
 
             /**

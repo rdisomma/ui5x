@@ -123,7 +123,7 @@ declare module "./LoadingResponsiveTable" {
          * Defines the maximum number of skeleton rows rendered when
         skeletonRowsMode is Fill.
          *
-         * Default value is: 10
+         * Default value is: 20
          * @returns Value of property "maxSkeletonRows"
          */
         getMaxSkeletonRows(): number;
@@ -136,8 +136,8 @@ declare module "./LoadingResponsiveTable" {
          *
          * When called with a value of "null" or "undefined", the default value of the property will be restored.
          *
-         * Default value is: 10
-         * @param [maxSkeletonRows=10] New value for property "maxSkeletonRows"
+         * Default value is: 20
+         * @param [maxSkeletonRows=20] New value for property "maxSkeletonRows"
          * @returns Reference to "this" in order to allow method chaining
          */
         setMaxSkeletonRows(maxSkeletonRows: number): this;

@@ -15,7 +15,7 @@ QUnit.test("Default properties and row constraints", function (assert) {
 
     assert.notOk(loadingTable.getLoading(), "Loading is disabled by default");
     assert.strictEqual(loadingTable.getSkeletonRows(), 5, "Five skeleton rows are shown by default");
-    assert.strictEqual(loadingTable.getMaxSkeletonRows(), 10, "Ten rows are allowed in Fill mode");
+    assert.strictEqual(loadingTable.getMaxSkeletonRows(), 20, "Twenty rows are allowed in Fill mode");
     assert.strictEqual(loadingTable.getSkeletonRowsMode(), SkeletonRowMode.Fixed, "Fixed row mode is the default");
     assert.notOk(loadingTable.getDynamicSkeletonWidths(), "Dynamic widths are disabled by default");
     assert.ok(loadingTable.getAnimated(), "Skeleton animation is enabled by default");

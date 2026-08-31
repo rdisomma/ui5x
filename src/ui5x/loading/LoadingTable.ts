@@ -73,7 +73,7 @@ export default class LoadingTable extends Control {
              */
             maxSkeletonRows: {
                 type: "int",
-                defaultValue: 10
+                defaultValue: 20
             },
 
             /**
