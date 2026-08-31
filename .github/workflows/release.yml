@@ -33,9 +33,11 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: npm
 
-      # Trusted publishing needs a newer npm than the one bundled with Node.
+      # The npm bundled with Node 22 predates trusted publishing. The 11 line
+      # supports it; npm@latest is 12, which requires a Node newer than the one
+      # this workflow and the CI matrix run on.
       - name: Use an npm that can publish through OIDC
-        run: npm install --global npm@latest
+        run: npm install --global npm@^11
 
       - name: Cache the OpenUI5 libraries
         uses: actions/cache@v4
