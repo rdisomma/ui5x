@@ -7,9 +7,9 @@ Advanced controls for OpenUI5 and SAPUI5.
 **[Open the live demo](https://rdisomma.github.io/ui5x/)** to see every control and have fun
 customising how each one behaves.
 
-UI5X adds higher-level controls to OpenUI5 and SAPUI5. The standard libraries stop at the
-building blocks, so anything composed from them gets rebuilt in every project. UI5X ships those
-compositions as controls, with the theming, accessibility and state handling already done.
+The standard libraries stop at the building blocks, so anything composed from them gets rebuilt
+in every project. UI5X ships those compositions as controls, with the theming, accessibility and
+state handling already done.
 
 Each one extends `sap.ui.core.Control` or the standard control it specialises. None of them touch
 a private API. You declare and bind them from XML views, JavaScript or TypeScript.
@@ -54,38 +54,11 @@ a private API. You declare and bind them from XML views, JavaScript or TypeScrip
 
 ## Compatibility
 
-- Developed and tested against OpenUI5 `1.151.0`
+- Developed against OpenUI5 `1.151.0`, and tested with SAPUI5 `1.151.0` in SAP Business
+  Application Studio. Older UI5 versions have not been validated yet
 - Themes: `sap_horizon`, `sap_horizon_dark`, `sap_horizon_hcb`, `sap_horizon_hcw`,
   `sap_fiori_3`, `sap_fiori_3_dark`, `sap_fiori_3_hcb`, `sap_fiori_3_hcw`.
   Any other theme falls back to the base theme
-- Tested with SAPUI5 `1.151.0` in SAP Business Application Studio
-- Built using public UI5 APIs
-- Compatibility with older UI5 versions has not been validated yet
-
-## Tests
-
-```sh
-npm test
-```
-
-Runs the QUnit suite in headless Chrome through karma. The run exits non-zero
-on the first failing assertion, so it can be used as a CI gate.
-
-`npm run test:unit:browser` opens the same suite in a visible browser, which is
-easier to debug.
-
-To check a control by hand, `npm start` serves the demo pages under
-`test-resources/ui5x/`. Each one carries a toolbar that changes the layout and the behaviour of
-its control, and a theme selector covering every theme the library ships, which is the practical
-way to look at the dark and high-contrast palettes.
-
-## Development requirements
-
-- Node.js `20.19+` or `22.12+` (Node.js 21 is not supported by UI5 CLI 4).
-  UI5 CLI 4 itself accepts `20.11+`, but the interface generator loads an
-  ESM-only dependency, and `require()` of an ES module needs those versions
-- npm `8+`
-- UI5 CLI `4`
 
 ## Installation
 
@@ -839,67 +812,38 @@ sap.ui.require([
 
 ## Development
 
-```bash
-npm install
-```
+Requires Node.js `20.19+` or `22.12+` and npm `8+`. UI5 CLI 4 itself accepts Node.js `20.11+`,
+but the interface generator loads an ESM-only dependency and `require()` of an ES module needs
+those versions. Node.js 21 is not supported by UI5 CLI 4.
 
 ```bash
+npm install
 npm start
 ```
 
-`npm start` regenerates the control interfaces in watch mode and serves the test pages at
-`http://localhost:8080/test-resources/ui5x/Skeleton.html`. Additional manual demos include
-`LoadingContainer.html`, `LoadingResponsiveTable.html`, `LoadingTable.html`, `Accordion.html`,
-`CopyButton.html`, `SegmentedInput.html` and `ChatFeed.html` in the same directory.
+`npm start` regenerates the control interfaces in watch mode and serves one manual demo page per
+control at `http://localhost:8080/test-resources/ui5x/Skeleton.html`. Each carries a toolbar that
+changes the layout and the behaviour of its control, and a theme selector covering every theme
+the library ships, which is the practical way to look at the dark and high-contrast palettes.
 
 | Script                      | What it does |
 | --------------------------- | ------------ |
 | `npm start`                 | Interface generator (watch) + dev server |
+| `npm test`                  | QUnit suite in headless Chrome; exits non-zero on the first failing assertion, so it works as a CI gate |
+| `npm run test:unit:browser` | The same suite in a visible browser, which is easier to debug |
 | `npm run interfaces`        | Generate the `*.gen.d.ts` control interfaces once |
 | `npm run typecheck`         | `tsc --noEmit` |
 | `npm run build`             | Interfaces + typecheck + regular UI5 build into `dist/` |
-| `npm run build:package`     | Build UI5X and create a reusable UI5 build manifest |
+| `npm run build:package`     | Alias of `npm run build`, used by `package:pack` |
 | `npm run start:dist`        | Serve the built library from `dist/` |
-| `npm run test:unit:browser` | Open the QUnit suite in the browser |
 | `npm run package:pack`      | Build, prepare and create the distributable npm tarball |
 | `npm run package:dry-run`   | Validate the distributable package without creating a tarball |
 | `npm run clean`             | Remove `dist/` |
 
-### Project layout
-
-```
-src/ui5x/
-  library.ts                     library metadata and registration
-  loading/
-    Skeleton.ts                  placeholder control
-    LoadingContainer.ts          loading-state container
-    LoadingResponsiveTable.ts    responsive table skeleton wrapper
-    LoadingTable.ts              grid table skeleton wrapper
-    SkeletonType.ts              Line | Rectangle | Circle enum
-    renderer/                    control renderers
-  layout/
-    Accordion.ts                 accordion container
-    AccordionItem.ts             expandable section
-    renderer/                    control renderers
-  button/
-    CopyButton.ts                clipboard button with success feedback
-  input/
-    SegmentedInput.ts            segmented numeric and alphanumeric input
-    SegmentedInputType.ts        Numeric | Alphanumeric enum
-    SegmentedInputSize.ts        Small | Medium | Large enum
-    renderer/                    segmented input renderer
-  chat/
-    ChatFeed.ts                  bindable chat and composer control
-    ChatMessage.ts               individual incoming or own message
-    renderer/                    chat renderers
-  themes/                        LESS sources grouped by control namespace
-test/ui5x/
-  *.html                         manual demo pages
-  qunit/                         unit tests
-```
-
-Controls are written in TypeScript. After changing control metadata (properties, aggregations,
-events), run `npm run interfaces` so the generated `*.gen.d.ts` declarations stay in sync.
+Controls are written in TypeScript under `src/ui5x/`, grouped by namespace, with the LESS sources
+in `src/ui5x/themes/` and the tests in `test/ui5x/`. After changing control metadata (properties,
+aggregations, events), run `npm run interfaces` so the generated `*.gen.d.ts` declarations stay
+in sync.
 
 ## Contributing
 
