@@ -42,7 +42,7 @@ export default class SegmentedInput extends Control {
              *
              * Values are constrained between 1 and 34.
              */
-            digits: {
+            segmentCount: {
                 type: "int",
                 defaultValue: 6
             },
@@ -236,7 +236,7 @@ export default class SegmentedInput extends Control {
         }
 
         if (
-            this.digitValues.length !== this.getDigits()
+            this.digitValues.length !== this.getSegmentCount()
             || this.digitValues.join("") !== value
         ) {
             this.digitValues = this.createDigitValues(value);
@@ -249,12 +249,12 @@ export default class SegmentedInput extends Control {
         this.syncDigitInputs();
     }
 
-    setDigits(digits: number): this {
-        const normalizedDigits = Number.isFinite(digits)
-            ? Math.min(34, Math.max(1, Math.round(digits)))
+    setSegmentCount(segmentCount: number): this {
+        const normalizedDigits = Number.isFinite(segmentCount)
+            ? Math.min(34, Math.max(1, Math.round(segmentCount)))
             : 1;
 
-        this.setProperty("digits", normalizedDigits);
+        this.setProperty("segmentCount", normalizedDigits);
         const value = this.normalizeValue(this.getValue());
 
         this.setProperty("value", value, true);
@@ -411,7 +411,7 @@ export default class SegmentedInput extends Control {
 
             case "End":
                 event.preventDefault();
-                this.focusDigit(this.getDigits() - 1);
+                this.focusDigit(this.getSegmentCount() - 1);
                 break;
 
             default:
@@ -580,7 +580,7 @@ export default class SegmentedInput extends Control {
 
     private insertCharacters(index: number, insertedCharacters: string): void {
         const insertion = insertedCharacters
-            .slice(0, this.getDigits() - index)
+            .slice(0, this.getSegmentCount() - index)
             .split("");
 
         insertion.forEach((digit, offset) => {
@@ -589,12 +589,12 @@ export default class SegmentedInput extends Control {
 
         this.applyUserValue(Math.min(
             index + insertion.length,
-            this.getDigits() - 1
+            this.getSegmentCount() - 1
         ));
     }
 
     private removeDigit(index: number, focusIndex: number): void {
-        if (index < 0 || index >= this.getDigits()) {
+        if (index < 0 || index >= this.getSegmentCount()) {
             this.syncDigitInputs();
             return;
         }
@@ -630,7 +630,7 @@ export default class SegmentedInput extends Control {
 
     private normalizeValue(value: string): string {
         return this.sanitizeValue(value)
-            .slice(0, this.getDigits());
+            .slice(0, this.getSegmentCount());
     }
 
     private sanitizeValue(value: string): string {
@@ -647,7 +647,7 @@ export default class SegmentedInput extends Control {
 
     private createDigitValues(value: string): string[] {
         return Array.from(
-            { length: this.getDigits() },
+            { length: this.getSegmentCount() },
             (_, index) => value[index] ?? ""
         );
     }
@@ -689,7 +689,7 @@ export default class SegmentedInput extends Control {
 
     private focusDigit(index: number): void {
         const normalizedIndex = Math.min(
-            this.getDigits() - 1,
+            this.getSegmentCount() - 1,
             Math.max(0, index)
         );
 

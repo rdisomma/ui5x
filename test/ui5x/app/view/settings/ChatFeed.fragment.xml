@@ -96,8 +96,8 @@
                             </Select>
                         </InputListItem>
 
-                        <InputListItem label="Maximum height">
-                            <Input textAlign="Begin" value="{settings>/chatFeed/chatMaxHeight}" width="9rem" />
+                        <InputListItem label="Height">
+                            <Input textAlign="Begin" value="{settings>/chatFeed/height}" width="9rem" />
                         </InputListItem>
 
                         <InputListItem label="Width">

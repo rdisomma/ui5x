@@ -134,7 +134,7 @@ declare module "./ChatFeed" {
         Percentage values require a parent with an explicit height.
         Set an empty value to let the chat follow its content.
          */
-        chatMaxHeight?: CSSSize | PropertyBindingInfo | `{${string}}`;
+        height?: CSSSize | PropertyBindingInfo | `{${string}}`;
 
         /**
          * Defines the width of the feed.
@@ -480,7 +480,7 @@ declare module "./ChatFeed" {
          *
          * Defines whether consecutive messages are grouped by date.
          *
-         * Default value is: false
+         * Default value is: true
          * @returns Value of property "groupByDate"
          */
         getGroupByDate(): boolean;
@@ -492,8 +492,8 @@ declare module "./ChatFeed" {
          *
          * When called with a value of "null" or "undefined", the default value of the property will be restored.
          *
-         * Default value is: false
-         * @param [groupByDate=false] New value for property "groupByDate"
+         * Default value is: true
+         * @param [groupByDate=true] New value for property "groupByDate"
          * @returns Reference to "this" in order to allow method chaining
          */
         setGroupByDate(groupByDate: boolean): this;
@@ -674,10 +674,10 @@ declare module "./ChatFeed" {
          */
         setMessageAlignment(messageAlignment: ChatFeedMessageAlignment): this;
 
-        // property: chatMaxHeight
+        // property: height
 
         /**
-         * Gets current value of property "chatMaxHeight".
+         * Gets current value of property "height".
          *
          * Defines the reserved height and maximum height of the chat,
         keeping the composer position stable as the conversation grows.
@@ -686,12 +686,12 @@ declare module "./ChatFeed" {
         Set an empty value to let the chat follow its content.
          *
          * Default value is: "32rem"
-         * @returns Value of property "chatMaxHeight"
+         * @returns Value of property "height"
          */
-        getChatMaxHeight(): CSSSize;
+        getHeight(): CSSSize;
 
         /**
-         * Sets a new value for property "chatMaxHeight".
+         * Sets a new value for property "height".
          *
          * Defines the reserved height and maximum height of the chat,
         keeping the composer position stable as the conversation grows.
@@ -702,10 +702,10 @@ declare module "./ChatFeed" {
          * When called with a value of "null" or "undefined", the default value of the property will be restored.
          *
          * Default value is: "32rem"
-         * @param [chatMaxHeight="32rem"] New value for property "chatMaxHeight"
+         * @param [height="32rem"] New value for property "height"
          * @returns Reference to "this" in order to allow method chaining
          */
-        setChatMaxHeight(chatMaxHeight: CSSSize): this;
+        setHeight(height: CSSSize): this;
 
         // property: width
 

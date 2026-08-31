@@ -95,13 +95,13 @@ QUnit.test("Own messages render their content, time and actions", function (asse
         timestamp
     });
     let editValue = "";
-    let deletePressCount = 0;
+    let deleteCount = 0;
     let renderingCount = 0;
 
-    message.attachEditPress((event) => {
+    message.attachEdit((event) => {
         editValue = event.getParameter("value") ?? "";
     });
-    message.attachDeletePress(() => deletePressCount++);
+    message.attachDelete(() => deleteCount++);
 
     message.addEventDelegate({
         onAfterRendering: () => {
@@ -120,7 +120,7 @@ QUnit.test("Own messages render their content, time and actions", function (asse
                 assert.ok(document.getElementById(`${message.getId()}-delete`), "The delete action is rendered");
 
                 message._getDeleteButton().firePress();
-                assert.strictEqual(deletePressCount, 1, "The delete event is fired");
+                assert.strictEqual(deleteCount, 1, "The delete event is fired");
                 assert.strictEqual(editValue, "", "Opening the editor does not fire an edit event");
 
                 message._getEditButton().firePress();
@@ -161,7 +161,7 @@ QUnit.test("Cancelling an inline edit keeps the original message", function (ass
     });
     let editPressCount = 0;
 
-    message.attachEditPress(() => editPressCount++);
+    message.attachEdit(() => editPressCount++);
 
     message._getEditButton().firePress();
     message._getEditor().fireLiveChange({ value: "Discarded" });

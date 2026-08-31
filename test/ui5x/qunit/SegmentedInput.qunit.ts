@@ -10,16 +10,16 @@ QUnit.module("ui5x.input.SegmentedInput");
 QUnit.test("Defaults and digit constraints", function (assert) {
     const input = new SegmentedInput();
 
-    assert.strictEqual(input.getDigits(), 6, "Six digits are shown by default");
+    assert.strictEqual(input.getSegmentCount(), 6, "Six segmentCount are shown by default");
     assert.strictEqual(input.getInputType(), SegmentedInputType.Numeric, "Numeric input is the default");
     assert.strictEqual(input.getSize(), SegmentedInputSize.Medium, "Medium is the default size");
     assert.notOk(input.getShowClearIcon(), "The clear icon is hidden by default");
 
-    input.setDigits(0);
-    assert.strictEqual(input.getDigits(), 1, "The lower bound is one digit");
+    input.setSegmentCount(0);
+    assert.strictEqual(input.getSegmentCount(), 1, "The lower bound is one digit");
 
-    input.setDigits(35);
-    assert.strictEqual(input.getDigits(), 34, "The upper bound is 34 digits");
+    input.setSegmentCount(35);
+    assert.strictEqual(input.getSegmentCount(), 34, "The upper bound is 34 segmentCount");
 
     input.destroy();
 });
@@ -28,7 +28,7 @@ QUnit.test("Separators are optional and use the configured interval", function (
     const done = assert.async();
     const defaultInput = new SegmentedInput();
     const input = new SegmentedInput({
-        digits: 6,
+        segmentCount: 6,
         showSeparators: true,
         separatorInterval: 2
     });
@@ -41,7 +41,7 @@ QUnit.test("Separators are optional and use the configured interval", function (
     assert.strictEqual(
         defaultInput.getSeparatorInterval(),
         3,
-        "Three digits are grouped by default"
+        "Three segmentCount are grouped by default"
     );
     defaultInput.destroy();
 
@@ -65,10 +65,10 @@ QUnit.test("Separators are optional and use the configured interval", function (
     input.placeAt("qunit-fixture");
 });
 
-QUnit.test("Value is numeric and limited to the configured digits", function (assert) {
+QUnit.test("Value is numeric and limited to the configured segmentCount", function (assert) {
     const done = assert.async();
     const input = new SegmentedInput({
-        digits: 4,
+        segmentCount: 4,
         value: "1a23b45"
     });
 
@@ -91,7 +91,7 @@ QUnit.test("Value is numeric and limited to the configured digits", function (as
 
 QUnit.test("Alphanumeric values support fiscal codes and preserve their order", function (assert) {
     const input = new SegmentedInput({
-        digits: 16,
+        segmentCount: 16,
         inputType: SegmentedInputType.Alphanumeric,
         value: "RSS-MRA85 T10A562S!"
     });
@@ -116,7 +116,7 @@ QUnit.test("Alphanumeric values support fiscal codes and preserve their order", 
 QUnit.test("User input fires liveChange and complete", function (assert) {
     const done = assert.async();
     const input = new SegmentedInput({
-        digits: 2
+        segmentCount: 2
     });
 
     const liveValues: string[] = [];
@@ -165,10 +165,10 @@ QUnit.test("User input fires liveChange and complete", function (assert) {
     input.placeAt("qunit-fixture");
 });
 
-QUnit.test("Input remains in the focused digit when previous digits are empty", function (assert) {
+QUnit.test("Input remains in the focused digit when previous segmentCount are empty", function (assert) {
     const done = assert.async();
     const input = new SegmentedInput({
-        digits: 4
+        segmentCount: 4
     });
 
     let completedValue = "";
@@ -218,7 +218,7 @@ QUnit.test("Input remains in the focused digit when previous digits are empty", 
 QUnit.test("Typing before an existing digit replaces only the focused field", function (assert) {
     const done = assert.async();
     const input = new SegmentedInput({
-        digits: 4,
+        segmentCount: 4,
         value: "1234"
     });
 
@@ -266,7 +266,7 @@ QUnit.test("Typing before an existing digit replaces only the focused field", fu
 QUnit.test("Paste fills all six fields and Backspace removes a digit", function (assert) {
     const done = assert.async();
     const input = new SegmentedInput({
-        digits: 6
+        segmentCount: 6
     });
 
     let completedValue = "";
@@ -312,7 +312,7 @@ QUnit.test("Paste fills all six fields and Backspace removes a digit", function 
 
             firstDigit.dispatchEvent(pasteEvent);
 
-            assert.strictEqual(input.getValue(), "123456", "All pasted digits are used");
+            assert.strictEqual(input.getValue(), "123456", "All pasted segmentCount are used");
             assert.strictEqual(completedValue, "123456", "Paste can complete the code");
 
             lastDigit.dispatchEvent(new KeyboardEvent("keydown", {
@@ -334,7 +334,7 @@ QUnit.test("Paste fills all six fields and Backspace removes a digit", function 
 QUnit.test("Success value state text is visible while a field has focus", function (assert) {
     const done = assert.async();
     const input = new SegmentedInput({
-        digits: 2,
+        segmentCount: 2,
         valueState: ValueState.Success,
         valueStateText: "Code verified"
     });
@@ -372,7 +372,7 @@ QUnit.test("Success value state text is visible while a field has focus", functi
 QUnit.test("Clear icon and clear API empty every field", function (assert) {
     const done = assert.async();
     const input = new SegmentedInput({
-        digits: 4,
+        segmentCount: 4,
         value: "1234",
         showClearIcon: true
     });
@@ -433,9 +433,9 @@ QUnit.test("Clear icon and clear API empty every field", function (assert) {
 QUnit.test("Sizes are distinct and Medium matches sap.m.Input height", function (assert) {
     const done = assert.async();
     const controls = [
-        new SegmentedInput({ digits: 1, size: SegmentedInputSize.Small }),
-        new SegmentedInput({ digits: 1, size: SegmentedInputSize.Medium }),
-        new SegmentedInput({ digits: 1, size: SegmentedInputSize.Large })
+        new SegmentedInput({ segmentCount: 1, size: SegmentedInputSize.Small }),
+        new SegmentedInput({ segmentCount: 1, size: SegmentedInputSize.Medium }),
+        new SegmentedInput({ segmentCount: 1, size: SegmentedInputSize.Large })
     ];
     const standardInput = new Input();
     let renderedControls = 0;
@@ -475,7 +475,7 @@ QUnit.test("Value state and value state text are rendered accessibly", function 
     const done = assert.async();
     const defaultInput = new SegmentedInput();
     const input = new SegmentedInput({
-        digits: 2,
+        segmentCount: 2,
         valueState: ValueState.Error,
         valueStateText: "Invalid code"
     });

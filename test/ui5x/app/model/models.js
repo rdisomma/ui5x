@@ -31,7 +31,7 @@ sap.ui.define([
                     incomingMessageAppearance: "Conversation",
                     composerPosition: "Bottom",
                     messageAlignment: "Bottom",
-                    chatMaxHeight: "100%",
+                    height: "100%",
                     width: "100%",
                     ownSenderName: "You",
                     messagesEditable: true,
@@ -73,7 +73,7 @@ sap.ui.define([
                     animated: true
                 },
                 segmentedInput: {
-                    digits: 6,
+                    segmentCount: 6,
                     inputType: "Numeric",
                     size: "Medium",
                     showSeparators: true,

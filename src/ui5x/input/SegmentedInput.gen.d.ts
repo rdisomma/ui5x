@@ -17,7 +17,7 @@ declare module "./SegmentedInput" {
         
         Values are constrained between 1 and 34.
          */
-        digits?: number | PropertyBindingInfo | `{${string}}`;
+        segmentCount?: number | PropertyBindingInfo | `{${string}}`;
 
         /**
          * Defines which characters can be entered.
@@ -111,22 +111,22 @@ declare module "./SegmentedInput" {
 
     export default interface SegmentedInput {
 
-        // property: digits
+        // property: segmentCount
 
         /**
-         * Gets current value of property "digits".
+         * Gets current value of property "segmentCount".
          *
          * Defines the number of digit fields.
         
         Values are constrained between 1 and 34.
          *
          * Default value is: 6
-         * @returns Value of property "digits"
+         * @returns Value of property "segmentCount"
          */
-        getDigits(): number;
+        getSegmentCount(): number;
 
         /**
-         * Sets a new value for property "digits".
+         * Sets a new value for property "segmentCount".
          *
          * Defines the number of digit fields.
         
@@ -135,10 +135,10 @@ declare module "./SegmentedInput" {
          * When called with a value of "null" or "undefined", the default value of the property will be restored.
          *
          * Default value is: 6
-         * @param [digits=6] New value for property "digits"
+         * @param [segmentCount=6] New value for property "segmentCount"
          * @returns Reference to "this" in order to allow method chaining
          */
-        setDigits(digits: number): this;
+        setSegmentCount(segmentCount: number): this;
 
         // property: inputType
 

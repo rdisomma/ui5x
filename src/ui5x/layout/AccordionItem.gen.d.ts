@@ -32,11 +32,6 @@ declare module "./AccordionItem" {
         toggleable?: boolean | PropertyBindingInfo | `{${string}}`;
 
         /**
-         * Defines a stable key identifying the item within its Accordion.
-         */
-        key?: string | PropertyBindingInfo;
-
-        /**
          * Defines whether the item can be expanded or collapsed.
          */
         enabled?: boolean | PropertyBindingInfo | `{${string}}`;
@@ -138,31 +133,6 @@ declare module "./AccordionItem" {
          * @returns Reference to "this" in order to allow method chaining
          */
         setToggleable(toggleable: boolean): this;
-
-        // property: key
-
-        /**
-         * Gets current value of property "key".
-         *
-         * Defines a stable key identifying the item within its Accordion.
-         *
-         * Default value is: ""
-         * @returns Value of property "key"
-         */
-        getKey(): string;
-
-        /**
-         * Sets a new value for property "key".
-         *
-         * Defines a stable key identifying the item within its Accordion.
-         *
-         * When called with a value of "null" or "undefined", the default value of the property will be restored.
-         *
-         * Default value is: ""
-         * @param [key=""] New value for property "key"
-         * @returns Reference to "this" in order to allow method chaining
-         */
-        setKey(key: string): this;
 
         // property: enabled
 

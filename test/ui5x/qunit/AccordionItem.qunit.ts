@@ -14,7 +14,6 @@ QUnit.test("Default properties and aggregation", function (assert) {
     assert.notOk(item.getExpanded(), "The item is collapsed by default");
     assert.ok(item.getToggleable(), "The item is toggleable by default");
     assert.ok(item.getEnabled(), "The item is enabled by default");
-    assert.strictEqual(item.getKey(), "", "The key is empty by default");
     assert.deepEqual(item.getContent(), [content], "Content uses the default aggregation");
 
     item.destroy();

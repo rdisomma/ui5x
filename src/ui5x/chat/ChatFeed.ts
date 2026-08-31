@@ -135,7 +135,7 @@ export default class ChatFeed extends Control {
              */
             groupByDate: {
                 type: "boolean",
-                defaultValue: false
+                defaultValue: true
             },
             /**
              * Defines how the timestamp of each message is displayed.
@@ -196,7 +196,7 @@ export default class ChatFeed extends Control {
              * Percentage values require a parent with an explicit height.
              * Set an empty value to let the chat follow its content.
              */
-            chatMaxHeight: {
+            height: {
                 type: "sap.ui.core.CSSSize",
                 defaultValue: "32rem"
             },
@@ -610,16 +610,16 @@ export default class ChatFeed extends Control {
         this.detachMessageHandlers();
 
         this.getMessages().forEach((message) => {
-            message.attachEvent("editPress", this.handleMessageEdit, this);
-            message.attachEvent("deletePress", this.handleMessageDelete, this);
+            message.attachEvent("edit", this.handleMessageEdit, this);
+            message.attachEvent("delete", this.handleMessageDelete, this);
             this.attachedMessages.add(message);
         });
     }
 
     private detachMessageHandlers(): void {
         this.attachedMessages.forEach((message) => {
-            message.detachEvent("editPress", this.handleMessageEdit, this);
-            message.detachEvent("deletePress", this.handleMessageDelete, this);
+            message.detachEvent("edit", this.handleMessageEdit, this);
+            message.detachEvent("delete", this.handleMessageDelete, this);
         });
 
         this.attachedMessages.clear();

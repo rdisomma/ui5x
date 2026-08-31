@@ -24,7 +24,7 @@
             incomingMessageAppearance="{settings>/chatFeed/incomingMessageAppearance}"
             composerPosition="{settings>/chatFeed/composerPosition}"
             messageAlignment="{settings>/chatFeed/messageAlignment}"
-            chatMaxHeight="{settings>/chatFeed/chatMaxHeight}"
+            height="{settings>/chatFeed/height}"
             width="{settings>/chatFeed/width}"
             send=".onSend"
             messageEdit=".onMessageEdit"

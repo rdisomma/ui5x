@@ -23,10 +23,7 @@ const ChatFeedRenderer = {
 
         rm.style("width", feed.getWidth());
 
-        if (feed.getChatMaxHeight()) {
-            rm.style("height", feed.getChatMaxHeight());
-            rm.style("max-height", feed.getChatMaxHeight());
-        }
+        rm.style("height", feed.getHeight());
 
         rm.openEnd();
 

@@ -124,7 +124,7 @@ export default class ChatMessage extends Control {
             /**
              * Fired when an inline edit is confirmed.
              */
-            editPress: {
+            edit: {
                 parameters: {
                     value: {
                         type: "string"
@@ -134,7 +134,7 @@ export default class ChatMessage extends Control {
             /**
              * Fired when the delete action is pressed.
              */
-            deletePress: {}
+            delete: {}
         }
     };
 
@@ -176,7 +176,7 @@ export default class ChatMessage extends Control {
                 icon: "sap-icon://delete",
                 tooltip: deleteText,
                 type: ButtonType.Reject,
-                press: () => this.fireEvent("deletePress")
+                press: () => this.fireEvent("delete")
             }).addStyleClass("ui5xChatMessageAction"),
             true
         );
@@ -350,7 +350,7 @@ export default class ChatMessage extends Control {
 
         this.editing = false;
         this.draftText = "";
-        this.fireEvent("editPress", { value });
+        this.fireEvent("edit", { value });
         this.invalidate();
     }
 

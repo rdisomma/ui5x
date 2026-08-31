@@ -24,13 +24,13 @@ QUnit.test("Defaults and composer controls", function (assert) {
     assert.ok(feed.getSendOnEnter(), "Enter sends by default");
     assert.ok(feed.getShowSendButton(), "The send button is visible by default");
     assert.ok(feed.getSendButtonEnabled(), "The send action is enabled by default");
-    assert.notOk(feed.getGroupByDate(), "Date grouping is disabled by default");
+    assert.ok(feed.getGroupByDate(), "Messages are grouped by date by default");
     assert.notOk(feed.getHighlightOwnMessage(), "Own messages are not highlighted by default");
     assert.strictEqual(feed.getOwnMessageAppearance(), ChatMessageAppearance.Bubble, "Own messages use bubbles by default");
     assert.strictEqual(feed.getIncomingMessageAppearance(), ChatMessageAppearance.Conversation, "Incoming messages use the conversation appearance by default");
     assert.strictEqual(feed.getComposerPosition(), ChatFeedComposerPosition.Top, "The composer starts above the messages");
     assert.strictEqual(feed.getMessageAlignment(), ChatFeedMessageAlignment.Top, "Messages start at the top");
-    assert.strictEqual(feed.getChatMaxHeight(), "32rem", "The chat has a finite default height");
+    assert.strictEqual(feed.getHeight(), "32rem", "The chat has a finite default height");
     assert.strictEqual(feed.getWidth(), "100%", "The feed fills its container by default");
     assert.deepEqual(feed.getMessages(), [], "There are no messages by default");
     assert.strictEqual(feed.getSendButtonType(), ButtonType.Emphasized, "The send button is emphasized");
@@ -57,7 +57,7 @@ QUnit.test("Message appearances are independent from composer placement and scro
         incomingMessageAppearance: ChatMessageAppearance.Bubble,
         composerPosition: ChatFeedComposerPosition.Bottom,
         messageAlignment: ChatFeedMessageAlignment.Bottom,
-        chatMaxHeight: "6rem",
+        height: "6rem",
         messages
     });
 
@@ -71,7 +71,6 @@ QUnit.test("Message appearances are independent from composer placement and scro
             assert.ok(domRef?.classList.contains("ui5xChatFeedIncomingMessagesBubble"), "Incoming messages use the configured bubble appearance");
             assert.ok(messageLog?.classList.contains("ui5xChatFeedMessagesBottom"), "The messages content is bottom aligned");
             assert.strictEqual(domRef?.style.height, "6rem", "The configured chat height is reserved immediately");
-            assert.strictEqual(domRef?.style.maxHeight, "6rem", "The configured maximum chat height is rendered");
             assert.strictEqual(messageLog?.style.height, "", "The messages viewport uses the remaining chat height");
             assert.strictEqual(messageLog?.nextElementSibling, composer, "The composer is rendered after the messages");
             assert.ok((messageLog?.scrollHeight ?? 0) > (messageLog?.clientHeight ?? 0), "Long conversations scroll inside the viewport");
@@ -93,7 +92,7 @@ QUnit.test("The bottom composer remains stable while a short conversation grows"
 
     const feed = new ChatFeed({
         composerPosition: ChatFeedComposerPosition.Bottom,
-        chatMaxHeight: "100%",
+        height: "100%",
         messages: [new ChatMessage({ text: "First message" })]
     });
     let initialComposerTop = 0;
@@ -139,7 +138,7 @@ QUnit.test("Sending a new message always scrolls to the end", function (assert) 
     const feed = new ChatFeed({
         value: "Newest message",
         messageAlignment: ChatFeedMessageAlignment.Top,
-        chatMaxHeight: "6rem",
+        height: "6rem",
         messages
     });
     let renderingCount = 0;

@@ -61,13 +61,6 @@ export default class AccordionItem extends Control {
                 defaultValue: true
             },
             /**
-             * Defines a stable key identifying the item within its Accordion.
-             */
-            key: {
-                type: "string",
-                defaultValue: ""
-            },
-            /**
              * Defines whether the item can be expanded or collapsed.
              */
             enabled: {

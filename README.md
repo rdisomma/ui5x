@@ -601,7 +601,7 @@ license keys, VINs and IBANs. Pasted content is distributed across the segments 
 ```js
 sap.ui.require(["ui5x/input/SegmentedInput"], function (SegmentedInput) {
   new SegmentedInput({
-    digits: 16,
+    segmentCount: 16,
     inputType: "Alphanumeric",
     size: "Small",
     showClearIcon: true,
@@ -621,7 +621,7 @@ In XML views:
   xmlns:input="ui5x.input">
 
   <input:SegmentedInput
-    digits="6"
+    segmentCount="6"
     inputType="Numeric"
     size="Large"
     showSeparators="true"
@@ -641,7 +641,7 @@ forms and `Large` emphasizes short verification codes.
 
 | Property            | Type                               | Default   | Description                                                       |
 | ------------------- | ---------------------------------- | --------- | ----------------------------------------------------------------- |
-| `digits`            | `int`                              | `6`       | Number of segments, clamped between 1 and 34.                     |
+| `segmentCount`            | `int`                              | `6`       | Number of segments, clamped between 1 and 34.                     |
 | `inputType`         | `ui5x.input.SegmentedInputType`    | `Numeric` | Accepted characters: `Numeric` or `Alphanumeric`.                 |
 | `size`              | `ui5x.input.SegmentedInputSize`    | `Medium`  | Segment size: `Small`, `Medium` or `Large`.                       |
 | `value`             | `string`                           | `""`      | Current normalized value, limited to the configured segment count. |
@@ -684,7 +684,7 @@ sap.ui.require([
     incomingMessageAppearance: "Conversation",
     composerPosition: "Bottom",
     messageAlignment: "Bottom",
-    chatMaxHeight: "32rem",
+    height: "32rem",
     send: function (oEvent) {
       // Add oEvent.getParameter("value") to the application model.
     },
@@ -727,7 +727,7 @@ sap.ui.require([
     incomingMessageAppearance="Conversation"
     composerPosition="Bottom"
     messageAlignment="Bottom"
-    chatMaxHeight="32rem"
+    height="32rem"
     messages="{/messages}"
     send=".onSend"
     messageEdit=".onMessageEdit"
@@ -770,13 +770,13 @@ chronological order while initially showing the latest messages.
 | `showSendButton`         | `boolean`             | `true`                     | Displays the send button.                        |
 | `sendButtonEnabled`      | `boolean`             | `true`                     | Enables the button independently from Enter.    |
 | `messageTimestampFormat` | `ui5x.chat.ChatMessageTimestampFormat` | `Time`    | Displays each timestamp as `Time`, as `DateTime`, or hides it with `None`. Without date separators, `Time` alone leaves the day ambiguous. |
-| `groupByDate`            | `boolean`             | `false`                    | Inserts date separators between message groups. |
+| `groupByDate`            | `boolean`             | `true`                     | Inserts date separators between message groups. |
 | `highlightOwnMessage`    | `boolean`             | `false`                    | Highlights every message marked as `ownMessage`. |
 | `ownMessageAppearance`   | `ui5x.chat.ChatMessageAppearance` | `Bubble`          | Selects the appearance of messages from the current user. |
 | `incomingMessageAppearance` | `ui5x.chat.ChatMessageAppearance` | `Conversation` | Selects the appearance of incoming messages. |
 | `composerPosition`       | `ui5x.chat.ChatFeedComposerPosition` | `Top`       | Places the composer above or below the messages. |
 | `messageAlignment`       | `ui5x.chat.ChatFeedMessageAlignment` | `Top`       | Starts short conversations at the top or bottom and controls the initial scroll position. |
-| `chatMaxHeight`          | `sap.ui.core.CSSSize` | `32rem`                    | Reserves and limits the complete chat so the composer stays fixed; percentages require a parent with an explicit height, while an empty value restores a content-driven height. |
+| `height`                 | `sap.ui.core.CSSSize` | `32rem`                    | Height of the whole chat, which keeps the composer in place as messages arrive; a percentage needs a parent with a height of its own, and an empty value lets the content decide. |
 | `width`                  | `sap.ui.core.CSSSize` | `100%`                     | Width of the control.                            |
 
 | `ChatMessage` property | Type      | Default | Description                                         |

@@ -44,7 +44,7 @@
                 <IconTabFilter key="appearance" text="Appearance">
                     <List>
                         <InputListItem label="Number of boxes">
-                            <StepInput value="{settings>/segmentedInput/digits}" min="1" max="12" width="6rem" />
+                            <StepInput value="{settings>/segmentedInput/segmentCount}" min="1" max="12" width="6rem" />
                         </InputListItem>
 
                         <InputListItem label="Box size">

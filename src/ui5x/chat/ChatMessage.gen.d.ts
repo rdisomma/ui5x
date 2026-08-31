@@ -52,12 +52,12 @@ declare module "./ChatMessage" {
         /**
          * Fired when an inline edit is confirmed.
          */
-        editPress?: (event: ChatMessage$EditPressEvent) => void;
+        edit?: (event: ChatMessage$EditEvent) => void;
 
         /**
          * Fired when the delete action is pressed.
          */
-        deletePress?: (event: ChatMessage$DeletePressEvent) => void;
+        delete?: (event: ChatMessage$DeleteEvent) => void;
     }
 
     export default interface ChatMessage {
@@ -245,10 +245,10 @@ declare module "./ChatMessage" {
          */
         setTimestamp(timestamp: any): this;
 
-        // event: editPress
+        // event: edit
 
         /**
-         * Attaches event handler "fn" to the "editPress" event of this "ChatMessage".
+         * Attaches event handler "fn" to the "edit" event of this "ChatMessage".
          *
          * Fired when an inline edit is confirmed.
          *
@@ -260,10 +260,10 @@ declare module "./ChatMessage" {
          *
          * @returns Reference to "this" in order to allow method chaining
          */
-        attachEditPress(fn: (event: ChatMessage$EditPressEvent) => void, listener?: object): this;
+        attachEdit(fn: (event: ChatMessage$EditEvent) => void, listener?: object): this;
 
         /**
-         * Attaches event handler "fn" to the "editPress" event of this "ChatMessage".
+         * Attaches event handler "fn" to the "edit" event of this "ChatMessage".
          *
          * Fired when an inline edit is confirmed.
          *
@@ -276,10 +276,10 @@ declare module "./ChatMessage" {
          *
          * @returns Reference to "this" in order to allow method chaining
          */
-        attachEditPress<CustomDataType extends object>(data: CustomDataType, fn: (event: ChatMessage$EditPressEvent, data: CustomDataType) => void, listener?: object): this;
+        attachEdit<CustomDataType extends object>(data: CustomDataType, fn: (event: ChatMessage$EditEvent, data: CustomDataType) => void, listener?: object): this;
 
         /**
-         * Detaches event handler "fn" from the "editPress" event of this "ChatMessage".
+         * Detaches event handler "fn" from the "edit" event of this "ChatMessage".
          *
          * Fired when an inline edit is confirmed.
          *
@@ -289,10 +289,10 @@ declare module "./ChatMessage" {
          * @param listener Context object on which the given function had to be called
          * @returns Reference to "this" in order to allow method chaining
          */
-        detachEditPress(fn: (event: ChatMessage$EditPressEvent) => void, listener?: object): this;
+        detachEdit(fn: (event: ChatMessage$EditEvent) => void, listener?: object): this;
 
         /**
-         * Fires event "editPress" to attached listeners.
+         * Fires event "edit" to attached listeners.
          *
          * Fired when an inline edit is confirmed.
          *
@@ -301,12 +301,12 @@ declare module "./ChatMessage" {
          *
          * @returns Reference to "this" in order to allow method chaining
          */
-        fireEditPress(parameters?: ChatMessage$EditPressEventParameters): this;
+        fireEdit(parameters?: ChatMessage$EditEventParameters): this;
 
-        // event: deletePress
+        // event: delete
 
         /**
-         * Attaches event handler "fn" to the "deletePress" event of this "ChatMessage".
+         * Attaches event handler "fn" to the "delete" event of this "ChatMessage".
          *
          * Fired when the delete action is pressed.
          *
@@ -318,10 +318,10 @@ declare module "./ChatMessage" {
          *
          * @returns Reference to "this" in order to allow method chaining
          */
-        attachDeletePress(fn: (event: ChatMessage$DeletePressEvent) => void, listener?: object): this;
+        attachDelete(fn: (event: ChatMessage$DeleteEvent) => void, listener?: object): this;
 
         /**
-         * Attaches event handler "fn" to the "deletePress" event of this "ChatMessage".
+         * Attaches event handler "fn" to the "delete" event of this "ChatMessage".
          *
          * Fired when the delete action is pressed.
          *
@@ -334,10 +334,10 @@ declare module "./ChatMessage" {
          *
          * @returns Reference to "this" in order to allow method chaining
          */
-        attachDeletePress<CustomDataType extends object>(data: CustomDataType, fn: (event: ChatMessage$DeletePressEvent, data: CustomDataType) => void, listener?: object): this;
+        attachDelete<CustomDataType extends object>(data: CustomDataType, fn: (event: ChatMessage$DeleteEvent, data: CustomDataType) => void, listener?: object): this;
 
         /**
-         * Detaches event handler "fn" from the "deletePress" event of this "ChatMessage".
+         * Detaches event handler "fn" from the "delete" event of this "ChatMessage".
          *
          * Fired when the delete action is pressed.
          *
@@ -347,44 +347,44 @@ declare module "./ChatMessage" {
          * @param listener Context object on which the given function had to be called
          * @returns Reference to "this" in order to allow method chaining
          */
-        detachDeletePress(fn: (event: ChatMessage$DeletePressEvent) => void, listener?: object): this;
+        detachDelete(fn: (event: ChatMessage$DeleteEvent) => void, listener?: object): this;
 
         /**
-         * Fires event "deletePress" to attached listeners.
+         * Fires event "delete" to attached listeners.
          *
          * Fired when the delete action is pressed.
          *
          * @param parameters Parameters to pass along with the event
          * @returns Reference to "this" in order to allow method chaining
          */
-        fireDeletePress(parameters?: ChatMessage$DeletePressEventParameters): this;
+        fireDelete(parameters?: ChatMessage$DeleteEventParameters): this;
     }
 
     /**
-     * Interface describing the parameters of ChatMessage's 'editPress' event.
+     * Interface describing the parameters of ChatMessage's 'edit' event.
      * Fired when an inline edit is confirmed.
      */
-    export interface ChatMessage$EditPressEventParameters {
+    export interface ChatMessage$EditEventParameters {
         value?: string;
     }
 
     /**
-     * Interface describing the parameters of ChatMessage's 'deletePress' event.
+     * Interface describing the parameters of ChatMessage's 'delete' event.
      * Fired when the delete action is pressed.
      */
     // eslint-disable-next-line
-    export interface ChatMessage$DeletePressEventParameters {
+    export interface ChatMessage$DeleteEventParameters {
     }
 
     /**
-     * Type describing the ChatMessage's 'editPress' event.
+     * Type describing the ChatMessage's 'edit' event.
      * Fired when an inline edit is confirmed.
      */
-    export type ChatMessage$EditPressEvent = Event<ChatMessage$EditPressEventParameters>;
+    export type ChatMessage$EditEvent = Event<ChatMessage$EditEventParameters>;
 
     /**
-     * Type describing the ChatMessage's 'deletePress' event.
+     * Type describing the ChatMessage's 'delete' event.
      * Fired when the delete action is pressed.
      */
-    export type ChatMessage$DeletePressEvent = Event<ChatMessage$DeletePressEventParameters>;
+    export type ChatMessage$DeleteEvent = Event<ChatMessage$DeleteEventParameters>;
 }

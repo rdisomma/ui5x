@@ -11,7 +11,7 @@
 
             <ui5x:SegmentedInput
                 id="code"
-                digits="{settings>/segmentedInput/digits}"
+                segmentCount="{settings>/segmentedInput/segmentCount}"
                 inputType="{settings>/segmentedInput/inputType}"
                 size="{settings>/segmentedInput/size}"
                 showSeparators="{settings>/segmentedInput/showSeparators}"

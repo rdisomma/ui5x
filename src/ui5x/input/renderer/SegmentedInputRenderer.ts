@@ -15,7 +15,7 @@ const SegmentedInputRenderer = {
 
     render(rm: RenderManager, control: SegmentedInput): void {
         const id = control.getId();
-        const digits = control.getDigits();
+        const segmentCount = control.getSegmentCount();
         const showSeparators = control.getShowSeparators();
         const separatorInterval = control.getSeparatorInterval();
         const inputType = control.getInputType();
@@ -35,7 +35,7 @@ const SegmentedInputRenderer = {
         rm.openStart("div", control);
         rm.class("ui5xSegmentedInput");
         rm.class(`ui5xSegmentedInputSize${size}`);
-        rm.attr("data-ui5x-digits", digits);
+        rm.attr("data-ui5x-segment-count", segmentCount);
 
         if (!enabled) {
             rm.class("ui5xSegmentedInputDisabled");
@@ -51,19 +51,19 @@ const SegmentedInputRenderer = {
 
         rm.openEnd();
 
-        rm.openStart("div", `${id}-digits`);
+        rm.openStart("div", `${id}-segments`);
         rm.class("ui5xSegmentedInputDigits");
         rm.attr("role", "group");
         rm.openEnd();
 
-        for (let index = 0; index < digits; index++) {
+        for (let index = 0; index < segmentCount; index++) {
             rm.voidStart("input", `${id}-digit-${index}`);
             rm.class("ui5xSegmentedInputDigit");
             rm.attr("type", "text");
             rm.attr("inputmode", isNumeric ? "numeric" : "text");
             rm.attr("pattern", isNumeric ? "[0-9]*" : "[A-Za-z0-9]*");
-            rm.attr("maxlength", digits);
-            rm.attr("aria-label", `${index + 1} / ${digits}`);
+            rm.attr("maxlength", segmentCount);
+            rm.attr("aria-label", `${index + 1} / ${segmentCount}`);
             rm.attr("data-ui5x-digit-index", index);
             rm.attr("autocapitalize", "off");
             rm.attr("spellcheck", "false");
@@ -112,7 +112,7 @@ const SegmentedInputRenderer = {
             if (
                 showSeparators
                 && (index + 1) % separatorInterval === 0
-                && index < digits - 1
+                && index < segmentCount - 1
             ) {
                 rm.openStart("span");
                 rm.class("ui5xSegmentedInputSeparator");
