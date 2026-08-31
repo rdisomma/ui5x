@@ -45,6 +45,10 @@
                 </Select>
             </InputListItem>
 
+            <InputListItem label="Make the copy fail">
+                <Switch state="{settings>/copyButton/failOnPurpose}" />
+            </InputListItem>
+
             <InputListItem label="Text if it fails">
                 <Input textAlign="Begin" value="{settings>/copyButton/errorText}" width="11rem" />
             </InputListItem>

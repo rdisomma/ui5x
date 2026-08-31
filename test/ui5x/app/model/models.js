@@ -49,6 +49,7 @@ sap.ui.define([
                     errorIcon: "sap-icon://error",
                     errorText: "Not copied",
                     errorType: "Reject",
+                    failOnPurpose: false,
                     iconFirst: true
                 },
                 loadingContainer: {

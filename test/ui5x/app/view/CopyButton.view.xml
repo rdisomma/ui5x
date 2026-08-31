@@ -1,5 +1,5 @@
 <mvc:View
-    controllerName="ui5x.test.app.controller.Base"
+    controllerName="ui5x.test.app.controller.CopyButton"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:ui5x="ui5x.button"
