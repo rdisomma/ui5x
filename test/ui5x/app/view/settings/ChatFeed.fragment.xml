@@ -44,11 +44,11 @@
                             <Switch state="{settings>/chatFeed/sendButtonEnabled}" />
                         </InputListItem>
 
-                        <InputListItem label="Edit button on messages">
+                        <InputListItem label="Edit button on your messages">
                             <Switch state="{settings>/chatFeed/messagesEditable}" />
                         </InputListItem>
 
-                        <InputListItem label="Delete button on messages">
+                        <InputListItem label="Delete button on your messages">
                             <Switch state="{settings>/chatFeed/messagesDeletable}" />
                         </InputListItem>
                     </List>
