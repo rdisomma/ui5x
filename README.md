@@ -275,17 +275,17 @@ sap.ui.require([
   "ui5x/loading/LoadingContainer",
   "sap/m/Text"
 ], function (LoadingContainer, Text) {
-  const container = new LoadingContainer({
+  const oContainer = new LoadingContainer({
     loading: true,
     skeletonType: "Line",
     skeletonLines: 3,
     content: new Text({ text: "Loaded content" })
   });
 
-  container.placeAt("content");
+  oContainer.placeAt("content");
 
   // later, when data has arrived
-  container.setLoading(false);
+  oContainer.setLoading(false);
 });
 ```
 
@@ -589,9 +589,9 @@ sap.ui.require(["ui5x/input/SegmentedInput"], function (SegmentedInput) {
     inputType: "Alphanumeric",
     size: "Small",
     showClearIcon: true,
-    complete: function (event) {
+    complete: function (oEvent) {
       this.setValueState("Success");
-      this.setValueStateText(`Completed: ${event.getParameter("value")}`);
+      this.setValueStateText(`Completed: ${oEvent.getParameter("value")}`);
     }
   }).placeAt("content");
 });
@@ -657,7 +657,7 @@ sap.ui.require([
   "ui5x/chat/ChatFeed",
   "ui5x/chat/ChatMessage"
 ], function (ChatFeed, ChatMessage) {
-  const feed = new ChatFeed({
+  const oChatFeed = new ChatFeed({
     value: "{/draft}",
     placeholder: "Write a message",
     sendOnEnter: true,
@@ -669,18 +669,18 @@ sap.ui.require([
     composerPosition: "Bottom",
     messageAlignment: "Bottom",
     chatMaxHeight: "32rem",
-    send: function (event) {
-      // Add event.getParameter("value") to the application model.
+    send: function (oEvent) {
+      // Add oEvent.getParameter("value") to the application model.
     },
-    messageEdit: function (event) {
-      // Update event.getParameter("message").getBindingContext().
+    messageEdit: function (oEvent) {
+      // Update oEvent.getParameter("message").getBindingContext().
     },
-    messageDelete: function (event) {
+    messageDelete: function (oEvent) {
       // Remove the corresponding entry from the application model.
     }
   });
 
-  feed.bindAggregation("messages", {
+  oChatFeed.bindAggregation("messages", {
     path: "/messages",
     template: new ChatMessage({
       key: "{id}",
@@ -694,6 +694,43 @@ sap.ui.require([
     templateShareable: false
   });
 });
+```
+
+```xml
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:chat="ui5x.chat">
+
+  <chat:ChatFeed
+    value="{/draft}"
+    placeholder="Write a message"
+    sendOnEnter="true"
+    groupByDate="true"
+    messageTimestampFormat="Time"
+    ownMessageAppearance="Bubble"
+    incomingMessageAppearance="Conversation"
+    composerPosition="Bottom"
+    messageAlignment="Bottom"
+    chatMaxHeight="32rem"
+    messages="{/messages}"
+    send=".onSend"
+    messageEdit=".onMessageEdit"
+    messageDelete=".onMessageDelete">
+
+    <chat:messages>
+      <chat:ChatMessage
+        key="{id}"
+        text="{text}"
+        sender="{sender}"
+        ownMessage="{ownMessage}"
+        editable="{editable}"
+        deletable="{deletable}"
+        timestamp="{timestamp}" />
+    </chat:messages>
+
+  </chat:ChatFeed>
+
+</mvc:View>
 ```
 
 The control emits actions and leaves model mutations to the application, so the same API works
