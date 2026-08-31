@@ -138,18 +138,19 @@ export default class LoadingResponsiveTable extends Control {
     private declare _calculatedSkeletonRows: number;
     private declare _skeletonSignature: string;
     private declare _onWindowResize: () => void;
+    private declare _observedRoot: Element | null;
+    private declare _resizeObserver: ResizeObserver | null;
+    private declare _fillUpdateFrame: number | null;
 
     init(): void {
         this._calculatedSkeletonRows = 0;
         this._skeletonSignature = "";
+        this._observedRoot = null;
+        this._resizeObserver = null;
+        this._fillUpdateFrame = null;
 
         this._onWindowResize = (): void => {
-            if (
-                this.getLoading() &&
-                this.getSkeletonRowsMode() === SkeletonRowMode.Fill
-            ) {
-                this._updateCalculatedSkeletonRows();
-            }
+            this._scheduleFillUpdate();
         };
 
         this.setAggregation(
@@ -160,6 +161,11 @@ export default class LoadingResponsiveTable extends Control {
             true
         );
 
+        /*
+         * The available height is measured from the viewport, which the
+         * observer below cannot see changing on its own: shortening the window
+         * need not resize this control at all.
+         */
         window.addEventListener(
             "resize",
             this._onWindowResize
@@ -171,6 +177,16 @@ export default class LoadingResponsiveTable extends Control {
             "resize",
             this._onWindowResize
         );
+
+        if (this._fillUpdateFrame !== null) {
+            window.cancelAnimationFrame(this._fillUpdateFrame);
+
+            this._fillUpdateFrame = null;
+        }
+
+        this._resizeObserver?.disconnect();
+        this._resizeObserver = null;
+        this._observedRoot = null;
     }
 
     onBeforeRendering(): void {
@@ -180,12 +196,68 @@ export default class LoadingResponsiveTable extends Control {
     }
 
     onAfterRendering(): void {
+        this._syncResizeObserver();
+
         if (
             this.getLoading() &&
             this.getSkeletonRowsMode() === SkeletonRowMode.Fill
         ) {
             this._updateCalculatedSkeletonRows();
         }
+    }
+
+    /*
+     * Fill measures the DOM, so a control rendered inside something not yet
+     * laid out, a routing target mid-transition or a closed IconTabFilter,
+     * measures nothing and keeps the fallback row count. Watching the root
+     * element is what brings the measurement back once it has a size.
+     */
+    private _syncResizeObserver(): void {
+        const root = this.getDomRef();
+
+        /*
+         * observe() invokes the callback once on its own, so re-observing an
+         * unchanged target would schedule a measurement for every rendering.
+         */
+        if (root === this._observedRoot) {
+            return;
+        }
+
+        this._resizeObserver?.disconnect();
+        this._observedRoot = root;
+
+        if (!root) {
+            return;
+        }
+
+        if (!this._resizeObserver) {
+            this._resizeObserver = new ResizeObserver((): void => {
+                this._scheduleFillUpdate();
+            });
+        }
+
+        this._resizeObserver.observe(root);
+    }
+
+    /*
+     * Measuring straight from the observer would run inside the same layout
+     * pass that triggered it.
+     */
+    private _scheduleFillUpdate(): void {
+        if (this._fillUpdateFrame !== null) {
+            return;
+        }
+
+        this._fillUpdateFrame = window.requestAnimationFrame((): void => {
+            this._fillUpdateFrame = null;
+
+            if (
+                this.getLoading() &&
+                this.getSkeletonRowsMode() === SkeletonRowMode.Fill
+            ) {
+                this._updateCalculatedSkeletonRows();
+            }
+        });
     }
 
     setSkeletonRows(rows: number): this {

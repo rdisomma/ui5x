@@ -146,3 +146,40 @@ QUnit.test("Skeleton table mirrors columns, rows and visual settings", function 
 
     loadingTable.placeAt("qunit-fixture");
 });
+
+QUnit.test("Fill mode observes the root element", function (assert) {
+    const done = assert.async();
+    const NativeResizeObserver = window.ResizeObserver;
+    const observed: Element[] = [];
+
+    window.ResizeObserver = class extends NativeResizeObserver {
+        observe(target: Element, options?: ResizeObserverOptions): void {
+            observed.push(target);
+            super.observe(target, options);
+        }
+    };
+
+    const loadingTable = new LoadingResponsiveTable({
+        loading: true,
+        skeletonRowsMode: SkeletonRowMode.Fill,
+        table: new Table({
+            columns: [new Column({ header: new Text({ text: "Name" }) })]
+        })
+    });
+
+    loadingTable.addEventDelegate({
+        onAfterRendering: function () {
+            window.ResizeObserver = NativeResizeObserver;
+
+            assert.ok(
+                observed.includes(loadingTable.getDomRef() as Element),
+                "Fill measures the DOM, so a control whose first render happens before it has a size needs the root watched to measure again"
+            );
+
+            loadingTable.destroy();
+            done();
+        }
+    });
+
+    loadingTable.placeAt("qunit-fixture");
+});
