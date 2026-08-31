@@ -298,8 +298,16 @@
                 }
             );
 
+            const skeletonHeightChoice = DemoToolbar.choice(
+                ["", "3rem", "6rem"],
+                loadingContainer.getSkeletonHeight(),
+                function (key) {
+                    loadingContainer.setSkeletonHeight(key);
+                }
+            );
+
             /*
-             * skeletonType and skeletonLines only configure the built-in
+             * These three only configure the built-in
              * placeholder, so they are disabled while a custom placeholder is
              * provided. Otherwise the buttons would look active and change
              * nothing.
@@ -310,6 +318,7 @@
 
                 skeletonTypeChoice.setEnabled(!usesCustomPlaceholder);
                 skeletonLinesChoice.setEnabled(!usesCustomPlaceholder);
+                skeletonHeightChoice.setEnabled(!usesCustomPlaceholder);
             }
 
             syncDefaultSkeletonKnobs();
@@ -347,6 +356,8 @@
 
                 DemoToolbar.label("Lines"),
                 skeletonLinesChoice,
+                DemoToolbar.label("Rectangle height"),
+                skeletonHeightChoice,
 
                 DemoToolbar.separator(),
 

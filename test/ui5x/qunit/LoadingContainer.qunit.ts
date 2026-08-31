@@ -172,3 +172,48 @@ QUnit.test("The default placeholder follows animated and the container follows w
 
     container.placeAt("animated-width-test-area");
 });
+
+QUnit.test("The skeleton height reaches the default placeholder", function (assert) {
+    const done = assert.async();
+
+    const target = document.createElement("div");
+    target.id = "skeleton-height-container-test-area";
+
+    document
+        .getElementById("qunit-fixture")!
+        .appendChild(target);
+
+    const container = new LoadingContainer({
+        loading: true,
+        skeletonType: SkeletonType.Rectangle,
+        skeletonHeight: "4rem",
+        content: new HTML({ content: "<span>Loaded</span>" })
+    });
+
+    container.addEventDelegate({
+        onAfterRendering: () => {
+            const shape = container
+                .getDomRef()!
+                .querySelector(".ui5xSkeletonShape") as HTMLElement;
+
+            assert.strictEqual(
+                shape.style.height,
+                "4rem",
+                "The configured height is on the default placeholder"
+            );
+
+            container.setSkeletonHeight("6rem");
+
+            assert.strictEqual(
+                (container.getAggregation("_defaultPlaceholder") as unknown as { getHeight(): string }).getHeight(),
+                "6rem",
+                "A later change reaches it too"
+            );
+
+            container.destroy();
+            done();
+        }
+    });
+
+    container.placeAt("skeleton-height-container-test-area");
+});

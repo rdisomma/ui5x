@@ -53,6 +53,7 @@ sap.ui.define([
                     customPlaceholder: true,
                     skeletonType: "Line",
                     skeletonLines: 3,
+                    skeletonHeight: "3rem",
                     animated: true,
                     width: "24rem"
                 },

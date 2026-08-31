@@ -18,7 +18,8 @@
             width="{settings>/loadingContainer/width}"
             animated="{settings>/loadingContainer/animated}"
             skeletonType="{settings>/loadingContainer/skeletonType}"
-            skeletonLines="{settings>/loadingContainer/skeletonLines}">
+            skeletonLines="{settings>/loadingContainer/skeletonLines}"
+            skeletonHeight="{settings>/loadingContainer/skeletonHeight}">
 
             <ui5x:content>
                 <VBox>
@@ -45,7 +46,7 @@
 
                         <ui5x:Skeleton
                             type="Line"
-                            lines="{settings>/loadingContainer/skeletonLines}"
+                            lines="2"
                             animated="{settings>/loadingContainer/animated}"
                             width="100%">
                             <ui5x:layoutData>
@@ -56,6 +57,7 @@
 
                     <ui5x:Skeleton
                             type="Rectangle"
+                            height="3rem"
                             animated="{settings>/loadingContainer/animated}"
                             width="100%"
                             class="sapUiSmallMarginTop" />

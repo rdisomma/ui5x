@@ -28,8 +28,19 @@
                 </Select>
             </InputListItem>
 
+            <InputListItem label="Rectangle height">
+                <Input
+                    textAlign="Begin"
+                    value="{settings>/loadingContainer/skeletonHeight}"
+                    enabled="{= !${settings>/loadingContainer/customPlaceholder} }"
+                    width="9rem" />
+            </InputListItem>
+
             <InputListItem label="Number of lines">
-                <StepInput value="{settings>/loadingContainer/skeletonLines}" min="1" max="3" width="6rem" />
+                <StepInput
+                    value="{settings>/loadingContainer/skeletonLines}"
+                    enabled="{= !${settings>/loadingContainer/customPlaceholder} }"
+                    min="1" max="3" width="6rem" />
             </InputListItem>
 
             <InputListItem label="Shimmer animation">

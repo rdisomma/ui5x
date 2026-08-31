@@ -330,6 +330,7 @@ With a custom placeholder:
 | `loading`       | `boolean`                   | `false` | Show the placeholder instead of the content.                        |
 | `skeletonType`  | `ui5x.loading.SkeletonType` | `Line`  | Type of the default skeleton. Ignored when `placeholder` is set.    |
 | `skeletonLines` | `int`                       | `1`     | Lines of the default skeleton (clamped to 1–3). Ignored when `placeholder` is set. |
+| `skeletonHeight`| `sap.ui.core.CSSSize`       | `null`  | Height of the default skeleton, used only by type `Rectangle`. Ignored when `placeholder` is set. |
 | `animated`      | `boolean`                   | `true`  | Animate the default skeleton. Ignored when `placeholder` is set.    |
 | `width`         | `sap.ui.core.CSSSize`       | `null`  | Width of the container. Inherits the width of its parent when unset. |
 

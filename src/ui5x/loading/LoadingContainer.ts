@@ -77,6 +77,18 @@ export default class LoadingContainer extends Control {
                 defaultValue: null
             },
             /**
+             * Defines the height of the default skeleton placeholder.
+             *
+             * This property only affects skeletons of type
+             * {@link ui5x.loading.SkeletonType.Rectangle} and has no effect
+             * when a custom placeholder is provided: a line takes its height
+             * from skeletonLines, and a circle from its width.
+             */
+            skeletonHeight: {
+                type: "sap.ui.core.CSSSize",
+                defaultValue: null
+            },
+            /**
              * Defines whether the default skeleton placeholder animates.
              *
              * The animation is automatically disabled when the user's
@@ -121,6 +133,7 @@ export default class LoadingContainer extends Control {
         this.setAggregation("_defaultPlaceholder", new Skeleton({
             type: this.getSkeletonType(),
             lines: this.getSkeletonLines(),
+            height: this.getSkeletonHeight(),
             animated: this.getAnimated()
         }), true);
     }
@@ -141,6 +154,15 @@ export default class LoadingContainer extends Control {
 
         const skeleton = this.getAggregation("_defaultPlaceholder") as Skeleton | null;
         skeleton?.setLines(normalizedLines);
+
+        return this;
+    }
+
+    setSkeletonHeight(height: string): this {
+        this.setProperty("skeletonHeight", height);
+
+        const skeleton = this.getAggregation("_defaultPlaceholder") as Skeleton | null;
+        skeleton?.setHeight(height);
 
         return this;
     }

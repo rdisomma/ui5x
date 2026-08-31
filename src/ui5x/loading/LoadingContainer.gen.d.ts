@@ -47,6 +47,19 @@ declare module "./LoadingContainer" {
         width?: CSSSize | PropertyBindingInfo | `{${string}}`;
 
         /**
+         * /**
+                     * Defines the height of the default skeleton placeholder.
+                     *
+                     * This property only affects skeletons of type
+                     *
+        {@link ui5x.loading.SkeletonType.Rectangle}
+         and has no effect
+                     * when a custom placeholder is provided: a line takes its height
+                     * from skeletonLines, and a circle from its width.
+         */
+        skeletonHeight?: CSSSize | PropertyBindingInfo | `{${string}}`;
+
+        /**
          * Defines whether the default skeleton placeholder animates.
         
         The animation is automatically disabled when the user's
@@ -197,6 +210,45 @@ declare module "./LoadingContainer" {
          * @returns Reference to "this" in order to allow method chaining
          */
         setWidth(width: CSSSize): this;
+
+        // property: skeletonHeight
+
+        /**
+         * Gets current value of property "skeletonHeight".
+         *
+         * /**
+                     * Defines the height of the default skeleton placeholder.
+                     *
+                     * This property only affects skeletons of type
+                     *
+        {@link ui5x.loading.SkeletonType.Rectangle}
+         and has no effect
+                     * when a custom placeholder is provided: a line takes its height
+                     * from skeletonLines, and a circle from its width.
+         *
+         * @returns Value of property "skeletonHeight"
+         */
+        getSkeletonHeight(): CSSSize;
+
+        /**
+         * Sets a new value for property "skeletonHeight".
+         *
+         * /**
+                     * Defines the height of the default skeleton placeholder.
+                     *
+                     * This property only affects skeletons of type
+                     *
+        {@link ui5x.loading.SkeletonType.Rectangle}
+         and has no effect
+                     * when a custom placeholder is provided: a line takes its height
+                     * from skeletonLines, and a circle from its width.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * @param skeletonHeight New value for property "skeletonHeight"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setSkeletonHeight(skeletonHeight: CSSSize): this;
 
         // property: animated
 
