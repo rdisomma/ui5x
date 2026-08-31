@@ -40,8 +40,8 @@ QUnit.test("Defaults and action buttons", function (assert) {
     );
     assert.strictEqual(
         message._getDeleteButton().getType(),
-        ButtonType.Transparent,
-        "The delete action is transparent, so it does not compete with the message"
+        ButtonType.Reject,
+        "The delete action uses a reject sap.m.Button"
     );
     assert.strictEqual(
         message._getSaveButton().getType(),

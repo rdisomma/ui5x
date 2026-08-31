@@ -270,13 +270,27 @@
     color: @sapUiContentLabelColor;
 
     font-size: @sapMFontSmallSize;
-    line-height: 1rem;
+
+    /*
+     * A line box taller than the text puts its extra space above and below in
+     * unequal parts, so the digits sat higher than the action icons even
+     * though both boxes were centred. Hugging the text makes the box and the
+     * ink share a centre.
+     */
+    line-height: 1;
 }
 
 .ui5xChatMessageActions {
     gap: 0.5rem;
     display: flex;
     align-items: center;
+
+    /*
+     * The footer distributes the time and the actions, and with the time
+     * hidden a single child would be pushed to the start. This keeps the
+     * actions against the end whatever else the footer holds.
+     */
+    margin-left: auto;
 }
 
 .ui5xChatMessageAction.sapMBtn {
@@ -289,6 +303,22 @@
 .ui5xChatMessageAction .sapMBtnInner {
     min-width: 2rem;
     height: 2rem;
+}
+
+/*
+ * sap.m gives the icon a line box taller than the square the action shrinks
+ * it to, which drops the glyph below the middle. Centring the glyph itself
+ * makes the box height irrelevant.
+ */
+.ui5xChatMessageAction .sapMBtnIcon {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1;
 }
 
 
