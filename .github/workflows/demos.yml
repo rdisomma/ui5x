@@ -1,16 +1,11 @@
 name: Demos
 
-# Manual for now. Add a push trigger once the repository is public and Pages is
-# enabled under Settings > Pages with "GitHub Actions" as the source:
-#
-#   on:
-#     push:
-#       branches: [main]
-#     workflow_dispatch:
-#
-# Deploying to Pages from a private repository needs a paid GitHub plan, so
-# until then this workflow would fail on every push.
+# The site is rebuilt from main, so the published demo is never older than the
+# controls it shows. Pages is configured under Settings > Pages with "GitHub
+# Actions" as the source.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:

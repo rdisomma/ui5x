@@ -1,0 +1,79 @@
+name: Release
+
+# Releasing is tagging. The tag carries the version, and the job refuses to
+# publish if it disagrees with package.json, so a mistyped tag cannot spend a
+# version number.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # npm exchanges this token with the registry to prove the publish comes from
+  # this repository and this workflow. It is what replaces a stored npm token.
+  id-token: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12"
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      # Trusted publishing needs a newer npm than the one bundled with Node.
+      - name: Use an npm that can publish through OIDC
+        run: npm install --global npm@latest
+
+      - name: Cache the OpenUI5 libraries
+        uses: actions/cache@v4
+        with:
+          path: ~/.ui5/framework
+          key: ui5-${{ runner.os }}-${{ hashFiles('ui5.yaml') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate the control interfaces
+        run: npm run interfaces
+
+      - name: Check the generated interfaces are up to date
+        run: git diff --exit-code -- '*.gen.d.ts'
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Run the test suite
+        run: npm test
+
+      - name: Build the distribution package
+        run: npm run build:package && npm run package:prepare
+
+      - name: Check the tag matches the version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          VERSION="$(node -p "require('./dist/package.json').version")"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "Tag v$TAG does not match package version $VERSION" >&2
+            exit 1
+          fi
+
+      # No token: the registry authenticates the OIDC claim above. The package
+      # is dist/, never the repository root, which package.json marks private
+      # so a publish from the wrong directory fails instead of shipping the
+      # sources.
+      - name: Publish to npm
+        run: npm publish ./dist --provenance
