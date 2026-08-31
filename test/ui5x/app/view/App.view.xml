@@ -12,6 +12,10 @@
                 <Title text="UI5X" level="H1" />
                 <ToolbarSpacer />
                 <Button
+                    text="API reference"
+                    icon="sap-icon://sys-help"
+                    press=".onOpenApiReference" />
+                <Button
                     text="Play with it"
                     icon="sap-icon://palette"
                     type="Emphasized"

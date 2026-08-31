@@ -1,9 +1,10 @@
 sap.ui.define([
     "./Base.controller",
     "sap/ui/core/Fragment",
+    "sap/m/library",
     "sap/m/MessageToast",
     "../model/models"
-], function (Base, Fragment, MessageToast, models) {
+], function (Base, Fragment, mobileLibrary, MessageToast, models) {
     "use strict";
 
     return Base.extend("ui5x.test.app.controller.App", {
@@ -21,6 +22,14 @@ sap.ui.define([
 
         onNavigate: function (oEvent) {
             this.navTo(oEvent.getParameter("item").getKey());
+        },
+
+        onOpenApiReference: function () {
+            mobileLibrary.URLHelper.redirect(
+                "https://github.com/rdisomma/ui5x#" +
+                    this.getModel("app").getProperty("/control").toLowerCase(),
+                true
+            );
         },
 
         onOpenSettings: function (oEvent) {
