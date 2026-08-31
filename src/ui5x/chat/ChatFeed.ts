@@ -119,6 +119,17 @@ export default class ChatFeed extends Control {
             /**
              * Defines whether the send button is displayed.
              */
+            /**
+             * Defines whether the composer is rendered.
+             *
+             * A read-only feed, such as a transcript or an audit trail, sets
+             * this to false. The send action and its events are then
+             * unreachable, so {@link #event:send} is never fired.
+             */
+            showComposer: {
+                type: "boolean",
+                defaultValue: true
+            },
             showSendButton: {
                 type: "boolean",
                 defaultValue: true

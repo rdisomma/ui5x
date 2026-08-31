@@ -45,6 +45,19 @@ export default class Skeleton extends Control {
                 defaultValue: null
             },
             /**
+             * Defines the height of the skeleton.
+             *
+             * This property only affects skeletons of type
+             * {@link ui5x.loading.SkeletonType.Rectangle}. A line takes its
+             * height from the number of lines, and a circle from its width.
+             *
+             * Accepts any valid UI5 CSSSize value, such as "3rem" or "48px".
+             */
+            height: {
+                type: "sap.ui.core.CSSSize",
+                defaultValue: null
+            },
+            /**
              * Defines the visual shape of the skeleton.
              *
              * @defaultValue ui5x.loading.SkeletonType.Line

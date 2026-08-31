@@ -22,6 +22,7 @@ sap.ui.define([
                     sendOnEnter: true,
                     sendButtonText: "",
                     sendButtonTooltip: "Send",
+                    showComposer: true,
                     showSendButton: true,
                     sendButtonEnabled: true,
                     messageTimestampFormat: "Time",
@@ -90,6 +91,7 @@ sap.ui.define([
                     composite: true,
                     type: "Line",
                     lines: 3,
+                    height: "3rem",
                     width: "24rem",
                     animated: true
                 }

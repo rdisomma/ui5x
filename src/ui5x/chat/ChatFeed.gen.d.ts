@@ -70,8 +70,16 @@ declare module "./ChatFeed" {
         sendButtonTooltip?: string | PropertyBindingInfo;
 
         /**
-         * Defines whether the send button is displayed.
+         * /**
+                     * Defines whether the composer is rendered.
+                     *
+                     * A read-only feed, such as a transcript or an audit trail, sets
+                     * this to false. The send action and its events are then
+                     * unreachable, so
+        {@link #event:send}
+         is never fired.
          */
+        showComposer?: boolean | PropertyBindingInfo | `{${string}}`;
         showSendButton?: boolean | PropertyBindingInfo | `{${string}}`;
 
         /**
@@ -423,12 +431,49 @@ declare module "./ChatFeed" {
          */
         setSendButtonTooltip(sendButtonTooltip: string): this;
 
+        // property: showComposer
+
+        /**
+         * Gets current value of property "showComposer".
+         *
+         * /**
+                     * Defines whether the composer is rendered.
+                     *
+                     * A read-only feed, such as a transcript or an audit trail, sets
+                     * this to false. The send action and its events are then
+                     * unreachable, so
+        {@link #event:send}
+         is never fired.
+         *
+         * Default value is: true
+         * @returns Value of property "showComposer"
+         */
+        getShowComposer(): boolean;
+
+        /**
+         * Sets a new value for property "showComposer".
+         *
+         * /**
+                     * Defines whether the composer is rendered.
+                     *
+                     * A read-only feed, such as a transcript or an audit trail, sets
+                     * this to false. The send action and its events are then
+                     * unreachable, so
+        {@link #event:send}
+         is never fired.
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * Default value is: true
+         * @param [showComposer=true] New value for property "showComposer"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setShowComposer(showComposer: boolean): this;
+
         // property: showSendButton
 
         /**
          * Gets current value of property "showSendButton".
-         *
-         * Defines whether the send button is displayed.
          *
          * Default value is: true
          * @returns Value of property "showSendButton"
@@ -437,8 +482,6 @@ declare module "./ChatFeed" {
 
         /**
          * Sets a new value for property "showSendButton".
-         *
-         * Defines whether the send button is displayed.
          *
          * When called with a value of "null" or "undefined", the default value of the property will be restored.
          *

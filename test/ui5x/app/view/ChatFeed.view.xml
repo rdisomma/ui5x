@@ -15,6 +15,7 @@
             sendOnEnter="{settings>/chatFeed/sendOnEnter}"
             sendButtonText="{settings>/chatFeed/sendButtonText}"
             sendButtonTooltip="{settings>/chatFeed/sendButtonTooltip}"
+            showComposer="{settings>/chatFeed/showComposer}"
             showSendButton="{settings>/chatFeed/showSendButton}"
             sendButtonEnabled="{settings>/chatFeed/sendButtonEnabled}"
             messageTimestampFormat="{settings>/chatFeed/messageTimestampFormat}"

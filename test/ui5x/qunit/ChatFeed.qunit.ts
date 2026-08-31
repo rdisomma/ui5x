@@ -630,3 +630,35 @@ QUnit.test("Visibility and editability are reflected by the composer", function 
 
     feed.placeAt("qunit-fixture");
 });
+
+QUnit.test("A feed without a composer renders none", function (assert) {
+    const done = assert.async();
+
+    const target = document.createElement("div");
+    target.id = "chat-feed-readonly-test-area";
+
+    document
+        .getElementById("qunit-fixture")!
+        .appendChild(target);
+
+    const feed = new ChatFeed({
+        showComposer: false,
+        messages: [new ChatMessage({ key: "1", text: "Shipped this morning" })]
+    });
+
+    feed.addEventDelegate({
+        onAfterRendering: () => {
+            assert.notOk(feed.getDomRef("composer"), "The composer is absent");
+
+            assert.ok(
+                feed.getDomRef("messages"),
+                "The conversation is still rendered"
+            );
+
+            feed.destroy();
+            done();
+        }
+    });
+
+    feed.placeAt("chat-feed-readonly-test-area");
+});

@@ -88,3 +88,39 @@ QUnit.test("Line skeleton renders the requested number of lines", function (asse
 
     skeleton.placeAt("skeleton-test-area");
 });
+QUnit.test("The height applies to a rectangle and to nothing else", function (assert) {
+    const done = assert.async();
+
+    const target = document.createElement("div");
+    target.id = "skeleton-height-test-area";
+
+    document
+        .getElementById("qunit-fixture")!
+        .appendChild(target);
+
+    const rectangle = new Skeleton({ type: SkeletonType.Rectangle, height: "5rem" });
+    const circle = new Skeleton({ type: SkeletonType.Circle, height: "5rem" });
+
+    circle.addEventDelegate({
+        onAfterRendering: () => {
+            assert.strictEqual(
+                (rectangle.getDomRef("shape") as HTMLElement).style.height,
+                "5rem",
+                "The rectangle takes the configured height"
+            );
+
+            assert.strictEqual(
+                (circle.getDomRef("shape") as HTMLElement).style.height,
+                "",
+                "The circle keeps the height its aspect ratio gives it"
+            );
+
+            rectangle.destroy();
+            circle.destroy();
+            done();
+        }
+    });
+
+    rectangle.placeAt("skeleton-height-test-area");
+    circle.placeAt("skeleton-height-test-area");
+});

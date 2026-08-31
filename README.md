@@ -274,6 +274,7 @@ In XML views:
 | Property   | Type                     | Default  | Description                                                                 |
 | ---------- | ------------------------ | -------- | --------------------------------------------------------------------------- |
 | `width`    | `sap.ui.core.CSSSize`    | `null`   | Width of the skeleton, e.g. `"100%"`, `"20rem"`, `"320px"`.                  |
+| `height`   | `sap.ui.core.CSSSize`    | `null`   | Height of the skeleton. Only applies to type `Rectangle`: a line takes its height from `lines`, a circle from its width. |
 | `type`     | `ui5x.loading.SkeletonType` | `Line` | Visual shape: `Line`, `Rectangle` or `Circle`.                              |
 | `lines`    | `int`                    | `1`      | Number of placeholder lines. Values outside 1–3 are clamped. Only applies to type `Line`. |
 | `animated` | `boolean`                | `true`   | Shimmer animation. Also stops when the system requests reduced motion.       |
@@ -590,6 +591,11 @@ a press initiated by the user.
 | `successText` | `string`              | `""`                   | Temporary text, applied only when the button already has text. |
 | `successType` | `sap.m.ButtonType`    | Current button `type`  | Temporary type. An explicitly configured value takes priority. |
 
+| Event         | Parameters                        | Description                                             |
+| ------------- | --------------------------------- | -------------------------------------------------------- |
+| `copySuccess` | `value: string`                   | Fired once the value has reached the clipboard.           |
+| `copyError`   | `value: string`, `reason: string` | Fired when the write failed, which `press` cannot report. |
+
 ### SegmentedInput
 
 `SegmentedInput` collects a fixed-length value in individual fields. It supports numeric codes
@@ -767,6 +773,7 @@ chronological order while initially showing the latest messages.
 | `sendButtonIcon`         | `sap.ui.core.URI`     | `sap-icon://paper-plane`   | Send button icon.                                |
 | `sendButtonType`         | `sap.m.ButtonType`    | `Emphasized`               | Send button type.                                |
 | `sendButtonTooltip`      | `string`              | `sap.m localized text`      | Accessible send button tooltip.                  |
+| `showComposer`           | `boolean`             | `true`                     | Renders the composer. A read-only feed sets it to `false`, and `send` is then never fired. |
 | `showSendButton`         | `boolean`             | `true`                     | Displays the send button.                        |
 | `sendButtonEnabled`      | `boolean`             | `true`                     | Enables the button independently from Enter.    |
 | `messageTimestampFormat` | `ui5x.chat.ChatMessageTimestampFormat` | `Time`    | Displays each timestamp as `Time`, as `DateTime`, or hides it with `None`. Without date separators, `Time` alone leaves the day ambiguous. |

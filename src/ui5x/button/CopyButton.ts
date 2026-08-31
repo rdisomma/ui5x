@@ -73,6 +73,43 @@ export default class CopyButton extends Button {
                 type: "sap.m.ButtonType",
                 defaultValue: ButtonType.Default
             }
+        },
+
+        events: {
+            /**
+             * Fired after the value has reached the system clipboard.
+             *
+             * The press event only says the button was pressed. The write that
+             * follows is asynchronous and can fail, so an application that
+             * reports the outcome listens here instead.
+             */
+            copySuccess: {
+                parameters: {
+                    /**
+                     * The value written to the clipboard.
+                     */
+                    value: { type: "string" }
+                }
+            },
+
+            /**
+             * Fired when the value could not be written to the clipboard,
+             * which happens on an insecure origin, without permission, or
+             * where the browser exposes no Clipboard API at all.
+             */
+            copyError: {
+                parameters: {
+                    /**
+                     * The value that was not written.
+                     */
+                    value: { type: "string" },
+
+                    /**
+                     * The reason the write failed.
+                     */
+                    reason: { type: "string" }
+                }
+            }
         }
     }
 
@@ -127,11 +164,12 @@ export default class CopyButton extends Button {
         const value = this.getValue();
 
         if (!navigator.clipboard) {
-            return Log.error(
-                "Clipboard API is not available.",
-                undefined,
-                "ui5x.button.CopyButton"
-            );
+            const reason = "Clipboard API is not available.";
+
+            Log.error(reason, undefined, "ui5x.button.CopyButton");
+            this.fireEvent("copyError", { value, reason });
+
+            return;
         }
 
         try {
@@ -147,14 +185,19 @@ export default class CopyButton extends Button {
             }
 
             this.showSuccessFeedback();
+            this.fireEvent("copySuccess", { value });
         } catch (e) {
+            const reason = e instanceof Error ? e.message : String(e);
+
             Log.error(
                 "Failed to copy value to the clipboard.",
-                e instanceof Error
-                    ? e.message
-                    : String(e),
+                reason,
                 "ui5x.button.CopyButton"
             );
+
+            if (!this.isDestroyed()) {
+                this.fireEvent("copyError", { value, reason });
+            }
         }
     }
 

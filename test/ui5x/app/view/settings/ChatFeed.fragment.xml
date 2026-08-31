@@ -32,6 +32,10 @@
                             <Switch state="{settings>/chatFeed/sendOnEnter}" />
                         </InputListItem>
 
+                        <InputListItem label="Show the composer">
+                            <Switch state="{settings>/chatFeed/showComposer}" />
+                        </InputListItem>
+
                         <InputListItem label="Show the send button">
                             <Switch state="{settings>/chatFeed/showSendButton}" />
                         </InputListItem>

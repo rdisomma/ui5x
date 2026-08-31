@@ -11,6 +11,7 @@
             visible="{= !${settings>/skeleton/composite} }"
             type="{settings>/skeleton/type}"
             lines="{settings>/skeleton/lines}"
+            height="{settings>/skeleton/height}"
             width="{settings>/skeleton/width}"
             animated="{settings>/skeleton/animated}" />
 
@@ -38,6 +39,7 @@
             <ui5x:Skeleton
                 type="Rectangle"
                 width="100%"
+                height="{settings>/skeleton/height}"
                 animated="{settings>/skeleton/animated}"
                 class="sapUiSmallMarginTop" />
         </VBox>

@@ -51,7 +51,19 @@ const SkeletonRenderer = {
 
         rm.class("ui5xSkeletonItem");
         rm.class("ui5xSkeletonShape");
-        
+
+        /*
+         * The style goes on the shape rather than the root: the rectangle's
+         * height lives in the shape's own rule, and a circle takes its height
+         * from the aspect ratio of the root, which an explicit height would
+         * fight.
+         */
+        const height = control.getHeight();
+
+        if (height && control.getType() === SkeletonType.Rectangle) {
+            rm.style("height", height);
+        }
+
         rm.openEnd();
         rm.close("span");
     },

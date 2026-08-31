@@ -137,3 +137,42 @@ QUnit.test("The feedback never reaches a bound model", function (assert) {
 
     button.destroy();
 });
+
+QUnit.test("A clipboard failure reaches the application", function (assert) {
+    const done = assert.async();
+
+    const button = new CopyButton({ value: "npm i ui5x" });
+
+    const clipboard = navigator.clipboard;
+
+    Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: {
+            writeText: () => Promise.reject(new Error("Denied"))
+        }
+    });
+
+    button.attachCopyError((oEvent) => {
+        assert.strictEqual(
+            oEvent.getParameter("value"),
+            "npm i ui5x",
+            "The value that was not written is reported"
+        );
+
+        assert.strictEqual(
+            oEvent.getParameter("reason"),
+            "Denied",
+            "The reason is reported"
+        );
+
+        Object.defineProperty(navigator, "clipboard", {
+            configurable: true,
+            value: clipboard
+        });
+
+        button.destroy();
+        done();
+    });
+
+    button.firePress();
+});

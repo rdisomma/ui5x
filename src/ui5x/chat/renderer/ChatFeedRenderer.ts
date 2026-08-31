@@ -27,16 +27,18 @@ const ChatFeedRenderer = {
 
         rm.openEnd();
 
+        const showComposer = feed.getShowComposer();
+
         const composerAtBottom = feed.getComposerPosition()
             === ChatFeedComposerPosition.Bottom;
 
-        if (!composerAtBottom) {
+        if (showComposer && !composerAtBottom) {
             this.renderComposer(rm, feed);
         }
 
         this.renderMessagesViewport(rm, feed);
 
-        if (composerAtBottom) {
+        if (showComposer && composerAtBottom) {
             this.renderComposer(rm, feed);
         }
 

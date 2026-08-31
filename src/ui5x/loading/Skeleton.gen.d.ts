@@ -19,6 +19,20 @@ declare module "./Skeleton" {
         width?: CSSSize | PropertyBindingInfo | `{${string}}`;
 
         /**
+         * /**
+                     * Defines the height of the skeleton.
+                     *
+                     * This property only affects skeletons of type
+                     *
+        {@link ui5x.loading.SkeletonType.Rectangle}
+        . A line takes its
+                     * height from the number of lines, and a circle from its width.
+                     *
+                     * Accepts any valid UI5 CSSSize value, such as "3rem" or "48px".
+         */
+        height?: CSSSize | PropertyBindingInfo | `{${string}}`;
+
+        /**
          * Defines the visual shape of the skeleton.
          */
         type?: SkeletonType | PropertyBindingInfo | `{${string}}`;
@@ -75,6 +89,47 @@ declare module "./Skeleton" {
          * @returns Reference to "this" in order to allow method chaining
          */
         setWidth(width: CSSSize): this;
+
+        // property: height
+
+        /**
+         * Gets current value of property "height".
+         *
+         * /**
+                     * Defines the height of the skeleton.
+                     *
+                     * This property only affects skeletons of type
+                     *
+        {@link ui5x.loading.SkeletonType.Rectangle}
+        . A line takes its
+                     * height from the number of lines, and a circle from its width.
+                     *
+                     * Accepts any valid UI5 CSSSize value, such as "3rem" or "48px".
+         *
+         * @returns Value of property "height"
+         */
+        getHeight(): CSSSize;
+
+        /**
+         * Sets a new value for property "height".
+         *
+         * /**
+                     * Defines the height of the skeleton.
+                     *
+                     * This property only affects skeletons of type
+                     *
+        {@link ui5x.loading.SkeletonType.Rectangle}
+        . A line takes its
+                     * height from the number of lines, and a circle from its width.
+                     *
+                     * Accepts any valid UI5 CSSSize value, such as "3rem" or "48px".
+         *
+         * When called with a value of "null" or "undefined", the default value of the property will be restored.
+         *
+         * @param height New value for property "height"
+         * @returns Reference to "this" in order to allow method chaining
+         */
+        setHeight(height: CSSSize): this;
 
         // property: type
 
