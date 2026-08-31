@@ -93,7 +93,11 @@ way to look at the dark and high-contrast palettes.
 npm install @raffaeledisomma/ui5x
 ```
 
-**1.** Declare and map the library in the application's `manifest.json`:
+**1.** In `manifest.json`, add two entries to the `sap.ui5` section the application already has,
+as siblings of each other:
+
+- `dependencies.libs` declares UI5X, so the runtime loads it with the component
+- `resourceRoots` tells UI5 where the library is served from
 
 ```json
 {
