@@ -30,7 +30,7 @@ QUnit.test("Defaults and composer controls", function (assert) {
     assert.strictEqual(feed.getIncomingMessageAppearance(), ChatMessageAppearance.Conversation, "Incoming messages use the conversation appearance by default");
     assert.strictEqual(feed.getComposerPosition(), ChatFeedComposerPosition.Top, "The composer starts above the messages");
     assert.strictEqual(feed.getMessageAlignment(), ChatFeedMessageAlignment.Top, "Messages start at the top");
-    assert.strictEqual(feed.getHeight(), "32rem", "The chat has a finite default height");
+    assert.strictEqual(feed.getHeight(), "100%", "The chat fills the height it is given");
     assert.strictEqual(feed.getWidth(), "100%", "The feed fills its container by default");
     assert.deepEqual(feed.getMessages(), [], "There are no messages by default");
     assert.strictEqual(feed.getSendButtonType(), ButtonType.Emphasized, "The send button is emphasized");

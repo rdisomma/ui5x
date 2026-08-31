@@ -728,7 +728,7 @@ declare module "./ChatFeed" {
         Percentage values require a parent with an explicit height.
         Set an empty value to let the chat follow its content.
          *
-         * Default value is: "32rem"
+         * Default value is: "100%"
          * @returns Value of property "height"
          */
         getHeight(): CSSSize;
@@ -744,8 +744,8 @@ declare module "./ChatFeed" {
          *
          * When called with a value of "null" or "undefined", the default value of the property will be restored.
          *
-         * Default value is: "32rem"
-         * @param [height="32rem"] New value for property "height"
+         * Default value is: "100%"
+         * @param [height="100%"] New value for property "height"
          * @returns Reference to "this" in order to allow method chaining
          */
         setHeight(height: CSSSize): this;

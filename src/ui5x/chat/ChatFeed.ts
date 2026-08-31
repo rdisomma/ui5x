@@ -209,7 +209,7 @@ export default class ChatFeed extends Control {
              */
             height: {
                 type: "sap.ui.core.CSSSize",
-                defaultValue: "32rem"
+                defaultValue: "100%"
             },
             /**
              * Defines the width of the feed.

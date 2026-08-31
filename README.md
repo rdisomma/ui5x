@@ -705,7 +705,7 @@ chronological order while initially showing the latest messages.
 | `incomingMessageAppearance` | `ui5x.chat.ChatMessageAppearance` | `Conversation` | Selects the appearance of incoming messages. |
 | `composerPosition`       | `ui5x.chat.ChatFeedComposerPosition` | `Top`       | Places the composer above or below the messages. |
 | `messageAlignment`       | `ui5x.chat.ChatFeedMessageAlignment` | `Top`       | Starts short conversations at the top or bottom and controls the initial scroll position. |
-| `height`                 | `sap.ui.core.CSSSize` | `32rem`                    | Height of the whole chat, which keeps the composer in place as messages arrive; a percentage needs a parent with a height of its own, and an empty value lets the content decide. |
+| `height`                 | `sap.ui.core.CSSSize` | `100%`                     | Height of the whole chat, which keeps the composer in place as messages arrive; a percentage needs a parent with a height of its own, and an empty value lets the content decide. |
 | `width`                  | `sap.ui.core.CSSSize` | `100%`                     | Width of the control.                            |
 
 | `ChatMessage` property | Type      | Default | Description                                         |
@@ -743,7 +743,7 @@ sap.ui.require([
     incomingMessageAppearance: "Conversation",
     composerPosition: "Bottom",
     messageAlignment: "Bottom",
-    height: "32rem",
+    height: "100%",
     send: function (oEvent) {
       // Add oEvent.getParameter("value") to the application model.
     },
@@ -786,7 +786,7 @@ sap.ui.require([
     incomingMessageAppearance="Conversation"
     composerPosition="Bottom"
     messageAlignment="Bottom"
-    height="32rem"
+    height="100%"
     messages="{/messages}"
     send=".onSend"
     messageEdit=".onMessageEdit"

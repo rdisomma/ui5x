@@ -7,6 +7,13 @@
 
     box-sizing: border-box;
 
+    /*
+     * Keeps the composer and the messages off the edges of the feed.
+     * border-box takes it out of the declared size rather than adding to it,
+     * so a height of 100% still measures 100%.
+     */
+    padding: 0.5rem;
+
     color: @sapUiText;
     font-family: @sapUiFontFamily;
 }
