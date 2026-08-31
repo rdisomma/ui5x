@@ -18,25 +18,23 @@ a private API. You declare and bind them from XML views, JavaScript or TypeScrip
 
 ## Features
 
-- **[`Skeleton`](#skeleton)** — a placeholder in the shape of the content you are waiting for: a paragraph of
-  lines, a block, or an avatar disc. Animated by default, hidden from screen readers, and styled
-  with UI5 theme parameters so it follows the active theme.
-- **[`LoadingContainer`](#loadingcontainer)** — swaps between a placeholder and the real content: bind `loading` to a
-  model flag and the container does the switch for you, with no manual visibility juggling. It
-  ships with a built-in skeleton and accepts any UI5 control as a custom placeholder when the
-  default does not match your layout.
-- **[`LoadingResponsiveTable`](#loadingresponsivetable)** — wraps a responsive `sap.m.Table` and replaces its rows with
-  matching skeleton cells while data is loading. It supports fixed and viewport-filling row counts.
-- **[`LoadingTable`](#loadingtable)** — wraps a grid `sap.ui.table.Table` and renders a matching, presentation-only
-  table with skeleton cells while data is loading.
-- **[`Accordion`](#accordion)** — groups `AccordionItem` sections with single or multiple expansion. Items can
-  contain any UI5 control and support disabled or non-toggleable states.
-- **[`CopyButton`](#copybutton)** — copies a value to the system clipboard and confirms success with a temporary
-  icon, text and button type while preserving the original state.
-- **[`SegmentedInput`](#segmentedinput)** — collects numeric or alphanumeric identifiers in separate fields, with
-  optional grouping, three sizes, value-state feedback, paste support and a Fiori clear action.
-- **[`ChatFeed`](#chatfeed)** — combines a configurable message composer with a bindable conversation. Messages
-  can be aligned by current user, grouped by date and expose edit or delete actions.
+- **[`Skeleton`](#skeleton)** — a placeholder in the shape of the content you are waiting for: a
+  paragraph of lines, a block, or an avatar disc.
+- **[`LoadingContainer`](#loadingcontainer)** — swaps between a placeholder and the real content:
+  bind `loading` to a model flag and it does the switch. Ships with a built-in skeleton and takes
+  any control as a custom placeholder.
+- **[`LoadingResponsiveTable`](#loadingresponsivetable)** — wraps a responsive `sap.m.Table` and
+  replaces its rows with matching skeleton cells, in a fixed or viewport-filling count.
+- **[`LoadingTable`](#loadingtable)** — the same for a grid `sap.ui.table.Table`, rendered as a
+  presentation-only copy while data is loading.
+- **[`Accordion`](#accordion)** — groups `AccordionItem` sections with single or multiple
+  expansion. Items take any UI5 control and can be disabled or held open.
+- **[`CopyButton`](#copybutton)** — copies a value to the system clipboard and reports success or
+  failure with a temporary icon, text and button type.
+- **[`SegmentedInput`](#segmentedinput)** — collects numeric or alphanumeric identifiers in
+  separate fields, with grouping, value-state feedback and paste support.
+- **[`ChatFeed`](#chatfeed)** — combines a message composer with a bindable conversation.
+  Messages align by current user, group by date and expose edit or delete actions.
 - **Accessibility-aware** — loading containers expose `aria-busy`, skeleton content is kept out
   of the accessibility tree, and animations respect `prefers-reduced-motion`. The interactive
   controls implement the UI5 focus and labelling contracts (`getFocusDomRef`, `getIdForLabel`,
@@ -834,7 +832,6 @@ the library ships, which is the practical way to look at the dark and high-contr
 | `npm run interfaces`        | Generate the `*.gen.d.ts` control interfaces once |
 | `npm run typecheck`         | `tsc --noEmit` |
 | `npm run build`             | Interfaces + typecheck + regular UI5 build into `dist/` |
-| `npm run build:package`     | Alias of `npm run build`, used by `package:pack` |
 | `npm run start:dist`        | Serve the built library from `dist/` |
 | `npm run package:pack`      | Build, prepare and create the distributable npm tarball |
 | `npm run package:dry-run`   | Validate the distributable package without creating a tarball |
