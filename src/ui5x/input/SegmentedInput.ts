@@ -71,7 +71,7 @@ export default class SegmentedInput extends Control {
                 defaultValue: false
             },
             /**
-             * Defines the number of digits displayed between separators.
+             * Defines the number of segments displayed between separators.
              *
              * Values lower than 1 are normalized to 1.
              */

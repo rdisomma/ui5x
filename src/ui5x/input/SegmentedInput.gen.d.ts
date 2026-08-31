@@ -38,7 +38,7 @@ declare module "./SegmentedInput" {
         showSeparators?: boolean | PropertyBindingInfo | `{${string}}`;
 
         /**
-         * Defines the number of digits displayed between separators.
+         * Defines the number of segments displayed between separators.
         
         Values lower than 1 are normalized to 1.
          */
@@ -226,7 +226,7 @@ declare module "./SegmentedInput" {
         /**
          * Gets current value of property "separatorInterval".
          *
-         * Defines the number of digits displayed between separators.
+         * Defines the number of segments displayed between separators.
         
         Values lower than 1 are normalized to 1.
          *
@@ -238,7 +238,7 @@ declare module "./SegmentedInput" {
         /**
          * Sets a new value for property "separatorInterval".
          *
-         * Defines the number of digits displayed between separators.
+         * Defines the number of segments displayed between separators.
         
         Values lower than 1 are normalized to 1.
          *

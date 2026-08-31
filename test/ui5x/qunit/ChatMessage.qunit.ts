@@ -159,9 +159,9 @@ QUnit.test("Cancelling an inline edit keeps the original message", function (ass
         text: "Original",
         editable: true
     });
-    let editPressCount = 0;
+    let editCount = 0;
 
-    message.attachEdit(() => editPressCount++);
+    message.attachEdit(() => editCount++);
 
     message._getEditButton().firePress();
     message._getEditor().fireLiveChange({ value: "Discarded" });
@@ -169,7 +169,7 @@ QUnit.test("Cancelling an inline edit keeps the original message", function (ass
 
     assert.notOk(message._isEditing(), "Cancel closes the editor");
     assert.strictEqual(message.getText(), "Original", "The message text is not mutated");
-    assert.strictEqual(editPressCount, 0, "Cancel does not emit an edit event");
+    assert.strictEqual(editCount, 0, "Cancel does not emit an edit event");
 
     message.destroy();
 });
