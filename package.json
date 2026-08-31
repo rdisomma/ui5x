@@ -1,6 +1,6 @@
 {
   "name": "@raffaeledisomma/ui5x",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An OpenUI5 and SAPUI5 library of composite controls, with theming, accessibility and state handling built in",
   "types": "dist/index.d.ts",
   "main": "index.js",
