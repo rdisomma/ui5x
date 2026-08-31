@@ -144,14 +144,17 @@ instead:
 </details>
 
 <details>
-<summary><b>Why the <code>resourceRoots</code> entry is required</b></summary>
+<summary><b>Why both manifest entries are required</b></summary>
 
-It is what tells UI5 where the library lives. UI5X is served from `/thirdparty/ui5x/` rather than
-from `/resources/`, which a SAP Fiori tools project reserves for the SAPUI5 runtime: a proxy
-claims it during local preview, and a route forwards it to SAP's servers once deployed. Serving
-UI5X from its own path means neither has to be reconfigured and neither can intercept the
-library, and it is also what makes the library resolve in SAP Build Work Zone, where the UI5
-runtime is loaded by the shell.
+Without them the application starts and fails on the first control with
+`ModuleError: failed to load 'ui5x/library.js'`.
+
+`resourceRoots` is the one easy to leave out: it tells UI5 where the library lives. UI5X is served
+from `/thirdparty/ui5x/` rather than from `/resources/`, which a SAP Fiori tools project reserves
+for the SAPUI5 runtime: a proxy claims it during local preview, and a route forwards it to SAP's
+servers once deployed. Serving UI5X from its own path means neither has to be reconfigured and
+neither can intercept the library, and it is also what makes the library resolve in SAP Build Work
+Zone, where the UI5 runtime is loaded by the shell.
 
 </details>
 
@@ -213,19 +216,11 @@ builder:
         includeDependencies: true
 ```
 
-Verify the archive, then the deployment:
-
-```bash
-unzip -l dist/<archive>.zip | grep "thirdparty/ui5x/library.js"
-curl -sI https://<application-url>/thirdparty/ui5x/library.js
-```
-
 <details>
-<summary><b>What each setting does, and what is missing without it</b></summary>
+<summary><b>What these two settings do, and what is missing without each</b></summary>
 
 | Setting | Needed for | Symptom when missing |
 | ------- | ---------- | -------------------- |
-| `manifest.json` declaration and mapping | always | `ModuleError: failed to load 'ui5x/library.js'` |
 | `includeDependency` | any deployment | `dist` contains no `thirdparty/ui5x` |
 | `includeDependencies` | Cloud Foundry | the archive contains no `thirdparty/ui5x` |
 
@@ -234,10 +229,21 @@ dependency, which is what `includeDependency` does. If the project then packages
 `ui5-task-zipper`, the archive holds the application's own files only until `includeDependencies`
 is set. The two options are one letter apart and both are required.
 
-Serving `library.js` from the deployed application means the deployment is complete, whether or
-not the application itself works.
-
 </details>
+
+### Checking that the library was deployed
+
+Neither command changes anything. The first should print the matching line from the archive, the
+second a status line ending in `200`:
+
+```bash
+unzip -l dist/<archive>.zip | grep "thirdparty/ui5x/library.js"
+curl -sI https://<application-url>/thirdparty/ui5x/library.js | head -1
+```
+
+No output from `grep` means the archive was built without the library, so one of the two settings
+above is missing. A status other than `200` means the library never reached the server. A `200`
+means the deployment carries it, whether or not the application itself works.
 
 ## Controls and API reference
 
