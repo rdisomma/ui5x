@@ -18,24 +18,24 @@ a private API. You declare and bind them from XML views, JavaScript or TypeScrip
 
 ## Features
 
-- **`Skeleton`** — a placeholder in the shape of the content you are waiting for: a paragraph of
+- **[`Skeleton`](#skeleton)** — a placeholder in the shape of the content you are waiting for: a paragraph of
   lines, a block, or an avatar disc. Animated by default, hidden from screen readers, and styled
   with UI5 theme parameters so it follows the active theme.
-- **`LoadingContainer`** — swaps between a placeholder and the real content: bind `loading` to a
+- **[`LoadingContainer`](#loadingcontainer)** — swaps between a placeholder and the real content: bind `loading` to a
   model flag and the container does the switch for you, with no manual visibility juggling. It
   ships with a built-in skeleton and accepts any UI5 control as a custom placeholder when the
   default does not match your layout.
-- **`LoadingResponsiveTable`** — wraps a responsive `sap.m.Table` and replaces its rows with
+- **[`LoadingResponsiveTable`](#loadingresponsivetable)** — wraps a responsive `sap.m.Table` and replaces its rows with
   matching skeleton cells while data is loading. It supports fixed and viewport-filling row counts.
-- **`LoadingTable`** — wraps a grid `sap.ui.table.Table` and renders a matching, presentation-only
+- **[`LoadingTable`](#loadingtable)** — wraps a grid `sap.ui.table.Table` and renders a matching, presentation-only
   table with skeleton cells while data is loading.
-- **`Accordion`** — groups `AccordionItem` sections with single or multiple expansion. Items can
+- **[`Accordion`](#accordion)** — groups `AccordionItem` sections with single or multiple expansion. Items can
   contain any UI5 control and support disabled or non-toggleable states.
-- **`CopyButton`** — copies a value to the system clipboard and confirms success with a temporary
+- **[`CopyButton`](#copybutton)** — copies a value to the system clipboard and confirms success with a temporary
   icon, text and button type while preserving the original state.
-- **`SegmentedInput`** — collects numeric or alphanumeric identifiers in separate fields, with
+- **[`SegmentedInput`](#segmentedinput)** — collects numeric or alphanumeric identifiers in separate fields, with
   optional grouping, three sizes, value-state feedback, paste support and a Fiori clear action.
-- **`ChatFeed`** — combines a configurable message composer with a bindable conversation. Messages
+- **[`ChatFeed`](#chatfeed)** — combines a configurable message composer with a bindable conversation. Messages
   can be aligned by current user, grouped by date and expose edit or delete actions.
 - **Accessibility-aware** — loading containers expose `aria-busy`, skeleton content is kept out
   of the accessibility tree, and animations respect `prefers-reduced-motion`. The interactive
@@ -79,26 +79,6 @@ To check a control by hand, `npm start` serves the demo pages under
 its control, and a theme selector covering every theme the library ships, which is the practical
 way to look at the dark and high-contrast palettes.
 
-### UI5 library dependencies
-
-UI5X declares three OpenUI5 libraries, which are loaded together with it:
-
-| Library        | Declared | Required by |
-| -------------- | -------- | ----------- |
-| `sap.ui.core`  | yes | Every control |
-| `sap.m`        | no  | `CopyButton` (which extends `sap.m.Button`), `ChatFeed`, `ChatMessage`, `SegmentedInput`, `LoadingResponsiveTable` |
-| `sap.ui.table` | no  | `LoadingTable` only |
-
-`sap.ui.core` is the only library UI5X declares, because it is the only one every control needs.
-The other two are imported by the controls that use them, so they are requested when one of those
-controls is loaded and not before: an application built only from `Skeleton`, `LoadingContainer`,
-`Accordion` or `LoadingTable` never loads `sap.m`, and one that uses no grid table never loads
-`sap.ui.table`.
-
-An application that does use those controls already carries the library in question, since the
-table passed to `LoadingTable` is a `sap.ui.table.Table` and the controls that build on `sap.m`
-are used from a view that has it.
-
 ## Development requirements
 
 - Node.js `20.19+` or `22.12+` (Node.js 21 is not supported by UI5 CLI 4).
@@ -113,23 +93,7 @@ are used from a view that has it.
 npm install @raffaeledisomma/ui5x
 ```
 
-UI5X has no npm dependencies of its own, so installing it adds one package and nothing else.
-The package carries the built library, its type definitions and the `-dbg.js` variants UI5 loads
-with `sap-ui-debug=true`; the TypeScript sources are not shipped.
-Whatever `npm audit` reports afterwards comes from the application's own dependency tree, not
-from here. The UI5 libraries it needs at runtime are listed under
-[UI5 library dependencies](#ui5-library-dependencies).
-
-UI5X declares `sap.ui.core` alone, so nothing has to be added for the controls to load.
-
-Where the UI5 runtime comes from decides whether anything else is needed. A SAP Fiori tools
-project proxies `/resources` to `https://ui5.sap.com` and has the whole runtime available, so
-every library resolves whether or not it is named anywhere. A project that lets the UI5 tooling
-serve `/resources` gets only what its own `framework` section lists, plus what those libraries
-depend on, and `sap.ui.table` is the one `LoadingTable` needs there. An application using that
-control declares it regardless, since the table it passes in is a `sap.ui.table.Table`.
-
-Then declare UI5X in the application's `manifest.json`:
+**1.** Declare and map the library in the application's `manifest.json`:
 
 ```json
 {
@@ -146,26 +110,7 @@ Then declare UI5X in the application's `manifest.json`:
 }
 ```
 
-`resourceRoots` is what tells UI5 where the library lives. UI5X is served from
-`/thirdparty/ui5x/` rather than from `/resources/`, so this mapping is required rather than
-optional, and it is also what makes the library resolve against the application in SAP Build
-Work Zone, where the UI5 runtime is loaded by the shell.
-
-An application that boots from `index.html` without a component never reads that manifest, so
-the same mapping goes on the bootstrap tag instead:
-
-```html
-<script
-  id="sap-ui-bootstrap"
-  src="resources/sap-ui-core.js"
-  data-sap-ui-resource-roots='{"ui5x": "/thirdparty/ui5x/"}'>
-</script>
-```
-
-### Using the types from TypeScript
-
-The control interfaces are declared as module augmentations, which TypeScript loads only when the
-package is named in the compiler's `types`:
+**2.** TypeScript projects only — name the package in `tsconfig.json`:
 
 ```json
 {
@@ -175,47 +120,88 @@ package is named in the compiler's `types`:
 }
 ```
 
-Without that entry the imports still resolve and nothing appears to be missing, but the controls
-come out bare: a settings object is rejected and every generated getter is reported as absent.
+That is everything a locally previewed application needs. Deploying one adds two settings, in
+[Deploying an application that uses UI5X](#deploying-an-application-that-uses-ui5x).
 
-## Consuming UI5X in a SAP Fiori tools project
+<details>
+<summary><b>Applications that boot from <code>index.html</code> without a component</b></summary>
 
-A SAP Fiori tools project reserves `/resources/` for the SAPUI5 runtime: a proxy claims it during
-local preview, and a route forwards it to SAP's servers once deployed. UI5X is therefore served
-from `/thirdparty/ui5x/` instead, so neither has to be reconfigured and neither can intercept the
-library.
+Such an application never reads `manifest.json`, so the same mapping goes on the bootstrap tag
+instead:
 
-What remains is getting the library into the deployment, which UI5 CLI does not do on its own.
+```html
+<script
+  id="sap-ui-bootstrap"
+  src="resources/sap-ui-core.js"
+  data-sap-ui-resource-roots='{"ui5x": "/thirdparty/ui5x/"}'>
+</script>
+```
 
-| Step | File | Needed for | Symptom when missing |
-| ---- | ---- | ---------- | -------------------- |
-| Declare and map the library | `manifest.json` | always | `ModuleError: failed to load 'ui5x/library.js'` |
-| Include in the build | `ui5.yaml` or the deploy configuration | any deployment | `dist` contains no `thirdparty/ui5x` |
-| Include in the archive | the `ui5-task-zipper` configuration | Cloud Foundry | the archive contains no `thirdparty/ui5x` |
+</details>
+
+<details>
+<summary><b>Why the <code>resourceRoots</code> entry is required</b></summary>
+
+It is what tells UI5 where the library lives. UI5X is served from `/thirdparty/ui5x/` rather than
+from `/resources/`, which a SAP Fiori tools project reserves for the SAPUI5 runtime: a proxy
+claims it during local preview, and a route forwards it to SAP's servers once deployed. Serving
+UI5X from its own path means neither has to be reconfigured and neither can intercept the
+library, and it is also what makes the library resolve in SAP Build Work Zone, where the UI5
+runtime is loaded by the shell.
+
+</details>
+
+<details>
+<summary><b>What the <code>types</code> entry changes</b></summary>
+
+The control interfaces are declared as module augmentations, which TypeScript loads only when the
+package is named in the compiler's `types`. Without that entry the imports still resolve and
+nothing appears to be missing, but the controls come out bare: a settings object is rejected and
+every generated getter is reported as absent.
+
+</details>
+
+<details>
+<summary><b>What installing adds, and which UI5 libraries have to be available</b></summary>
+
+UI5X has no npm dependencies of its own, so installing it adds one package and nothing else.
+The package carries the built library, its type definitions and the `-dbg.js` variants UI5 loads
+with `sap-ui-debug=true`; the TypeScript sources are not shipped. Whatever `npm audit` reports
+afterwards comes from the application's own dependency tree, not from here.
+
+UI5X declares `sap.ui.core` alone, because it is the only library every control needs:
+
+| Library        | Declared | Required by |
+| -------------- | -------- | ----------- |
+| `sap.ui.core`  | yes | Every control |
+| `sap.m`        | no  | `CopyButton` (which extends `sap.m.Button`), `ChatFeed`, `ChatMessage`, `SegmentedInput`, `LoadingResponsiveTable` |
+| `sap.ui.table` | no  | `LoadingTable` only |
+
+The other two are imported by the controls that use them, so they are requested when one of those
+controls is loaded and not before: an application built only from `Skeleton`, `LoadingContainer`,
+`Accordion` or `LoadingTable` never loads `sap.m`, and one that uses no grid table never loads
+`sap.ui.table`.
+
+Where the UI5 runtime comes from decides whether anything else is needed. A SAP Fiori tools
+project proxies `/resources` to `https://ui5.sap.com` and has the whole runtime available, so
+every library resolves whether or not it is named anywhere. A project that lets the UI5 tooling
+serve `/resources` gets only what its own `framework` section lists, plus what those libraries
+depend on, and `sap.ui.table` is the one `LoadingTable` needs there. An application using that
+control declares it regardless, since the table it passes in is a `sap.ui.table.Table`.
+
+</details>
+
+## Deploying an application that uses UI5X
 
 Nothing is needed for local preview: `npm start` serves the library from the dependency graph.
-
-### Build output
-
-`ui5 build` only writes the application's own files unless the library is declared as a build
-dependency. Add it to the configuration the build actually uses, which for a Fiori tools project
-is often `ui5-deploy.yaml` rather than `ui5.yaml`:
+For a deployment, add both of the following. For a SAP Fiori tools project they often belong in
+`ui5-deploy.yaml` rather than `ui5.yaml`, whichever configuration the build actually uses.
 
 ```yaml
 builder:
   settings:
     includeDependency:
       - ui5x
-```
-
-### Deployment archive
-
-If the project packages itself with `ui5-task-zipper`, the archive holds the application's own
-files only. The option that adds the libraries is spelled `includeDependencies`, one letter away
-from the build setting above, and both are required:
-
-```yaml
-builder:
   customTasks:
     - name: ui5-task-zipper
       afterTask: generateCachebusterInfo
@@ -223,23 +209,36 @@ builder:
         includeDependencies: true
 ```
 
-Verify before deploying:
+Verify the archive, then the deployment:
 
 ```bash
 unzip -l dist/<archive>.zip | grep "thirdparty/ui5x/library.js"
+curl -sI https://<application-url>/thirdparty/ui5x/library.js
 ```
 
-### Verifying a deployment
+<details>
+<summary><b>What each setting does, and what is missing without it</b></summary>
 
-The library can be requested directly, without the application having to work:
+| Setting | Needed for | Symptom when missing |
+| ------- | ---------- | -------------------- |
+| `manifest.json` declaration and mapping | always | `ModuleError: failed to load 'ui5x/library.js'` |
+| `includeDependency` | any deployment | `dist` contains no `thirdparty/ui5x` |
+| `includeDependencies` | Cloud Foundry | the archive contains no `thirdparty/ui5x` |
 
-```
-https://<application-url>/thirdparty/ui5x/library.js
-```
+`ui5 build` only writes the application's own files unless the library is declared as a build
+dependency, which is what `includeDependency` does. If the project then packages itself with
+`ui5-task-zipper`, the archive holds the application's own files only until `includeDependencies`
+is set. The two options are one letter apart and both are required.
 
-Serving the file means the deployment is complete.
+Serving `library.js` from the deployed application means the deployment is complete, whether or
+not the application itself works.
 
-## Usage
+</details>
+
+## Controls and API reference
+
+One section per control: what it does, an example in JavaScript and in XML, and the full table of
+its properties, aggregations and events.
 
 ### Skeleton
 
