@@ -4,6 +4,8 @@
 
 An OpenUI5 and SAPUI5 library of composite controls, with theming, accessibility and state handling built in.
 
+![UI5X](docs/assets/social-preview.png)
+
 **[Open the live demo](https://rdisomma.github.io/ui5x/)** to see every control and have fun
 customising how each one behaves.
 

@@ -45,4 +45,13 @@ const index = (await readFile(new URL("index.html", app), "utf8"))
 await writeFile(new URL("index.html", out), index);
 await cp(library, new URL("resources/ui5x/", out), { recursive: true });
 
+/*
+ * The card the Open Graph tags point at. Link previews fetch it from the site
+ * itself, so it has to sit next to index.html at the address they name.
+ */
+await cp(
+    new URL("docs/assets/social-preview.png", root),
+    new URL("social-preview.png", out)
+);
+
 console.log("Demo site built in demo-site/");
